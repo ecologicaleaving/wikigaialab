@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 // Types for notification system
 export interface NotificationData {
   userId: string;
-  type: 'vote_milestone' | 'admin_alert' | 'problem_approved' | 'problem_rejected' | 'featured_content' | 'welcome';
+  type: 'vote_milestone' | 'admin_alert' | 'problem_approved' | 'problem_rejected' | 'featured_content' | 'welcome' | 'status_change';
   subject: string;
   contentText: string;
   contentHtml?: string;
@@ -35,6 +35,10 @@ export interface TemplateVariables {
   proposer_email?: string;
   problem_description?: string;
   admin_url?: string;
+  previous_status?: string;
+  new_status?: string;
+  trigger_type?: string;
+  reason?: string;
   [key: string]: any;
 }
 
@@ -186,6 +190,167 @@ export class NotificationService {
       return notificationId;
     } catch (error) {
       console.error('Error sending vote milestone notification:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send status change notification
+   */
+  async sendStatusChangeNotification(
+    problemId: string,
+    previousStatus: string,
+    newStatus: string,
+    context: {
+      triggerType: string;
+      voteCount: number;
+      adminUser?: string;
+      reason?: string;
+    }
+  ): Promise<string[]> {
+    try {
+      // Get problem details
+      const { data: problem, error: problemError } = await this.supabase
+        .from('problems')
+        .select(`
+          id,
+          title,
+          description,
+          vote_count,
+          created_at,
+          proposer:users!proposer_id(id, name, email),
+          category:categories!category_id(id, name)
+        `)
+        .eq('id', problemId)
+        .single();
+
+      if (problemError || !problem) {
+        throw new Error(`Problem not found: ${problemError?.message}`);
+      }
+
+      const notificationIds: string[] = [];
+
+      // Send notification to problem proposer
+      const { data: proposerPrefs } = await this.supabase
+        .from('user_notification_preferences')
+        .select('email_status_changes')
+        .eq('user_id', problem.proposer.id)
+        .single();
+
+      if (proposerPrefs?.email_status_changes) {
+        // Prepare template variables for proposer
+        const proposerVariables: TemplateVariables = {
+          user_name: problem.proposer.name || 'Utente',
+          problem_title: problem.title,
+          previous_status: previousStatus,
+          new_status: newStatus,
+          category_name: problem.category.name,
+          current_votes: context.voteCount,
+          trigger_type: context.triggerType,
+          reason: context.reason || '',
+          problem_url: `${process.env.NEXT_PUBLIC_APP_URL}/problems/${problem.id}`,
+          created_at: new Date(problem.created_at).toLocaleDateString('it-IT')
+        };
+
+        // Render email from template
+        const { subject, contentText, contentHtml } = await this.renderTemplate(
+          'status_change_proposer',
+          proposerVariables
+        );
+
+        // Queue the notification
+        const proposerNotificationId = await this.queueNotification({
+          userId: problem.proposer.id,
+          type: 'status_change',
+          subject,
+          contentText,
+          contentHtml,
+          problemId,
+          relatedData: { 
+            previousStatus, 
+            newStatus, 
+            triggerType: context.triggerType,
+            voteCount: context.voteCount 
+          }
+        });
+
+        notificationIds.push(proposerNotificationId);
+      }
+
+      // Send admin notifications for important status changes
+      const importantStatuses = ['In Development', 'Completed', 'Rejected'];
+      if (importantStatuses.includes(newStatus)) {
+        // Get all admin users
+        const { data: adminUsers, error: adminError } = await this.supabase
+          .from('users')
+          .select('id, name, email')
+          .eq('is_admin', true);
+
+        if (!adminError && adminUsers?.length) {
+          for (const admin of adminUsers) {
+            // Check admin notification preferences
+            const { data: adminPrefs } = await this.supabase
+              .from('user_notification_preferences')
+              .select('email_admin_notifications')
+              .eq('user_id', admin.id)
+              .single();
+
+            if (!adminPrefs?.email_admin_notifications) {
+              continue;
+            }
+
+            // Prepare template variables for admin
+            const adminVariables: TemplateVariables = {
+              user_name: admin.name || 'Admin',
+              problem_title: problem.title,
+              proposer_name: problem.proposer.name || 'Utente',
+              proposer_email: problem.proposer.email,
+              previous_status: previousStatus,
+              new_status: newStatus,
+              category_name: problem.category.name,
+              current_votes: context.voteCount,
+              trigger_type: context.triggerType,
+              reason: context.reason || '',
+              problem_description: problem.description,
+              problem_url: `${process.env.NEXT_PUBLIC_APP_URL}/problems/${problem.id}`,
+              admin_url: `${process.env.NEXT_PUBLIC_APP_URL}/admin`,
+              created_at: new Date(problem.created_at).toLocaleDateString('it-IT')
+            };
+
+            // Render email from template
+            const { subject, contentText, contentHtml } = await this.renderTemplate(
+              'status_change_admin',
+              adminVariables
+            );
+
+            // Queue the notification
+            const adminNotificationId = await this.queueNotification({
+              userId: admin.id,
+              type: 'status_change',
+              subject,
+              contentText,
+              contentHtml,
+              problemId,
+              relatedData: { 
+                previousStatus, 
+                newStatus, 
+                triggerType: context.triggerType,
+                voteCount: context.voteCount,
+                isAdminNotification: true 
+              }
+            });
+
+            notificationIds.push(adminNotificationId);
+          }
+        }
+      }
+
+      // Send all queued notifications
+      await this.sendPendingNotifications();
+
+      return notificationIds;
+    } catch (error) {
+      console.error('Error sending status change notification:', error);
       throw error;
     }
   }

@@ -120,6 +120,23 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       // This will be eventually consistent through triggers
     }
 
+    // Broadcast real-time vote update to connected clients
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/realtime/votes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          problemId,
+          newVoteCount,
+          hasVoted,
+          userId: user.id
+        })
+      });
+    } catch (realtimeError) {
+      // Don't fail the vote if real-time broadcast fails
+      console.error('Failed to broadcast real-time update:', realtimeError);
+    }
+
     // Check for vote milestones and send notifications
     if (hasVoted && newVoteCount > problem.vote_count) {
       // Only check milestones when vote count increases

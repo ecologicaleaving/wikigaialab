@@ -9,7 +9,8 @@ import {
   TagIcon,
   UsersIcon,
   ChartBarIcon,
-  CogIcon
+  CogIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 
@@ -36,6 +37,12 @@ const navigation = [
     name: 'Gestione Categorie',
     href: '/admin/categories',
     icon: TagIcon,
+    current: false,
+  },
+  {
+    name: 'Gestione Workflow',
+    href: '/admin/workflow',
+    icon: ClockIcon,
     current: false,
   },
   {

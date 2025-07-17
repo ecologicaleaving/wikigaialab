@@ -55,6 +55,37 @@ export async function POST(request: NextRequest) {
           success: true
         });
 
+        // Trigger workflow status update for vote milestone
+        try {
+          const workflowResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/workflow/status-update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              problemId,
+              newVoteCount
+            })
+          });
+
+          const workflowResult = await workflowResponse.json();
+          
+          results.push({
+            type: 'workflow_update',
+            milestone,
+            workflowResult,
+            success: workflowResponse.ok
+          });
+
+          console.log(`Workflow update triggered for problem ${problemId} at milestone ${milestone}:`, workflowResult);
+        } catch (workflowError) {
+          console.error(`Error triggering workflow update for milestone ${milestone}:`, workflowError);
+          results.push({
+            type: 'workflow_update',
+            milestone,
+            error: workflowError instanceof Error ? workflowError.message : 'Unknown workflow error',
+            success: false
+          });
+        }
+
       } catch (error) {
         console.error(`Error sending milestone ${milestone} notification:`, error);
         results.push({

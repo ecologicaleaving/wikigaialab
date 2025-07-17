@@ -9,7 +9,8 @@ import { Badge } from '../../../components/ui/badge';
 import { Lightbulb, Calendar, Heart, Tag, User2, Clock, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVoting } from '../../../hooks/useVoting';
-import { VoteButton } from '../../../components/ui/vote-button';
+import { RealtimeVoteButtonDetailed } from '../../../components/ui/RealtimeVoteButton';
+import { useRealtimeProblemVotes } from '../../../hooks/useRealtimeVotes';
 import { Breadcrumb } from '../../../components/ui/breadcrumb';
 import { RelatedProblems } from '../../../components/problems/related-problems';
 import { VoteMilestones } from '../../../components/problems/vote-milestones';
@@ -50,6 +51,15 @@ export default function ProblemDetailPage() {
     isVoting,
     toggleVote,
   } = useVoting(problemId);
+
+  // Real-time vote updates
+  const {
+    voteCount: realtimeVoteCount,
+    isConnected: realtimeConnected
+  } = useRealtimeProblemVotes(problemId, !!problem);
+
+  // Use real-time vote count when available, otherwise fallback to regular count
+  const displayVoteCount = realtimeVoteCount !== undefined ? realtimeVoteCount : (voteLoading ? problem?.vote_count || 0 : voteCount);
 
   // SEO and social sharing
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
@@ -181,21 +191,24 @@ export default function ProblemDetailPage() {
                   
                   <div className="flex items-center gap-4">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary-600">
-                        {voteLoading ? problem.vote_count : voteCount}
+                      <div className="text-3xl font-bold text-primary-600 transition-all duration-300">
+                        {displayVoteCount}
+                        {realtimeConnected && (
+                          <div className="inline-block ml-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          </div>
+                        )}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {(voteLoading ? problem.vote_count : voteCount) === 1 ? 'voto' : 'voti'}
+                        {displayVoteCount === 1 ? 'voto' : 'voti'}
+                        {realtimeConnected && (
+                          <span className="ml-1 text-green-600 text-xs">• Live</span>
+                        )}
                       </div>
                     </div>
-                    <VoteButton
-                      hasVoted={hasVoted}
-                      voteCount={voteLoading ? problem.vote_count : voteCount}
-                      isLoading={voteLoading}
-                      isVoting={isVoting}
-                      onClick={toggleVote}
-                      size="lg"
-                      variant="detail"
+                    <RealtimeVoteButtonDetailed
+                      problemId={problem.id}
+                      initialVoteCount={problem.vote_count}
                       showCount={false}
                     />
                   </div>
