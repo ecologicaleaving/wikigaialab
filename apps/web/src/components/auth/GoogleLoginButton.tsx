@@ -10,6 +10,9 @@ interface GoogleLoginButtonProps {
   variant?: 'default' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   children?: React.ReactNode;
+  onStart?: () => void;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
 }
 
 /**
@@ -22,12 +25,33 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   variant = 'default',
   size = 'md',
   children,
+  onStart,
+  onSuccess,
+  onError,
 }) => {
   const { signIn, isSigningIn, error } = useGoogleAuth();
 
   const handleClick = async () => {
     if (isSigningIn || disabled) return;
-    await signIn();
+    
+    // Call onStart callback
+    if (onStart) {
+      onStart();
+    }
+    
+    try {
+      await signIn();
+      
+      // Call onSuccess callback
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (err) {
+      // Call onError callback
+      if (onError) {
+        onError(err instanceof Error ? err.message : 'Authentication failed');
+      }
+    }
   };
 
   // Size variants

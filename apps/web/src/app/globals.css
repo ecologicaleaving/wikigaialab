@@ -120,13 +120,14 @@
   }
   
   .container-narrow {
-    @apply max-w-4xl mx-auto px-4;
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
   }
   
   .container-wide {
-    @apply max-w-7xl mx-auto px-4;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
   
+  /* Mobile-first animations */
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
@@ -137,5 +138,120 @@
   
   .animate-bounce-subtle {
     animation: bounceSubtle 0.6s ease-in-out;
+  }
+  
+  /* Animation delays */
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  
+  /* Mobile-first touch targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+  
+  /* Mobile-optimized scrolling */
+  .scroll-smooth-mobile {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Performance optimizations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Focus states for accessibility */
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+  }
+}
+
+/* Mobile-first breakpoint system */
+@media (max-width: 480px) {
+  .container-narrow {
+    @apply px-3;
+  }
+  
+  .btn-lg {
+    @apply h-14 px-8 text-lg;
+  }
+  
+  .btn-md {
+    @apply h-12 px-6 text-base;
+  }
+  
+  .btn-sm {
+    @apply h-10 px-4 text-sm;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container-narrow {
+    @apply px-6;
+  }
+}
+
+/* Performance-critical animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-support {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-bounce-subtle {
+    animation: none;
+  }
+  
+  .scroll-smooth-mobile {
+    scroll-behavior: auto;
   }
 }

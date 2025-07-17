@@ -1,34 +1,63 @@
+'use client';
+
+import React, { useEffect } from 'react';
 import { Heart, Users, Zap, ArrowRight } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { analytics } from '../lib/analytics';
+import { abTesting } from '../lib/ab-testing';
+import HeroSection from '../components/landing/HeroSection';
+import InteractiveDemo from '../components/landing/InteractiveDemo';
+import OnboardingFlow from '../components/landing/OnboardingFlow';
+import SocialProofSection from '../components/landing/SocialProofSection';
+import FAQSection from '../components/landing/FAQSection';
+import { performance } from '../lib/performance';
 
 export default function HomePage() {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    // Initialize analytics, A/B testing, and performance monitoring
+    if (typeof window !== 'undefined') {
+      analytics.initialize('G-XXXXXXXXXX'); // Replace with actual GA4 tracking ID
+      abTesting.initialize();
+      performance.initialize();
+      
+      // Initialize tracking
+      analytics.initializeScrollTracking();
+      analytics.initializeTimeTracking();
+      
+      // Track page view
+      analytics.trackFunnel('landing_page_view', {
+        user_authenticated: !!user,
+        referrer: document.referrer,
+        utm_source: new URLSearchParams(window.location.search).get('utm_source'),
+        utm_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign')
+      });
+      
+      // Track page performance
+      setTimeout(() => {
+        analytics.trackPagePerformance();
+      }, 1000);
+      
+      // Register service worker for performance optimization
+      performance.registerServiceWorker();
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
-        <div className="container-narrow">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary-900 mb-6">
-              WikiGaiaLab
-            </h1>
-            <p className="text-xl md:text-2xl text-primary-700 mb-8 max-w-3xl mx-auto">
-              Una piattaforma dove la community propone problemi, vota le soluzioni più utili, 
-              e accede ad app AI-powered create per tutti.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn-primary btn-lg">
-                Inizia Subito
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
-              <button className="btn-outline btn-lg">
-                Scopri di Più
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Hero Section */}
+      <HeroSection />
+      
+      {/* Interactive Demo */}
+      <InteractiveDemo />
+      
+      {/* Onboarding Flow */}
+      <OnboardingFlow />
 
       {/* How It Works */}
-      <section className="py-20">
+      <section id="come-funziona" className="py-20">
         <div className="container-narrow">
           <h2 className="text-3xl font-bold text-center mb-12">
             Come Funziona
@@ -64,6 +93,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      
+      {/* Social Proof Section */}
+      <SocialProofSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Current Problems Preview */}
       <section className="py-20 bg-neutral-100">

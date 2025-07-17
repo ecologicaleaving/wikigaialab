@@ -2,49 +2,16 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '../contexts/AuthContext';
+import { generateMetadata, landingPageSEO, organizationStructuredData, generateJsonLdScript } from '../lib/seo';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+});
 
-export const metadata: Metadata = {
-  title: 'WikiGaiaLab - Community Problem Solving',
-  description: 'A community-driven platform where users propose problems, vote on solutions, and access AI-powered applications.',
-  keywords: ['community', 'problem solving', 'AI', 'voting', 'solutions'],
-  authors: [{ name: 'WikiGaiaLab Team' }],
-  creator: 'WikiGaiaLab Team',
-  openGraph: {
-    title: 'WikiGaiaLab - Community Problem Solving',
-    description: 'A community-driven platform where users propose problems, vote on solutions, and access AI-powered applications.',
-    url: 'https://wikigaialab.com',
-    siteName: 'WikiGaiaLab',
-    images: [
-      {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'WikiGaiaLab - Community Problem Solving',
-      },
-    ],
-    locale: 'it_IT',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WikiGaiaLab - Community Problem Solving',
-    description: 'A community-driven platform where users propose problems, vote on solutions, and access AI-powered applications.',
-    images: ['/images/og-image.png'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+// Enhanced SEO metadata for Italian market
+export const metadata: Metadata = generateMetadata(landingPageSEO);
 
 export default function RootLayout({
   children,
@@ -53,6 +20,53 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it" className="scroll-smooth">
+      <head>
+        {/* Structured Data for Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: generateJsonLdScript(organizationStructuredData),
+          }}
+        />
+        
+        {/* Google Analytics */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX');
+            `,
+          }}
+        />
+        
+        {/* Preconnect to external domains */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        
+        {/* DNS Prefetch for performance */}
+        <link rel="dns-prefetch" href="https://accounts.google.com" />
+        <link rel="dns-prefetch" href="https://apis.google.com" />
+        
+        {/* Favicon and app icons */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* Theme color for mobile browsers */}
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="msapplication-TileColor" content="#2b5797" />
+        
+        {/* Viewport for mobile optimization */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
           <div className="min-h-screen bg-neutral-50">
