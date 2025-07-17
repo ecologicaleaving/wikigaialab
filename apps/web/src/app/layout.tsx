@@ -69,9 +69,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
-          <div className="min-h-screen bg-neutral-50">
-            {children}
-          </div>
+          {children}
         </AuthProvider>
       </body>
     </html>

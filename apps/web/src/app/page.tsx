@@ -11,6 +11,7 @@ import OnboardingFlow from '../components/landing/OnboardingFlow';
 import SocialProofSection from '../components/landing/SocialProofSection';
 import FAQSection from '../components/landing/FAQSection';
 import { performance } from '../lib/performance';
+import { UnauthenticatedLayout } from '../components/layout';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -46,7 +47,7 @@ export default function HomePage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen">
+    <UnauthenticatedLayout>
       {/* Enhanced Hero Section */}
       <HeroSection />
       
@@ -167,39 +168,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900 text-neutral-300 py-12">
-        <div className="container-narrow">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-white font-semibold mb-4">WikiGaiaLab</h3>
-              <p className="text-sm">
-                Innovazione sociale attraverso la tecnologia. Un progetto di collaborazione tra 
-                Ass.Gaia e Ecologicaleaving.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Link Utili</h4>
-              <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white">Come Funziona</a></li>
-                <li><a href="#" className="hover:text-white">Problemi</a></li>
-                <li><a href="#" className="hover:text-white">App Sviluppate</a></li>
-                <li><a href="#" className="hover:text-white">Contatti</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Partner</h4>
-              <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white">Ass.Gaia</a></li>
-                <li><a href="#" className="hover:text-white">Ecologicaleaving</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-neutral-800 mt-8 pt-8 text-center text-sm">
-            <p>&copy; 2024 WikiGaiaLab. Tutti i diritti riservati.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </UnauthenticatedLayout>
   );
 }

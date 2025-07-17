@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useAuth, useLogout, useUserDisplayName } from '../../hooks/useAuth';
+import { useAuth, useLogout } from '../../hooks/useAuth';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import Link from 'next/link';
 
@@ -16,7 +16,7 @@ interface UserMenuProps {
 export const UserMenu: React.FC<UserMenuProps> = ({ className = '' }) => {
   const { user, isAuthenticated } = useAuth();
   const { logout, isLoggingOut } = useLogout();
-  const displayName = useUserDisplayName();
+  const displayName = user?.name || user?.email || 'Utente';
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
