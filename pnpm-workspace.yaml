@@ -1,0 +1,20 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# Dependency management
+prefer-workspace-packages: true
+save-workspace-protocol: true
+shared-workspace-lockfile: true
+
+# Performance optimizations
+store-dir: .pnpm
+modules-dir: node_modules
+hoist-pattern: ['*']
+
+# Security
+audit-level: moderate
+fund: false
+
+# Resolution strategy
+resolution-mode: highest

@@ -1,0 +1,53 @@
+{
+  "name": "@wikigaialab/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WikiGaiaLab web application",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "clean": "rm -rf .next dist"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.38.0",
+    "@supabase/auth-helpers-nextjs": "0.8.7",
+    "@stripe/stripe-js": "2.1.11",
+    "stripe": "14.7.0",
+    "next": "14.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "clsx": "2.0.0",
+    "class-variance-authority": "0.7.0",
+    "lucide-react": "0.292.0",
+    "react-hook-form": "7.47.0",
+    "zod": "3.22.4",
+    "@hookform/resolvers": "3.3.2",
+    "sonner": "1.2.0",
+    "framer-motion": "10.16.4",
+    "date-fns": "2.30.0",
+    "recharts": "2.8.0",
+    "@wikigaialab/shared": "workspace:*",
+    "@wikigaialab/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.33",
+    "@types/react-dom": "18.2.14",
+    "typescript": "5.2.2",
+    "tailwindcss": "3.3.5",
+    "autoprefixer": "10.4.16",
+    "postcss": "8.4.31",
+    "eslint": "8.53.0",
+    "eslint-config-next": "14.0.3",
+    "prettier": "3.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

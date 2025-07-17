@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@wikigaialab/shared": ["./packages/shared/src"],
+      "@wikigaialab/shared/*": ["./packages/shared/src/*"],
+      "@wikigaialab/ui": ["./packages/ui/src"],
+      "@wikigaialab/ui/*": ["./packages/ui/src/*"],
+      "@wikigaialab/database": ["./packages/database/src"],
+      "@wikigaialab/database/*": ["./packages/database/src/*"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*",
+    "apps/*/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next"
+  ],
+  "references": [
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./packages/shared"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/database"
+    }
+  ]
+}

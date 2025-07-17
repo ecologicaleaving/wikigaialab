@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Pre-commit hook for WikiGaiaLab
+echo "🔍 Running pre-commit checks..."
+
+# 1. Type checking
+echo "📝 Checking TypeScript types..."
+npm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript type checking failed"
+  exit 1
+fi
+
+# 2. Linting
+echo "🧹 Running ESLint..."
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "❌ ESLint failed"
+  exit 1
+fi
+
+# 3. Format checking
+echo "💅 Checking code formatting..."
+npm run format:check
+if [ $? -ne 0 ]; then
+  echo "❌ Code formatting check failed"
+  echo "💡 Run 'npm run format' to fix formatting issues"
+  exit 1
+fi
+
+# 4. Environment validation
+echo "🔧 Validating environment configuration..."
+node -e "
+const { validateEnv } = require('./src/lib/env.ts');
+const result = validateEnv();
+if (!result.success) {
+  console.error('❌ Environment validation failed');
+  process.exit(1);
+}
+console.log('✅ Environment validation passed');
+"
+
+# 5. Unit tests (only staged files)
+echo "🧪 Running unit tests..."
+npm run test -- --passWithNoTests --findRelatedTests --bail
+if [ $? -ne 0 ]; then
+  echo "❌ Unit tests failed"
+  exit 1
+fi
+
+# 6. Build check (only on main/staging branches)
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "staging" ]; then
+  echo "🏗️  Running build check..."
+  npm run build
+  if [ $? -ne 0 ]; then
+    echo "❌ Build failed"
+    exit 1
+  fi
+fi
+
+echo "✅ All pre-commit checks passed!"
