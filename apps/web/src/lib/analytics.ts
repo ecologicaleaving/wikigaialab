@@ -287,6 +287,12 @@ const sendToCustomAnalytics = async (
   data: any
 ): Promise<void> => {
   try {
+    // Temporary disabled for development - no analytics table created yet
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Analytics (dev mode):', event, data);
+      return;
+    }
+    
     await fetch('/api/analytics/track', {
       method: 'POST',
       headers: {

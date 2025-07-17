@@ -12,6 +12,7 @@ import SocialProofSection from '../components/landing/SocialProofSection';
 import FAQSection from '../components/landing/FAQSection';
 import { performance } from '../lib/performance';
 import { UnauthenticatedLayout } from '../components/layout';
+import { config } from '../lib/env';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ export default function HomePage() {
   useEffect(() => {
     // Initialize analytics, A/B testing, and performance monitoring
     if (typeof window !== 'undefined') {
-      analytics.initialize('G-XXXXXXXXXX'); // Replace with actual GA4 tracking ID
+      analytics.initialize(config.NEXT_PUBLIC_GA_MEASUREMENT_ID);
       abTesting.initialize();
       performance.initialize();
       

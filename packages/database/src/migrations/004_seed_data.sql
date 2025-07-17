@@ -59,36 +59,42 @@ BEGIN
     SELECT id INTO user2_id FROM users WHERE email = 'user2@example.com';
     SELECT id INTO user3_id FROM users WHERE email = 'user3@example.com';
     
+    -- Temporarily disable auto-vote trigger for seeding
+    ALTER TABLE problems DISABLE TRIGGER trigger_auto_vote_on_problem_creation;
+    
     -- Insert problems if categories and users exist
     IF tech_cat_id IS NOT NULL AND user1_id IS NOT NULL THEN
         problem1_id := gen_random_uuid();
         INSERT INTO problems (id, proposer_id, title, description, category_id, status, vote_count, created_at) VALUES
-            (problem1_id, user1_id, 'Better Password Management for Everyone', 'Most people struggle with creating and remembering secure passwords. We need a simple, free solution that works across all devices and doesn''t require technical knowledge.', tech_cat_id, 'Proposed', 1, NOW() - INTERVAL '2 days');
+            (problem1_id, user1_id, 'Better Password Management for Everyone', 'Most people struggle with creating and remembering secure passwords. We need a simple, free solution that works across all devices and doesn''t require technical knowledge.', tech_cat_id, 'Proposed', 0, NOW() - INTERVAL '2 days');
     END IF;
     
     IF env_cat_id IS NOT NULL AND user2_id IS NOT NULL THEN
         problem2_id := gen_random_uuid();
         INSERT INTO problems (id, proposer_id, title, description, category_id, status, vote_count, created_at) VALUES
-            (problem2_id, user2_id, 'Reduce Food Waste in Restaurants', 'Restaurants throw away tons of perfectly good food daily. We need a system to connect restaurants with food banks and individuals who could use surplus food.', env_cat_id, 'In Development', 1, NOW() - INTERVAL '1 day');
+            (problem2_id, user2_id, 'Reduce Food Waste in Restaurants', 'Restaurants throw away tons of perfectly good food daily. We need a system to connect restaurants with food banks and individuals who could use surplus food.', env_cat_id, 'In Development', 0, NOW() - INTERVAL '1 day');
     END IF;
     
     IF health_cat_id IS NOT NULL AND user3_id IS NOT NULL THEN
         problem3_id := gen_random_uuid();
         INSERT INTO problems (id, proposer_id, title, description, category_id, status, vote_count, created_at) VALUES
-            (problem3_id, user3_id, 'Mental Health Support for Remote Workers', 'Remote workers often struggle with isolation and mental health issues. We need accessible, affordable mental health resources specifically designed for remote work challenges.', health_cat_id, 'Proposed', 1, NOW() - INTERVAL '3 hours');
+            (problem3_id, user3_id, 'Mental Health Support for Remote Workers', 'Remote workers often struggle with isolation and mental health issues. We need accessible, affordable mental health resources specifically designed for remote work challenges.', health_cat_id, 'Proposed', 0, NOW() - INTERVAL '3 hours');
     END IF;
     
     IF edu_cat_id IS NOT NULL AND user1_id IS NOT NULL THEN
         problem4_id := gen_random_uuid();
         INSERT INTO problems (id, proposer_id, title, description, category_id, status, vote_count, created_at) VALUES
-            (problem4_id, user1_id, 'Free Coding Education for Underserved Communities', 'Many talented individuals lack access to quality coding education due to economic barriers. We need free, comprehensive coding bootcamps in underserved communities.', edu_cat_id, 'Proposed', 1, NOW() - INTERVAL '6 hours');
+            (problem4_id, user1_id, 'Free Coding Education for Underserved Communities', 'Many talented individuals lack access to quality coding education due to economic barriers. We need free, comprehensive coding bootcamps in underserved communities.', edu_cat_id, 'Proposed', 0, NOW() - INTERVAL '6 hours');
     END IF;
     
     IF tech_cat_id IS NOT NULL AND user2_id IS NOT NULL THEN
         problem5_id := gen_random_uuid();
         INSERT INTO problems (id, proposer_id, title, description, category_id, status, vote_count, created_at) VALUES
-            (problem5_id, user2_id, 'Digital Privacy Protection Made Simple', 'Most people don''t understand how to protect their digital privacy. We need user-friendly tools and education to help regular users protect their personal data online.', tech_cat_id, 'Completed', 1, NOW() - INTERVAL '1 week');
+            (problem5_id, user2_id, 'Digital Privacy Protection Made Simple', 'Most people don''t understand how to protect their digital privacy. We need user-friendly tools and education to help regular users protect their personal data online.', tech_cat_id, 'Completed', 0, NOW() - INTERVAL '1 week');
     END IF;
+    
+    -- Re-enable auto-vote trigger
+    ALTER TABLE problems ENABLE TRIGGER trigger_auto_vote_on_problem_creation;
 END $$;
 
 -- Add some cross-voting between users (simulating real usage)
@@ -99,7 +105,7 @@ DECLARE
     user3_id UUID;
     user4_id UUID;
     problem_ids UUID[];
-    problem_id UUID;
+    current_problem_id UUID;
 BEGIN
     -- Get user IDs
     SELECT id INTO user1_id FROM users WHERE email = 'user1@example.com';
@@ -111,38 +117,43 @@ BEGIN
     SELECT ARRAY(SELECT id FROM problems) INTO problem_ids;
     
     -- Add some votes (excluding self-votes which are automatically created)
-    FOREACH problem_id IN ARRAY problem_ids LOOP
+    FOREACH current_problem_id IN ARRAY problem_ids LOOP
         -- User1 votes on problems not created by them
-        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = problem_id AND proposer_id = user1_id) THEN
+        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = current_problem_id AND proposer_id = user1_id) THEN
             INSERT INTO votes (user_id, problem_id, created_at) VALUES
-                (user1_id, problem_id, NOW() - INTERVAL '1 hour')
+                (user1_id, current_problem_id, NOW() - INTERVAL '1 hour')
             ON CONFLICT (user_id, problem_id) DO NOTHING;
         END IF;
         
         -- User2 votes on some problems
-        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = problem_id AND proposer_id = user2_id) 
+        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = current_problem_id AND proposer_id = user2_id) 
            AND random() > 0.5 THEN
             INSERT INTO votes (user_id, problem_id, created_at) VALUES
-                (user2_id, problem_id, NOW() - INTERVAL '2 hours')
+                (user2_id, current_problem_id, NOW() - INTERVAL '2 hours')
             ON CONFLICT (user_id, problem_id) DO NOTHING;
         END IF;
         
         -- User3 votes on most problems
-        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = problem_id AND proposer_id = user3_id) 
+        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = current_problem_id AND proposer_id = user3_id) 
            AND random() > 0.3 THEN
             INSERT INTO votes (user_id, problem_id, created_at) VALUES
-                (user3_id, problem_id, NOW() - INTERVAL '30 minutes')
+                (user3_id, current_problem_id, NOW() - INTERVAL '30 minutes')
             ON CONFLICT (user_id, problem_id) DO NOTHING;
         END IF;
         
         -- User4 votes on few problems
-        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = problem_id AND proposer_id = user4_id) 
+        IF NOT EXISTS (SELECT 1 FROM problems WHERE id = current_problem_id AND proposer_id = user4_id) 
            AND random() > 0.7 THEN
             INSERT INTO votes (user_id, problem_id, created_at) VALUES
-                (user4_id, problem_id, NOW() - INTERVAL '15 minutes')
+                (user4_id, current_problem_id, NOW() - INTERVAL '15 minutes')
             ON CONFLICT (user_id, problem_id) DO NOTHING;
         END IF;
     END LOOP;
+    
+    -- Update vote counts for all problems based on actual votes
+    UPDATE problems SET vote_count = (
+        SELECT COUNT(*) FROM votes WHERE votes.problem_id = problems.id
+    );
 END $$;
 
 -- Create a demo app for the completed problem

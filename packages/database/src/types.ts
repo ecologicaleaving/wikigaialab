@@ -8,7 +8,7 @@
  * @date 2025-07-17
  */
 
-export type { Database } from './supabase';
+import type { Database } from './supabase';
 
 // Re-export table types for convenience
 export type User = Database['public']['Tables']['users']['Row'];
@@ -124,7 +124,7 @@ export interface UserStats {
   subscriptionStatus: SubscriptionStatus;
 }
 
-// App feature types
+// App feature types (shared with validation)
 export interface AppFeature {
   id: string;
   name: string;
@@ -137,7 +137,7 @@ export interface AppFeatures {
   premium: AppFeature[];
 }
 
-// Database operation types
+// Database operation types (shared with validation)
 export interface DatabaseOperationResult<T = unknown> {
   success: boolean;
   data?: T;
@@ -145,7 +145,7 @@ export interface DatabaseOperationResult<T = unknown> {
   affectedRows?: number;
 }
 
-// Real-time subscription types
+// Real-time subscription types (shared with validation)
 export interface RealtimeEvent<T = unknown> {
   eventType: 'INSERT' | 'UPDATE' | 'DELETE';
   table: string;

@@ -4,11 +4,8 @@ const nextConfig = {
     typedRoutes: true,
   },
   images: {
-    domains: ['localhost', 'supabase.com'],
+    domains: ['localhost', 'supabase.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp', 'image/avif'],
-  },
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   async rewrites() {
     return [

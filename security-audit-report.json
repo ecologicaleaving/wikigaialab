@@ -1,0 +1,2507 @@
+{
+  "timestamp": "2025-07-17T22:18:48.819Z",
+  "summary": {
+    "passed": 9,
+    "warnings": 347,
+    "issues": 0
+  },
+  "details": {
+    "passed": [
+      {
+        "type": "pass",
+        "category": "SECRETS",
+        "message": "No hardcoded secrets detected",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:47.194Z"
+      },
+      {
+        "type": "pass",
+        "category": "ENV",
+        "message": "Environment example file exists",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:47.196Z"
+      },
+      {
+        "type": "pass",
+        "category": "ENV",
+        "message": "Local environment example file exists",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:47.196Z"
+      },
+      {
+        "type": "pass",
+        "category": "ENV",
+        "message": "Environment files are properly gitignored",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:47.196Z"
+      },
+      {
+        "type": "pass",
+        "category": "DEPS",
+        "message": "Lock file found: pnpm-lock.yaml",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:47.197Z"
+      },
+      {
+        "type": "pass",
+        "category": "API",
+        "message": "API security checks passed",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:48.666Z"
+      },
+      {
+        "type": "pass",
+        "category": "TS",
+        "message": "TypeScript configuration found",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:48.748Z"
+      },
+      {
+        "type": "pass",
+        "category": "TS",
+        "message": "TypeScript strict mode enabled",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:48.748Z"
+      },
+      {
+        "type": "pass",
+        "category": "TS",
+        "message": "noImplicitAny is properly configured",
+        "details": null,
+        "timestamp": "2025-07-17T22:18:48.748Z"
+      }
+    ],
+    "warnings": [
+      {
+        "type": "warning",
+        "category": "DEPS",
+        "message": "Could not run npm audit",
+        "details": "Command failed: npm audit --json\nnpm error code ENOLOCK\nnpm error audit This command requires an existing lockfile.\nnpm error audit Try creating one first with: npm i --package-lock-only\nnpm error audit Original error: loadVirtual requires existing shrinkwrap file\nnpm error A complete log of this run can be found in: /Users/davidecrescentini/.npm/_logs/2025-07-17T22_18_47_496Z-debug-0.log\n",
+        "timestamp": "2025-07-17T22:18:48.665Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/dashboard/route.ts:155",
+        "details": "console.error('Error fetching admin dashboard:', error);",
+        "timestamp": "2025-07-17T22:18:48.711Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/featured/route.ts:72",
+        "details": "console.error('Error fetching problems for featuring:', problemsError);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/featured/route.ts:98",
+        "details": "console.error('Error fetching collections:', collectionsError);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/featured/route.ts:138",
+        "details": "console.error('Error in featured content API:', error);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/featured/route.ts:336",
+        "details": "console.error('Error in featured content management:', error);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/moderation/route.ts:80",
+        "details": "console.error('Error fetching moderation queue:', problemsError);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/moderation/route.ts:139",
+        "details": "console.error('Error in moderation API:', error);",
+        "timestamp": "2025-07-17T22:18:48.712Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/moderation/route.ts:215",
+        "details": "console.error('Error updating problems:', updateError);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/moderation/route.ts:242",
+        "details": "console.warn('Failed to log admin activity:', logError);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/moderation/route.ts:255",
+        "details": "console.error('Error in bulk moderation:', error);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/problems/[id]/moderate/route.ts:118",
+        "details": "console.error('Error updating problem:', updateError);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/problems/[id]/moderate/route.ts:127",
+        "details": "console.log(`Admin ${user.id} performed ${action} on problem ${problemId}`, {",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/problems/[id]/moderate/route.ts:135",
+        "details": "console.warn('Failed to log admin activity:', logError);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/problems/[id]/moderate/route.ts:145",
+        "details": "console.error('Error in problem moderation:', error);",
+        "timestamp": "2025-07-17T22:18:48.713Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/users/[id]/role/route.ts:82",
+        "details": "console.error('Database error:', updateError);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/users/[id]/role/route.ts:90",
+        "details": "console.log(`Admin ${session.user.id} ${is_admin ? 'granted' : 'revoked'} admin role ${is_admin ? 'to' : 'from'} user ${targetUserId}`, {",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/users/[id]/role/route.ts:105",
+        "details": "console.error('API error:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/users/route.ts:78",
+        "details": "console.error('Database error:', usersError);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/users/route.ts:103",
+        "details": "console.error('API error:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/analytics/premium/route.ts:72",
+        "details": "console.error('Error fetching votes:', votesError);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/analytics/premium/route.ts:96",
+        "details": "console.error('Error fetching trending problems:', trendingError);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/analytics/premium/route.ts:105",
+        "details": "console.error('API error:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/analytics/track/route.ts:41",
+        "details": "console.error('Failed to store analytics event:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/analytics/track/route.ts:55",
+        "details": "console.error('Analytics tracking error:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/[slug]/route.ts:83",
+        "details": "console.error('Unexpected error in app detail API:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/featured/route.ts:34",
+        "details": "console.error('Database error fetching featured apps:', error);",
+        "timestamp": "2025-07-17T22:18:48.714Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/featured/route.ts:46",
+        "details": "console.error('Unexpected error in featured apps API:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/route.ts:69",
+        "details": "console.error('Database error fetching apps:', appsError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/route.ts:91",
+        "details": "console.error('Unexpected error in apps API:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/callback/route.ts:16",
+        "details": "console.error('OAuth callback error:', error, errorDescription);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/callback/route.ts:23",
+        "details": "console.error('No authorization code received');",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/callback/route.ts:37",
+        "details": "console.error('Error exchanging code for session:', sessionError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/callback/route.ts:44",
+        "details": "console.error('No session after code exchange');",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/callback/route.ts:54",
+        "details": "console.error('Callback processing error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/logout/route.ts:18",
+        "details": "console.error('Logout error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/logout/route.ts:31",
+        "details": "console.error('Logout processing error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:22",
+        "details": "console.error('Session error:', sessionError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:44",
+        "details": "console.error('Error fetching user profile:', profileError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:61",
+        "details": "console.error('Session GET error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:94",
+        "details": "console.error('Session refresh error:', refreshError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:116",
+        "details": "console.error('Error fetching user profile after refresh:', profileError);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:133",
+        "details": "console.error('Session POST error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:153",
+        "details": "console.error('Session DELETE error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/session/route.ts:163",
+        "details": "console.error('Session DELETE error:', error);",
+        "timestamp": "2025-07-17T22:18:48.715Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:36",
+        "details": "console.error('Error fetching user profile:', profileError);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:46",
+        "details": "console.error('User GET error:', error);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:98",
+        "details": "console.error('Error updating user profile:', updateError);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:108",
+        "details": "console.error('User PUT error:', error);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:141",
+        "details": "console.error('Error deleting user profile:', deleteError);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/auth/user/route.ts:154",
+        "details": "console.error('User DELETE error:', error);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/notifications/send-pending/route.ts:15",
+        "details": "console.log('Processing pending notifications...');",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/notifications/send-pending/route.ts:25",
+        "details": "console.error('Error processing pending notifications:', error);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/notifications/vote-milestone/route.ts:32",
+        "details": "console.log(`Sending milestone notification for problem ${problemId}, milestone ${milestone}`);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/notifications/vote-milestone/route.ts:59",
+        "details": "console.error(`Error sending milestone ${milestone} notification:`, error);",
+        "timestamp": "2025-07-17T22:18:48.716Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/notifications/vote-milestone/route.ts:79",
+        "details": "console.error('Error in vote milestone notification:', error);",
+        "timestamp": "2025-07-17T22:18:48.717Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/problems/[id]/vote/route.ts:138",
+        "details": "console.error('Failed to send milestone notification:', notificationError);",
+        "timestamp": "2025-07-17T22:18:48.717Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/problems/route.ts:131",
+        "details": "console.warn('Failed to update user stats:', error);",
+        "timestamp": "2025-07-17T22:18:48.717Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/user/problems/route.ts:36",
+        "details": "console.error('Database error:', error);",
+        "timestamp": "2025-07-17T22:18:48.717Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/user/problems/route.ts:49",
+        "details": "console.error('API error:', error);",
+        "timestamp": "2025-07-17T22:18:48.717Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/auth/callback/page.tsx:33",
+        "details": "console.error('OAuth callback error:', errorParam, errorDescription);",
+        "timestamp": "2025-07-17T22:18:48.718Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/auth/callback/page.tsx:48",
+        "details": "console.error('Session error:', sessionError);",
+        "timestamp": "2025-07-17T22:18:48.718Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/auth/callback/page.tsx:59",
+        "details": "console.error('No session or user found');",
+        "timestamp": "2025-07-17T22:18:48.718Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/auth/callback/page.tsx:83",
+        "details": "console.error('Database error:', dbError);",
+        "timestamp": "2025-07-17T22:18:48.718Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/auth/callback/page.tsx:93",
+        "details": "console.error('Callback handling error:', error);",
+        "timestamp": "2025-07-17T22:18:48.718Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/landing/HeroSection.tsx:65",
+        "details": "console.error('Failed to fetch community stats:', error);",
+        "timestamp": "2025-07-17T22:18:48.721Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/premium/EarlyAccessFeatures.tsx:179",
+        "details": "console.error('Failed to enroll:', error);",
+        "timestamp": "2025-07-17T22:18:48.725Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/premium/EarlyAccessFeatures.tsx:198",
+        "details": "console.error('Failed to unenroll:', error);",
+        "timestamp": "2025-07-17T22:18:48.725Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/premium/PremiumAnalyticsDashboard.tsx:99",
+        "details": "console.error('Failed to fetch analytics:', error);",
+        "timestamp": "2025-07-17T22:18:48.725Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/premium/PremiumPrioritySupport.tsx:101",
+        "details": "console.error('Failed to load support tickets:', error);",
+        "timestamp": "2025-07-17T22:18:48.726Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/components/premium/PremiumPrioritySupport.tsx:126",
+        "details": "console.error('Failed to create ticket:', error);",
+        "timestamp": "2025-07-17T22:18:48.726Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/contexts/AuthContext.tsx:158",
+        "details": "console.error('Error getting session:', error);",
+        "timestamp": "2025-07-17T22:18:48.727Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/contexts/AuthContext.tsx:172",
+        "details": "console.error('Error initializing auth:', error);",
+        "timestamp": "2025-07-17T22:18:48.727Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/contexts/AuthContext.tsx:199",
+        "details": "console.error('Error handling auth state change:', error);",
+        "timestamp": "2025-07-17T22:18:48.727Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/hooks/useAdminDashboard.ts:178",
+        "details": "console.error('Dashboard fetch error:', err);",
+        "timestamp": "2025-07-17T22:18:48.727Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/ab-testing.ts:226",
+        "details": "console.warn(`No A/B test assignment found for test: ${testName}`);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/analytics.ts:292",
+        "details": "console.log('📊 Analytics (dev mode):', event, data);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/analytics.ts:311",
+        "details": "console.error('Failed to send analytics data:', error);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:100",
+        "details": "console.error('API Error:', error.toJSON());",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:115",
+        "details": "console.error('Unexpected API Error:', error);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:232",
+        "details": "console.error('Database Error:', error);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:267",
+        "details": "console.error(`${serviceName} Service Error:`, error);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:297",
+        "details": "console.log(`[API] ${request.method} ${request.url}`);",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/api-middleware.ts:298",
+        "details": "console.log('Headers:', Object.fromEntries(request.headers.entries()));",
+        "timestamp": "2025-07-17T22:18:48.728Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:79",
+        "details": "console.error('Error creating/updating user:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:85",
+        "details": "console.error('Error in createOrUpdateUser:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:110",
+        "details": "console.error('Error signing in with Google:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:126",
+        "details": "console.error('Error signing out:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:157",
+        "details": "console.error('Error refreshing session:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:184",
+        "details": "console.error('Error fetching user from database:', dbError);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:190",
+        "details": "console.error('Error getting current user:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:216",
+        "details": "console.error('Error updating user profile:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:264",
+        "details": "console.error('Error validating session:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:292",
+        "details": "console.error('Error handling auth state change:', error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:308",
+        "details": "console.log('Auth Event:', logData);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/auth.ts:333",
+        "details": "console.error(`${errorContext} failed:`, error);",
+        "timestamp": "2025-07-17T22:18:48.729Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:77",
+        "details": "console.error('❌ Environment validation failed:');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:78",
+        "details": "console.error(error.errors.map(e => `  - ${e.path.join('.')}: ${e.message}`).join('\\n'));",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:83",
+        "details": "console.warn('⚠️  Continuing with default values in development');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:192",
+        "details": "console.log('🔧 Environment Configuration:');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:193",
+        "details": "console.log(`  Mode: ${config.NODE_ENV}`);",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:194",
+        "details": "console.log(`  App URL: ${config.NEXT_PUBLIC_APP_URL}`);",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:195",
+        "details": "console.log('🔌 Service Status:');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:197",
+        "details": "console.log(`  ${service}: ${available ? '✅' : '❌'}`);",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:200",
+        "details": "console.log('🎭 Mock Services:');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:202",
+        "details": "if (mocked) console.log(`  ${service}: 🎭 mocked`);",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:208",
+        "details": "console.warn('⚠️  Environment Issues:');",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/env.ts:209",
+        "details": "validation.errors.forEach(error => console.warn(`  - ${error}`));",
+        "timestamp": "2025-07-17T22:18:48.731Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/navigation-analytics.ts:75",
+        "details": "console.warn('Failed to store navigation history:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/navigation-analytics.ts:171",
+        "details": "console.warn('Failed to retrieve navigation history:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:85",
+        "details": "console.error('Error queueing notification:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:125",
+        "details": "console.log(`User ${problem.proposer.id} has disabled milestone notifications`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:138",
+        "details": "console.log(`Milestone ${milestone} notification already sent for problem ${problemId}`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:188",
+        "details": "console.error('Error sending vote milestone notification:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:224",
+        "details": "console.log('No admin users found for notification');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:240",
+        "details": "console.log(`Admin ${admin.id} has disabled admin notifications`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:283",
+        "details": "console.error('Error sending admin alert:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:322",
+        "details": "console.error('Error rendering template:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:332",
+        "details": "console.log('Resend not configured, skipping email sending');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:402",
+        "details": "console.log(`Notification ${notification.id} sent successfully to ${userEmail}`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:409",
+        "details": "console.error('Error sending pending notifications:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:442",
+        "details": "console.log(`Notification ${notificationId} failed: ${errorMessage}. ${shouldRetry ? 'Will retry.' : 'Max retries reached.'}`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/notifications/NotificationService.ts:444",
+        "details": "console.error('Error marking notification as failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:79",
+        "details": "console.warn('LCP observer not supported');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:94",
+        "details": "console.warn('FID observer not supported');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:113",
+        "details": "console.warn('CLS observer not supported');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:130",
+        "details": "console.warn('FCP observer not supported');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:343",
+        "details": "console.warn(`Performance budget exceeded for ${key}: ${metricValue} > ${value}`);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:359",
+        "details": "console.log('Service Worker registered successfully');",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/performance.ts:362",
+        "details": "console.error('Service Worker registration failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.732Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/rate-limiter.ts:215",
+        "details": "console.error('Rate limiting error:', error);",
+        "timestamp": "2025-07-17T22:18:48.733Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/tests/unit/auth/AuthContext.test.tsx:339",
+        "details": "const originalError = console.error;",
+        "timestamp": "2025-07-17T22:18:48.734Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/tests/unit/auth/AuthContext.test.tsx:340",
+        "details": "console.error = jest.fn();",
+        "timestamp": "2025-07-17T22:18:48.734Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/tests/unit/auth/AuthContext.test.tsx:346",
+        "details": "console.error = originalError;",
+        "timestamp": "2025-07-17T22:18:48.734Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/database/scripts/setup-database.js:33",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.734Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/database/src/utils/common.ts:34",
+        "details": "console.error('Database error:', error);",
+        "timestamp": "2025-07-17T22:18:48.735Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/db/db-health.ts:103",
+        "details": "console.warn('Real-time health check failed:', realtimeError);",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/db/db-health.ts:155",
+        "details": "console.error('🚨 Database is unhealthy:', health);",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/env.ts:78",
+        "details": "console.error('🚨 Environment validation failed:');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/env.ts:82",
+        "details": "console.error(`  - ${issue.field}: ${issue.message}`);",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/env.ts:85",
+        "details": "console.error('\\n💡 Please check your .env.local file and ensure all required variables are set.');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/env.ts:86",
+        "details": "console.error('📝 Refer to .env.local.example for the expected format.');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/packages/shared/src/env.ts:88",
+        "details": "console.error(`  - ${error.message}`);",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:18",
+        "details": "console.error('❌ Missing Supabase configuration in .env.local');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:24",
+        "details": "console.log('🚀 Applying new migrations to Supabase Cloud...');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:31",
+        "details": "console.log('📄 Applying migration 005: Content Management schema...');",
+        "timestamp": "2025-07-17T22:18:48.736Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:35",
+        "details": "console.error('❌ Error applying migration 005:', error005);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:39",
+        "details": "console.log('✅ Migration 005 applied successfully');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:45",
+        "details": "console.log('📄 Applying migration 006: Enhanced seed data...');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:49",
+        "details": "console.error('❌ Error applying migration 006:', error006);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:53",
+        "details": "console.log('✅ Migration 006 applied successfully');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:56",
+        "details": "console.log('🔍 Verifying applied changes...');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:64",
+        "details": "console.error('❌ Error verifying problems:', problemsError);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:66",
+        "details": "console.log(`✅ Found ${problems.length} problems in database`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:67",
+        "details": "console.log(`📊 Featured problems: ${problems.filter(p => p.is_featured).length}`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:75",
+        "details": "console.error('❌ Error verifying categories:', categoriesError);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:77",
+        "details": "console.log(`✅ Found ${categories.length} enhanced categories`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:79",
+        "details": "console.log(`  📁 ${cat.name}: ${cat.problems_count} problems, icon: ${cat.icon_name}`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:88",
+        "details": "console.error('❌ Error verifying collections:', collectionsError);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:90",
+        "details": "console.log(`✅ Found ${collections.length} content collections`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:93",
+        "details": "console.log('🎉 All migrations applied successfully!');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:94",
+        "details": "console.log('📈 Database is ready for Epic 3 Story 3.3 development');",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-cloud.js:97",
+        "details": "console.error('❌ Migration failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:14",
+        "details": "console.log(`📄 Executing ${sqlStatements.length} statements for ${migrationName}...`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:21",
+        "details": "console.log(`  ${i + 1}/${sqlStatements.length}: ${statement.substring(0, 60)}...`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:25",
+        "details": "console.error(`❌ Error in statement ${i + 1}:`, error);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:26",
+        "details": "console.error(`Statement: ${statement}`);",
+        "timestamp": "2025-07-17T22:18:48.737Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:30",
+        "details": "console.error(`❌ Failed to execute statement ${i + 1}:`, error);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:41",
+        "details": "console.error('❌ Missing Supabase configuration in .env.local');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:47",
+        "details": "console.log('🚀 Applying migrations to Supabase Cloud (manual execution)...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:51",
+        "details": "console.log('🔧 Creating helper function for SQL execution...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:67",
+        "details": "console.log('ℹ️  Helper function creation failed, trying direct execution...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:71",
+        "details": "console.log('📄 Applying migration 005 components...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:90",
+        "details": "console.log(`  Executing: ${statement.substring(0, 60)}...`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:104",
+        "details": "console.log(`⚠️  Direct SQL failed, statement may already exist: ${statement.substring(0, 40)}...`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:106",
+        "details": "console.log('✅ Statement executed successfully');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:109",
+        "details": "console.log(`⚠️  Statement may already exist or require manual execution: ${statement.substring(0, 40)}...`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:114",
+        "details": "console.log('📊 Updating existing data...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:162",
+        "details": "console.error(`❌ Error updating category ${update.name}:`, error);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:164",
+        "details": "console.log(`✅ Updated category: ${update.name}`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:167",
+        "details": "console.error(`❌ Failed to update category ${update.name}:`, error);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:182",
+        "details": "console.log('✅ Updated existing problems to approved status');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:185",
+        "details": "console.log('ℹ️  Problems may already have moderation status');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:189",
+        "details": "console.log('🔍 Verifying applied changes...');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:197",
+        "details": "console.error('❌ Error verifying problems:', problemsError);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:199",
+        "details": "console.log(`✅ Found ${problems.length} problems in database`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:201",
+        "details": "console.log('✅ Moderation status column added successfully');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:210",
+        "details": "console.error('❌ Error verifying categories:', categoriesError);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:212",
+        "details": "console.log(`✅ Found ${categories.length} categories`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:214",
+        "details": "console.log(`  📁 ${cat.name}: icon ${cat.icon_name || 'default'}, color ${cat.color_hex || 'default'}`);",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:218",
+        "details": "console.log('🎉 Core migration components applied successfully!');",
+        "timestamp": "2025-07-17T22:18:48.738Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:219",
+        "details": "console.log('📋 Note: Some advanced features may need manual SQL execution in Supabase dashboard');",
+        "timestamp": "2025-07-17T22:18:48.739Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:220",
+        "details": "console.log('🔗 Dashboard: https://jgivhyalioldfelngboi.supabase.co/project/jgivhyalioldfelngboi');",
+        "timestamp": "2025-07-17T22:18:48.739Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/apply-migrations-manual.js:223",
+        "details": "console.error('❌ Migration failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.739Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/fix-rls-policies.js:21",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:18",
+        "details": "console.error('❌ Missing Supabase configuration in .env.local');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:22",
+        "details": "console.log('🚀 Generating TypeScript types from Supabase Cloud...');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:27",
+        "details": "console.log(`📡 Project ID: ${projectId}`);",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:31",
+        "details": "console.log(`⚡ Running: ${command}`);",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:45",
+        "details": "console.log('✅ TypeScript types generated successfully');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:46",
+        "details": "console.log(`📄 Types written to: ${typesPath}`);",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:49",
+        "details": "console.log('\\n📋 New types preview:');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:51",
+        "details": "console.log(preview + '\\n...');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:54",
+        "details": "console.error('❌ Failed to generate types:', error.message);",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:57",
+        "details": "console.log('\\n🔧 Fallback: Creating manual type extensions...');",
+        "timestamp": "2025-07-17T22:18:48.740Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/generate-types-cloud.js:252",
+        "details": "console.log(`✅ Manual types created at: ${typesExtensionPath}`);",
+        "timestamp": "2025-07-17T22:18:48.742Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:32",
+        "details": "console.error(`❌ [${category}] ${message}`);",
+        "timestamp": "2025-07-17T22:18:48.742Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:33",
+        "details": "if (details) console.error(`   ${details}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:37",
+        "details": "console.warn(`⚠️  [${category}] ${message}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:38",
+        "details": "if (details) console.warn(`   ${details}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:42",
+        "details": "console.log(`✅ [${category}] ${message}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:45",
+        "details": "console.log(`ℹ️  [${category}] ${message}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:51",
+        "details": "console.log('\\n🔍 Checking for hardcoded secrets...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:93",
+        "details": "console.log('\\n🔍 Checking environment configuration...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:124",
+        "details": "console.log('\\n🔍 Checking dependency vulnerabilities...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:176",
+        "details": "console.log('\\n🔍 Checking API security...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:216",
+        "details": "console.log('\\n🔍 Checking for console statements...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:226",
+        "details": "if (line.includes('console.log') || line.includes('console.error') || line.includes('console.warn')) {",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:243",
+        "details": "console.log('\\n🔍 Checking TypeScript configuration...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:271",
+        "details": "console.log('\\n🔍 Checking for TODO/FIXME comments...');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:330",
+        "details": "console.log('\\n📊 Security Audit Report');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:331",
+        "details": "console.log('========================');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:332",
+        "details": "console.log(`✅ Passed: ${this.passed.length}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:333",
+        "details": "console.log(`⚠️  Warnings: ${this.warnings.length}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:334",
+        "details": "console.log(`❌ Issues: ${this.issues.length}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:337",
+        "details": "console.log('\\n🎉 No critical security issues found!');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:339",
+        "details": "console.log('\\n🚨 Critical issues that need immediate attention:');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:341",
+        "details": "console.log(`${index + 1}. [${issue.category}] ${issue.message}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:346",
+        "details": "console.log('\\n⚠️  Warnings to address:');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:348",
+        "details": "console.log(`${index + 1}. [${warning.category}] ${warning.message}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:352",
+        "details": "console.log(`... and ${this.warnings.length - 10} more warnings`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:373",
+        "details": "console.log(`\\n📄 Detailed report saved to: ${reportPath}`);",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:380",
+        "details": "console.log('🔒 WikiGaiaLab Security Audit Starting...\\n');",
+        "timestamp": "2025-07-17T22:18:48.744Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:402",
+        "details": "console.error('❌ Security audit failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-dev-environment.js:12",
+        "details": "console.log('🚀 WikiGaiaLab Development Environment Setup\\n');",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-dev-environment.js:24",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-dev-environment.js:216",
+        "details": "console.log(`${colors.blue}📋 Next Steps:${colors.reset}",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-no-docker.js:12",
+        "details": "console.log('🚀 WikiGaiaLab Setup (No Docker) per macOS 12\\n');",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-no-docker.js:23",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-no-docker.js:236",
+        "details": "console.log(`${colors.blue}📋 Prossimi Passi:${colors.reset}",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:12",
+        "details": "console.log('🚀 WikiGaiaLab Setup con Supabase Cloud\\n');",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:24",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:86",
+        "details": "console.log(`${colors.yellow}1. Vai su https://supabase.com${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:87",
+        "details": "console.log(`${colors.yellow}2. Crea un account o accedi${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:88",
+        "details": "console.log(`${colors.yellow}3. Crea un nuovo progetto${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:89",
+        "details": "console.log(`${colors.yellow}4. Vai su Settings > API${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:90",
+        "details": "console.log(`${colors.yellow}5. Copia le credenziali${colors.reset}\\n`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:159",
+        "details": "console.log(`${colors.yellow}1. Vai al tuo progetto Supabase${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:160",
+        "details": "console.log(`${colors.yellow}2. Vai su SQL Editor${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:161",
+        "details": "console.log(`${colors.yellow}3. Esegui i seguenti file SQL in ordine:${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:162",
+        "details": "console.log(`   - packages/database/src/migrations/001_initial_schema.sql`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:163",
+        "details": "console.log(`   - packages/database/src/migrations/002_triggers.sql`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:164",
+        "details": "console.log(`   - packages/database/src/migrations/003_rls_policies.sql`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:165",
+        "details": "console.log(`   - packages/database/src/migrations/004_seed_data.sql`);",
+        "timestamp": "2025-07-17T22:18:48.745Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup-supabase-cloud.js:197",
+        "details": "console.log(`${colors.blue}📋 Prossimi Passi:${colors.reset}",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:7",
+        "details": "console.log('🚀 Setting up WikiGaiaLab development environment...\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:12",
+        "details": "console.log('📝 Creating .env.local from template...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:17",
+        "details": "console.log('✅ .env.local created. Please update with your actual values.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:19",
+        "details": "console.log('✅ .env.local already exists.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:23",
+        "details": "console.log('📦 Installing dependencies...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:26",
+        "details": "console.log('✅ Dependencies installed successfully.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:28",
+        "details": "console.error('❌ Failed to install dependencies with pnpm, trying npm...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:31",
+        "details": "console.log('✅ Dependencies installed successfully with npm.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:33",
+        "details": "console.error('❌ Failed to install dependencies:', npmError.message);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:41",
+        "details": "console.log('✅ Supabase CLI is installed.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:43",
+        "details": "console.log('📦 Installing Supabase CLI...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:46",
+        "details": "console.log('✅ Supabase CLI installed successfully.\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:48",
+        "details": "console.log('⚠️  Could not install Supabase CLI automatically.');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:49",
+        "details": "console.log('Please install it manually: npm install -g supabase\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:54",
+        "details": "console.log('📁 Creating project structure...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:73",
+        "details": "console.log(`✅ Created ${dir}/`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:77",
+        "details": "console.log('\\n🎉 WikiGaiaLab monorepo setup completed successfully!\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:78",
+        "details": "console.log('Next steps:');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:79",
+        "details": "console.log('1. Update .env.local with your actual environment variables');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:80",
+        "details": "console.log('2. Set up your Supabase project and run: supabase link');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:81",
+        "details": "console.log('3. Run database migrations: pnpm run db:push');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:82",
+        "details": "console.log('4. Start development server: pnpm run dev');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:83",
+        "details": "console.log('5. Run tests: pnpm run test');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:84",
+        "details": "console.log('6. Check types: pnpm run type-check');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:85",
+        "details": "console.log('\\nMonorepo structure:');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:86",
+        "details": "console.log('- apps/web/     → Next.js application');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:87",
+        "details": "console.log('- packages/ui/  → Shared UI components');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:88",
+        "details": "console.log('- packages/shared/ → Shared utilities');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:89",
+        "details": "console.log('- packages/database/ → Database types and migrations');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/setup.js:90",
+        "details": "console.log('\\nHappy coding! 🚀');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:11",
+        "details": "console.log('🔍 Testing WikiGaiaLab database connection...\\n');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:15",
+        "details": "console.log('📊 Running health check...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:18",
+        "details": "console.log(`Status: ${getStatusEmoji(healthCheck.status)} ${healthCheck.status.toUpperCase()}`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:19",
+        "details": "console.log(`Latency: ${healthCheck.latency}ms`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:20",
+        "details": "console.log(`Timestamp: ${healthCheck.timestamp}`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:21",
+        "details": "console.log('\\n🔍 Individual checks:');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:24",
+        "details": "console.log(`  ${passed ? '✅' : '❌'} ${check}: ${passed ? 'PASSED' : 'FAILED'}`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:28",
+        "details": "console.log(`\\n❌ Error: ${healthCheck.error}`);",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:32",
+        "details": "console.log('\\n🔄 Testing retry logic...');",
+        "timestamp": "2025-07-17T22:18:48.746Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:42",
+        "details": "console.log('✅ Retry logic test passed');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:44",
+        "details": "console.log('❌ Retry logic test failed:', retryError.message);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:48",
+        "details": "console.log('\\n⚡ Running performance benchmarks...');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:51",
+        "details": "console.log(`Average query time: ${benchmarkResults.averageQueryTime}ms`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:52",
+        "details": "console.log(`Max query time: ${benchmarkResults.maxQueryTime}ms`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:53",
+        "details": "console.log(`Min query time: ${benchmarkResults.minQueryTime}ms`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:56",
+        "details": "console.log('\\n🏊 Testing connection pool...');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:58",
+        "details": "console.log(`Concurrent connections: ${poolTest.successful}/${poolTest.total}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:61",
+        "details": "console.log('\\n📋 Test Summary:');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:66",
+        "details": "console.log(`Overall Status: ${overallStatus ? '✅ HEALTHY' : '⚠️ NEEDS ATTENTION'}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:69",
+        "details": "console.log('\\n💡 Recommendations:');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:71",
+        "details": "console.log('  - Check database connection configuration');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:72",
+        "details": "console.log('  - Verify environment variables are set correctly');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:75",
+        "details": "console.log('  - Consider database optimization');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:76",
+        "details": "console.log('  - Check network connectivity');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:79",
+        "details": "console.log('  - Review connection pool configuration');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:80",
+        "details": "console.log('  - Check for connection leaks');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:85",
+        "details": "console.error('❌ Database test failed:', error.message);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:111",
+        "details": "console.warn(`Query ${i + 1} failed:`, error.message);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-db-connection.js:152",
+        "details": "runDatabaseTests().catch(console.error);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-environment.js:22",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-environment.js:25",
+        "details": "console.log('🧪 WikiGaiaLab Test Environment Verification\\n');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-environment.js:101",
+        "details": "const result = execSync('node -e \"console.log(\\'Schema check placeholder\\')\"', { encoding: 'utf8' });",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-environment.js:152",
+        "details": "console.log('\\n' + '='.repeat(50));",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-environment.js:155",
+        "details": "console.log(`",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/test-supabase.js:21",
+        "details": "console.log(`${colors[color]}${message}${colors.reset}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:15",
+        "details": "console.error('❌ Missing Supabase configuration');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:21",
+        "details": "console.log('🔍 Verifying notification system setup...\\n');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:35",
+        "details": "console.log(`❌ Table '${table}': ${error.message}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:37",
+        "details": "console.log(`✅ Table '${table}': OK`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:47",
+        "details": "console.log(`❌ Email templates: ${templatesError.message}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:49",
+        "details": "console.log(`\\n📧 Email Templates: ${templates.length} found`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:51",
+        "details": "console.log(`  • ${template.name} (${template.type}) - ${template.is_active ? 'Active' : 'Inactive'}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:60",
+        "details": "console.log(`\\n👤 User Preferences: ${preferencesCount || 0} users configured`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:67",
+        "details": "console.log(`📬 Notifications Queue: ${notificationsCount || 0} notifications`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:74",
+        "details": "console.log(`🎯 Vote Milestones: ${milestonesCount || 0} milestones tracked`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:77",
+        "details": "console.log('\\n🔐 Environment Configuration:');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:78",
+        "details": "console.log(`  • RESEND_API_KEY: ${process.env.RESEND_API_KEY ? '✅ Set' : '❌ Not set'}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:79",
+        "details": "console.log(`  • NOTIFICATION_SERVICE_TOKEN: ${process.env.NOTIFICATION_SERVICE_TOKEN ? '✅ Set' : '❌ Not set'}`);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:81",
+        "details": "console.log('\\n🎉 Notification system verification complete!');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:84",
+        "details": "console.log('\\n⚠️  Note: RESEND_API_KEY not set - emails will be logged but not sent');",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "Console statement found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/verify-notifications.js:88",
+        "details": "console.error('❌ Verification failed:', error);",
+        "timestamp": "2025-07-17T22:18:48.747Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/admin/content/dashboard/route.ts:146",
+        "details": "problemsGrowth: '+12%', // TODO: Calculate from historical data",
+        "timestamp": "2025-07-17T22:18:48.799Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/[slug]/route.ts:70",
+        "details": "// TODO: Implement user usage tracking when app_usage table is created",
+        "timestamp": "2025-07-17T22:18:48.801Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/app/api/apps/[slug]/route.ts:74",
+        "details": "// TODO: Implement view count tracking when analytics functions are created",
+        "timestamp": "2025-07-17T22:18:48.801Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/hooks/useAdminDashboard.ts:168",
+        "details": "problemsGrowth: '+12%', // TODO: Calculate from historical data",
+        "timestamp": "2025-07-17T22:18:48.811Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/rate-limiter.ts:124",
+        "details": "// TODO: Implement Redis-based rate limiting for production",
+        "timestamp": "2025-07-17T22:18:48.814Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/src/lib/rate-limiter.ts:165",
+        "details": "// TODO: Extract user ID from token",
+        "timestamp": "2025-07-17T22:18:48.814Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:269",
+        "details": "// Check for TODO/FIXME comments",
+        "timestamp": "2025-07-17T22:18:48.818Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:271",
+        "details": "console.log('\\n🔍 Checking for TODO/FIXME comments...');",
+        "timestamp": "2025-07-17T22:18:48.818Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:281",
+        "details": "if (line.includes('TODO') || line.includes('FIXME') || line.includes('HACK')) {",
+        "timestamp": "2025-07-17T22:18:48.818Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:282",
+        "details": "this.log('warning', 'CODE', `TODO/FIXME found in ${filePath}:${index + 1}`, line.trim());",
+        "timestamp": "2025-07-17T22:18:48.818Z"
+      },
+      {
+        "type": "warning",
+        "category": "CODE",
+        "message": "TODO/FIXME found in /Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/scripts/security-audit.js:289",
+        "details": "this.log('pass', 'CODE', 'No TODO/FIXME comments found');",
+        "timestamp": "2025-07-17T22:18:48.818Z"
+      }
+    ],
+    "issues": []
+  }
+}

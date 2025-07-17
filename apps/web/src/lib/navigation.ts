@@ -27,10 +27,10 @@ export const mainNavigationItems: NavigationItem[] = [
   },
   { 
     id: 'apps', 
-    label: 'Le Mie App', 
+    label: 'App', 
     href: '/apps', 
     icon: AppWindow, 
-    requiresAuth: true 
+    requiresAuth: false 
   },
   { 
     id: 'profile', 
@@ -77,7 +77,7 @@ export const footerNavigation = {
     title: 'Community',
     links: [
       { label: 'Problemi', href: '/problems' },
-      { label: 'App Sviluppate', href: '/apps' },
+      { label: 'App', href: '/apps' },
       { label: 'Classifica', href: '/leaderboard' },
       { label: 'Linee Guida', href: '/guidelines' }
     ]
@@ -121,7 +121,7 @@ export const mobileMenuNavigation: NavigationItem[] = [
 // Breadcrumb label mapping for dynamic routes
 export const breadcrumbLabels: Record<string, string> = {
   'problems': 'Problemi',
-  'apps': 'Le Mie App',
+  'apps': 'App',
   'profile': 'Profilo',
   'admin': 'Amministrazione',
   'dashboard': 'Dashboard',

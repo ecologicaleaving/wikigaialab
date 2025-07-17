@@ -219,23 +219,23 @@ export const databaseOperationResultSchema = z.object({
   affectedRows: z.number().int().optional(),
 });
 
-// Export type inference from schemas
-export type UserInsert = z.infer<typeof userInsertSchema>;
-export type UserUpdate = z.infer<typeof userUpdateSchema>;
-export type ProblemInsert = z.infer<typeof problemInsertSchema>;
-export type ProblemUpdate = z.infer<typeof problemUpdateSchema>;
-export type VoteInsert = z.infer<typeof voteInsertSchema>;
-export type CategoryInsert = z.infer<typeof categoryInsertSchema>;
-export type CategoryUpdate = z.infer<typeof categoryUpdateSchema>;
-export type AppInsert = z.infer<typeof appInsertSchema>;
-export type AppUpdate = z.infer<typeof appUpdateSchema>;
-export type PaginationParams = z.infer<typeof paginationSchema>;
-export type ProblemFilters = z.infer<typeof problemFiltersSchema>;
-export type ProblemSort = z.infer<typeof problemSortSchema>;
-export type SearchQuery = z.infer<typeof searchQuerySchema>;
-export type VoteOperation = z.infer<typeof voteOperationSchema>;
-export type VotingResult = z.infer<typeof votingResultSchema>;
-export type AppFeature = z.infer<typeof appFeatureSchema>;
-export type AppFeatures = z.infer<typeof appFeaturesSchema>;
-export type RealtimeEvent = z.infer<typeof realtimeEventSchema>;
-export type DatabaseOperationResult = z.infer<typeof databaseOperationResultSchema>;
+// Export validation schemas (types are in ../types.ts to avoid duplication)
+export type ValidationUserInsert = z.infer<typeof userInsertSchema>;
+export type ValidationUserUpdate = z.infer<typeof userUpdateSchema>;
+export type ValidationProblemInsert = z.infer<typeof problemInsertSchema>;
+export type ValidationProblemUpdate = z.infer<typeof problemUpdateSchema>;
+export type ValidationVoteInsert = z.infer<typeof voteInsertSchema>;
+export type ValidationCategoryInsert = z.infer<typeof categoryInsertSchema>;
+export type ValidationCategoryUpdate = z.infer<typeof categoryUpdateSchema>;
+export type ValidationAppInsert = z.infer<typeof appInsertSchema>;
+export type ValidationAppUpdate = z.infer<typeof appUpdateSchema>;
+export type ValidationPaginationParams = z.infer<typeof paginationSchema>;
+export type ValidationProblemFilters = z.infer<typeof problemFiltersSchema>;
+export type ValidationProblemSort = z.infer<typeof problemSortSchema>;
+export type ValidationSearchQuery = z.infer<typeof searchQuerySchema>;
+export type ValidationVoteOperation = z.infer<typeof voteOperationSchema>;
+export type ValidationVotingResult = z.infer<typeof votingResultSchema>;
+export type ValidationAppFeature = z.infer<typeof appFeatureSchema>;
+export type ValidationAppFeatures = z.infer<typeof appFeaturesSchema>;
+export type ValidationRealtimeEvent = z.infer<typeof realtimeEventSchema>;
+export type ValidationDatabaseOperationResult = z.infer<typeof databaseOperationResultSchema>;
