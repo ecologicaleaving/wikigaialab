@@ -1,12 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { usePremiumAccess } from '@/hooks/usePremiumAccess';
-import { useVotingHistory } from '@/hooks/useVotingHistory';
-import { VotingHistoryCard } from '@/components/analytics/VotingHistoryCard';
-import { AccessStatusCard } from '@/components/premium/AccessStatusCard';
-import { QuickVotePrompt } from '@/components/premium/UpgradePrompts';
+import { useAuth } from '../../hooks/useAuth';
+import { usePremiumAccess } from '../../hooks/usePremiumAccess';
+import { useVotingHistory } from '../../hooks/useVotingHistory';
+import { useRecommendations } from '../../hooks/useRecommendations';
+import { VotingHistoryCard } from '../analytics/VotingHistoryCard';
+import { AccessStatusCard } from '../premium/AccessStatusCard';
+import { QuickVotePrompt } from '../premium/UpgradePrompts';
+import RecommendationWidget from '../recommendations/RecommendationWidget';
+import RelatedProblemsWidget from '../recommendations/RelatedProblemsWidget';
+import { ReferralWidget } from '../growth/ReferralWidget';
+import { CampaignWidget } from '../growth/CampaignWidget';
+import { LeaderboardWidget } from '../growth/LeaderboardWidget';
 import { 
   Calendar, 
   TrendingUp, 
@@ -19,7 +25,12 @@ import {
   Settings,
   History,
   Check,
-  Lock
+  Lock,
+  Heart,
+  Lightbulb,
+  BookOpen,
+  UserPlus,
+  Trophy
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -31,7 +42,9 @@ interface DashboardTab {
 
 const tabs: DashboardTab[] = [
   { id: 'overview', name: 'Panoramica', icon: BarChart3 },
+  { id: 'recommendations', name: 'Raccomandazioni', icon: Heart },
   { id: 'voting', name: 'Cronologia Voti', icon: Vote },
+  { id: 'growth', name: 'Community Growth', icon: UserPlus },
   { id: 'problems', name: 'I Miei Problemi', icon: Users },
   { id: 'apps', name: 'Le Mie App', icon: AppWindow },
   { id: 'settings', name: 'Impostazioni', icon: Settings }
@@ -41,11 +54,22 @@ export function EnhancedUserDashboard() {
   const { user } = useAuth();
   const { accessData, loading: accessLoading } = usePremiumAccess();
   const { stats, loading: statsLoading } = useVotingHistory();
+  const {
+    personalRecommendations,
+    trendingProblems,
+    isLoading: recommendationsLoading,
+    refreshRecommendations
+  } = useRecommendations({ limit: 8 });
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!user) return null;
 
   const displayName = user.name || user.email || 'Utente';
+
+  // Handle navigation to problems
+  const handleProblemClick = (problemId: string) => {
+    window.location.href = `/problems/${problemId}`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -116,10 +140,19 @@ export function EnhancedUserDashboard() {
             stats={stats}
             loading={accessLoading || statsLoading}
             setActiveTab={setActiveTab}
+            personalRecommendations={personalRecommendations}
+            onProblemClick={handleProblemClick}
+          />
+        )}
+        
+        {activeTab === 'recommendations' && (
+          <RecommendationsTab 
+            onProblemClick={handleProblemClick}
           />
         )}
         
         {activeTab === 'voting' && <VotingHistoryTab />}
+        {activeTab === 'growth' && <GrowthTab user={user} />}
         {activeTab === 'problems' && <ProblemsTab />}
         {activeTab === 'apps' && <AppsTab />}
         {activeTab === 'settings' && <SettingsTab />}
@@ -134,13 +167,17 @@ function OverviewTab({
   accessData, 
   stats, 
   loading,
-  setActiveTab
+  setActiveTab,
+  personalRecommendations,
+  onProblemClick
 }: { 
   user: any;
   accessData: any;
   stats: any;
   loading: boolean;
   setActiveTab: (tab: string) => void;
+  personalRecommendations: any[];
+  onProblemClick: (problemId: string) => void;
 }) {
   if (loading) {
     return (
@@ -199,39 +236,85 @@ function OverviewTab({
           <RecentActivityList />
         </div>
 
+        {/* Personal Recommendations Preview */}
+        {personalRecommendations && personalRecommendations.length > 0 && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Heart className="h-5 w-5 text-primary-600" />
+                Raccomandazioni per Te
+              </h3>
+              <button
+                onClick={() => setActiveTab('recommendations')}
+                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+              >
+                Vedi tutte
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {personalRecommendations.slice(0, 4).map((problem) => (
+                <div
+                  key={problem.id}
+                  className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 cursor-pointer transition-colors"
+                  onClick={() => onProblemClick(problem.id)}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary-100 text-primary-700 rounded-full">
+                      {problem.category?.name || 'Categoria'}
+                    </span>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Heart className="h-3 w-3 mr-1" />
+                      {problem.vote_count}
+                    </div>
+                  </div>
+                  <h4 className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
+                    {problem.title}
+                  </h4>
+                  {problem.reasoning && (
+                    <p className="text-xs text-primary-600">
+                      Consigliato per i tuoi interessi
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">
             Azioni Rapide
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <QuickActionCard
+            <ActionCard
               title="Vota Problemi"
               description="Supporta le migliori proposte"
               href="/problems"
               icon={Vote}
               color="blue"
             />
-            <QuickActionCard
+            <ActionCard
+              title="Raccomandazioni"
+              description="Problemi per te"
+              href="#"
+              icon={Heart}
+              color="purple"
+              onClick={() => setActiveTab('recommendations')}
+            />
+            <ActionCard
               title="Proponi Soluzione"
               description="Condividi la tua idea"
               href="/problems/new"
               icon={Users}
               color="green"
             />
-            <QuickActionCard
-              title="Esplora App"
-              description="Scopri nuove app"
-              href="/apps"
-              icon={AppWindow}
-              color="purple"
-            />
-            <QuickActionCard
+            <ActionCard
               title="Visualizza Cronologia"
               description="I tuoi voti e proposte"
               href="#"
               icon={History}
-              color="indigo"
+              color="orange"
               onClick={() => setActiveTab('voting')}
             />
           </div>
@@ -245,6 +328,12 @@ function OverviewTab({
         
         {/* Quick Vote Prompt */}
         <QuickVotePrompt compact />
+        
+        {/* Referral Widget */}
+        <ReferralWidget userId={user.id} compact={true} />
+        
+        {/* Leaderboard Preview */}
+        <LeaderboardWidget userId={user.id} compact={true} showControls={false} />
         
         {/* Profile Stats */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -282,6 +371,80 @@ function OverviewTab({
   );
 }
 
+function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: string) => void }) {
+  return (
+    <div className="space-y-8">
+      {/* Personal Recommendations */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <Heart className="h-6 w-6 text-primary-600" />
+          <h2 className="text-xl font-semibold text-gray-900">
+            Raccomandazioni Personalizzate
+          </h2>
+        </div>
+        <RecommendationWidget
+          type="personal"
+          title=""
+          limit={12}
+          showExplanations={true}
+          onProblemClick={onProblemClick}
+        />
+      </div>
+
+      {/* Trending Problems */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <TrendingUp className="h-6 w-6 text-secondary-600" />
+          <h2 className="text-xl font-semibold text-gray-900">
+            Problemi di Tendenza
+          </h2>
+        </div>
+        <RecommendationWidget
+          type="trending"
+          title=""
+          limit={8}
+          showExplanations={false}
+          onProblemClick={onProblemClick}
+        />
+      </div>
+
+      {/* Recommendation Settings */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Personalizza le Raccomandazioni
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Diversità delle raccomandazioni
+            </label>
+            <select className="w-full border border-gray-300 rounded-md px-3 py-2">
+              <option>Simili ai miei interessi</option>
+              <option>Mix di contenuti</option>
+              <option>Molto vario</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Peso dei problemi trending
+            </label>
+            <select className="w-full border border-gray-300 rounded-md px-3 py-2">
+              <option>Basso</option>
+              <option>Medio</option>
+              <option>Alto</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-4">
+          <button className="btn-primary btn-sm">
+            Salva Preferenze
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function VotingHistoryTab() {
   return (
     <div className="space-y-6">
@@ -291,6 +454,86 @@ function VotingHistoryTab() {
         maxItems={20}
         className="bg-white"
       />
+    </div>
+  );
+}
+
+function GrowthTab({ user }: { user: any }) {
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-3 mb-2">
+          <UserPlus className="h-6 w-6 text-primary-600" />
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Community Growth
+          </h2>
+        </div>
+        <p className="text-gray-600">
+          Invita amici, partecipa alle sfide e scala le classifiche della community
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column */}
+        <div className="space-y-8">
+          {/* Referral System */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              Sistema Inviti
+            </h3>
+            <ReferralWidget userId={user?.id} />
+          </div>
+
+          {/* Campaigns */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Award className="h-5 w-5" />
+              Campagne Attive
+            </h3>
+            <CampaignWidget userId={user?.id} />
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-8">
+          {/* Leaderboards */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Trophy className="h-5 w-5" />
+              Classifiche Community
+            </h3>
+            <LeaderboardWidget userId={user?.id} />
+          </div>
+        </div>
+      </div>
+
+      {/* Growth Tips */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-100">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Lightbulb className="h-5 w-5 text-blue-600" />
+          Consigli per la Crescita
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-medium text-gray-900 mb-2">Porta Nuovi Utenti</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• Condividi il tuo link di invito sui social</li>
+              <li>• Invita amici interessati ai problemi della community</li>
+              <li>• Spiega il valore di WikiGaiaLab</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-medium text-gray-900 mb-2">Aumenta il Tuo Rank</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• Vota regolarmente sui problemi</li>
+              <li>• Proponi problemi di qualità</li>
+              <li>• Partecipa alle campagne attive</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

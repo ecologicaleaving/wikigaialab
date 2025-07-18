@@ -15,7 +15,9 @@ import { Breadcrumb } from '../../../components/ui/breadcrumb';
 import { RelatedProblems } from '../../../components/problems/related-problems';
 import { VoteMilestones } from '../../../components/problems/vote-milestones';
 import { SocialShare } from '../../../components/ui/social-share';
+import { SocialShareWidget } from '../../../components/growth/SocialShareWidget';
 import { useSEO } from '../../../hooks/useSEO';
+import { useAuth } from '../../../hooks/useAuth';
 import Link from 'next/link';
 
 interface Problem {
@@ -39,6 +41,7 @@ interface Problem {
 export default function ProblemDetailPage() {
   const params = useParams();
   const problemId = params.id as string;
+  const { user } = useAuth();
   
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -302,25 +305,15 @@ export default function ProblemDetailPage() {
               </CardContent>
             </Card>
 
-            {/* Social Sharing Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Condividi</CardTitle>
-                <CardDescription>
-                  Aiuta a far crescere la comunità condividendo questo problema
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SocialShare
-                  title={problem.title}
-                  description={problem.description}
-                  url={currentUrl}
-                  voteCount={voteLoading ? problem.vote_count : voteCount}
-                  category={problem.category.name}
-                  variant="full"
-                />
-              </CardContent>
-            </Card>
+            {/* Enhanced Social Sharing Widget */}
+            <SocialShareWidget
+              problemId={problem.id}
+              problemTitle={problem.title}
+              problemDescription={problem.description}
+              userId={user?.id}
+              compact={true}
+              showAnalytics={false}
+            />
 
             {/* Stats Card */}
             <Card>

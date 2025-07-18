@@ -10,7 +10,12 @@ import {
   UsersIcon,
   ChartBarIcon,
   CogIcon,
-  ClockIcon
+  ClockIcon,
+  DocumentPlusIcon,
+  StarIcon,
+  CloudArrowUpIcon,
+  BeakerIcon,
+  SeedlingIcon
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 
@@ -22,15 +27,39 @@ const navigation = [
     current: false,
   },
   {
+    name: 'Content Management',
+    href: '/admin/content',
+    icon: DocumentPlusIcon,
+    current: false,
+  },
+  {
     name: 'Moderazione',
     href: '/admin/moderation',
     icon: FlagIcon,
     current: false,
   },
   {
-    name: 'Contenuti in Evidenza',
+    name: 'Featured Content',
     href: '/admin/featured',
-    icon: RectangleStackIcon,
+    icon: StarIcon,
+    current: false,
+  },
+  {
+    name: 'Bulk Import',
+    href: '/admin/import',
+    icon: CloudArrowUpIcon,
+    current: false,
+  },
+  {
+    name: 'Quality Analysis',
+    href: '/admin/quality',
+    icon: BeakerIcon,
+    current: false,
+  },
+  {
+    name: 'Seed Data',
+    href: '/admin/seed',
+    icon: SeedlingIcon,
     current: false,
   },
   {
