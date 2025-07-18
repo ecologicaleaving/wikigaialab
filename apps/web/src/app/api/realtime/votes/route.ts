@@ -216,7 +216,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Function to broadcast vote updates to all connected clients
-export async function broadcastVoteUpdate(problemId: string, newVoteCount: number, hasVoted: boolean, userId?: string) {
+async function broadcastVoteUpdate(problemId: string, newVoteCount: number, hasVoted: boolean, userId?: string) {
   const updateData = {
     type: 'vote_update',
     problemId,

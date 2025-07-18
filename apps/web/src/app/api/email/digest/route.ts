@@ -10,10 +10,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 interface DigestPreferences {
   userId: string;
@@ -63,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (action === 'preferences') {
       // Get user's digest preferences
-      const { data: digestPrefs, error: prefsError } = await supabase
+      const { data: digestPrefs, error: prefsError } = await getSupabaseClient()
         .from('email_digests')
         .select('*')
         .eq('user_id', userId);
@@ -87,7 +89,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       // Get user's digest send history
       const limit = parseInt(url.searchParams.get('limit') || '20');
       
-      const { data: digestHistory, error: historyError } = await supabase
+      const { data: digestHistory, error: historyError } = await getSupabaseClient()
         .from('email_digest_sends')
         .select(`
           id, digest_type, subject, problems_included, send_status,
@@ -245,7 +247,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       updateData.next_send_at = calculateNextSendTime(frequency);
     }
 
-    const { data: updatedPrefs, error: updateError } = await supabase
+    const { data: updatedPrefs, error: updateError } = await getSupabaseClient()
       .from('email_digests')
       .upsert({
         user_id: userId,
@@ -298,7 +300,7 @@ async function createDefaultDigestPreferences(userId: string): Promise<DigestPre
     }
   ];
 
-  const { data: createdPrefs, error } = await supabase
+  const { data: createdPrefs, error } = await getSupabaseClient()
     .from('email_digests')
     .upsert(defaultPrefs)
     .select();
@@ -317,7 +319,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
   const periodStart = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000);
 
   // Get user's preferences
-  const { data: userPrefs } = await supabase
+  const { data: userPrefs } = await getSupabaseClient()
     .from('email_digests')
     .select('preferences')
     .eq('user_id', userId)
@@ -328,7 +330,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
   const maxProblems = prefs.maxProblems || 10;
 
   // Get user's interests for personalization
-  const { data: user } = await supabase
+  const { data: user } = await getSupabaseClient()
     .from('users')
     .select('interests, created_at')
     .eq('id', userId)
@@ -351,7 +353,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
 
   // Get new problems
   if (prefs.includeNewProblems !== false) {
-    const { data: newProblems } = await supabase
+    const { data: newProblems } = await getSupabaseClient()
       .from('problems')
       .select(`
         id, title, description, vote_count, created_at,
@@ -368,7 +370,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
 
   // Get trending problems
   if (prefs.includeTrendingProblems !== false) {
-    const { data: trendingProblems } = await supabase
+    const { data: trendingProblems } = await getSupabaseClient()
       .from('problems')
       .select(`
         id, title, description, vote_count, created_at,
@@ -390,13 +392,13 @@ async function generateDigestContent(userId: string, digestType: string): Promis
       { data: userProblems },
       { data: userComments }
     ] = await Promise.all([
-      supabase
+      getSupabaseClient()
         .from('votes')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
         .gte('created_at', periodStart.toISOString()),
       
-      supabase
+      getSupabaseClient()
         .from('problems')
         .select('id, title, vote_count')
         .eq('user_id', userId)
@@ -404,7 +406,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
         .order('vote_count', { ascending: false }),
       
       // Assuming there's a comments table
-      supabase
+      getSupabaseClient()
         .from('content_analytics')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
@@ -422,7 +424,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
   // Get personalized recommendations
   if (prefs.includeRecommendations !== false) {
     // This would use your recommendation system
-    const { data: recommendations } = await supabase
+    const { data: recommendations } = await getSupabaseClient()
       .from('problems')
       .select(`
         id, title, description, vote_count,
@@ -437,7 +439,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
 
   // Get active campaigns
   if (prefs.includeCampaigns !== false) {
-    const { data: campaigns } = await supabase
+    const { data: campaigns } = await getSupabaseClient()
       .from('engagement_campaigns')
       .select('id, name, description, end_date, reward_type, reward_value')
       .eq('status', 'active')
@@ -450,7 +452,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
 
   // Get leaderboards
   if (prefs.includeLeaderboards !== false) {
-    const { data: leaderboards } = await supabase
+    const { data: leaderboards } = await getSupabaseClient()
       .from('leaderboards')
       .select('id, name, type, period')
       .eq('is_active', true)
@@ -466,7 +468,7 @@ async function generateDigestContent(userId: string, digestType: string): Promis
 async function sendDigestToUser(userId: string, digestType: string): Promise<any> {
   try {
     // Check if user wants this digest
-    const { data: prefs } = await supabase
+    const { data: prefs } = await getSupabaseClient()
       .from('email_digests')
       .select('frequency, is_active, preferences')
       .eq('user_id', userId)
@@ -478,7 +480,7 @@ async function sendDigestToUser(userId: string, digestType: string): Promise<any
     }
 
     // Get user email
-    const { data: user } = await supabase
+    const { data: user } = await getSupabaseClient()
       .from('users')
       .select('email, name')
       .eq('id', userId)
@@ -495,7 +497,7 @@ async function sendDigestToUser(userId: string, digestType: string): Promise<any
     const { html, text, subject } = generateDigestEmail(content, user.name, digestType);
 
     // Create digest send record
-    const { data: digestSend, error: sendError } = await supabase
+    const { data: digestSend, error: sendError } = await getSupabaseClient()
       .from('email_digest_sends')
       .insert({
         user_id: userId,
@@ -520,7 +522,7 @@ async function sendDigestToUser(userId: string, digestType: string): Promise<any
 
     // Here you would integrate with your email service (SendGrid, AWS SES, etc.)
     // For now, we'll mark it as sent
-    await supabase
+    await getSupabaseClient()
       .from('email_digest_sends')
       .update({
         send_status: 'sent',
@@ -529,7 +531,7 @@ async function sendDigestToUser(userId: string, digestType: string): Promise<any
       .eq('id', digestSend.id);
 
     // Update last sent time
-    await supabase
+    await getSupabaseClient()
       .from('email_digests')
       .update({
         last_sent_at: new Date().toISOString(),
@@ -554,7 +556,7 @@ async function sendBatchDigests(digestType: string, userFilter: any = {}, dryRun
     const now = new Date();
     
     // Get users who should receive this digest
-    let query = supabase
+    let query = getSupabaseClient()
       .from('email_digests')
       .select(`
         user_id, frequency, last_sent_at, next_send_at,
@@ -612,7 +614,7 @@ async function sendBatchDigests(digestType: string, userFilter: any = {}, dryRun
 }
 
 async function scheduleDigest(userId: string, digestType: string, scheduleTime: string): Promise<any> {
-  const { error } = await supabase
+  const { error } = await getSupabaseClient()
     .from('email_digests')
     .update({
       next_send_at: scheduleTime,
@@ -642,7 +644,7 @@ async function trackDigestInteraction(digestSendId: string, interactionType: str
     updateData.unsubscribed_at = new Date().toISOString();
   }
 
-  const { error } = await supabase
+  const { error } = await getSupabaseClient()
     .from('email_digest_sends')
     .update(updateData)
     .eq('id', digestSendId);

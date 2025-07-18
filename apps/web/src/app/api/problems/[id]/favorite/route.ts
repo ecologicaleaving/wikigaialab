@@ -11,15 +11,22 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { AchievementEngine } from '@wikigaialab/shared/lib/achievementEngine';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize services
-const socialService = new SocialService({ databaseClient: supabase });
-const achievementEngine = new AchievementEngine({ databaseClient: supabase });
+// Initialize services helpers
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
+
+function getAchievementEngine() {
+  return new AchievementEngine({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * Helper function to authenticate user
@@ -31,7 +38,7 @@ async function authenticateUser(request: NextRequest) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const { data: { user }, error } = await getSupabaseClient().auth.getUser(token);
 
   if (error || !user) {
     throw new Error('Invalid authentication token');
@@ -65,7 +72,7 @@ export async function POST(
     }
 
     // Check if problem exists
-    const { data: problem, error: problemError } = await supabase
+    const { data: problem, error: problemError } = await getSupabaseClient()
       .from('problems')
       .select('id, title, description, proposer_id')
       .eq('id', problemId)
@@ -203,7 +210,7 @@ export async function GET(
     const isFavorited = await socialService.isFavorited(userId, problemId);
     
     // Get total favorites count for this problem
-    const { count: totalFavorites } = await supabase
+    const { count: totalFavorites } = await getSupabaseClient()
       .from('user_favorites')
       .select('*', { count: 'exact' })
       .eq('problem_id', problemId);

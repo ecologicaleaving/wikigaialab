@@ -9,14 +9,18 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { UserFollowersResponse } from '@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize social service
-const socialService = new SocialService({ databaseClient: supabase });
+// Initialize social service helper
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * GET /api/users/[id]/followers
@@ -45,7 +49,7 @@ export async function GET(
     }
 
     // Check if user exists
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await getSupabaseClient()
       .from('users')
       .select('id, name, email, profile_visibility')
       .eq('id', targetUserId)

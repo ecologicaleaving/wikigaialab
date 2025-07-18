@@ -7,10 +7,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 /**
  * GET /api/admin/growth-metrics
@@ -18,6 +20,8 @@ const supabase = createClient(
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = getSupabaseClient();
+    
     // Check admin authorization
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
@@ -70,13 +74,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       leaderboardMetrics,
       campaignMetrics
     ] = await Promise.all([
-      getUserAcquisitionMetrics(periodStart, now, previousPeriodStart),
-      getUserRetentionMetrics(periodStart, now),
-      getReferralMetrics(periodStart, now),
-      getSocialSharingMetrics(periodStart, now),
-      getEmailDigestMetrics(periodStart, now),
-      getLeaderboardMetrics(periodStart, now),
-      getCampaignMetrics(periodStart, now)
+      getUserAcquisitionMetrics(supabase, periodStart, now, previousPeriodStart),
+      getUserRetentionMetrics(supabase, periodStart, now),
+      getReferralMetrics(supabase, periodStart, now),
+      getSocialSharingMetrics(supabase, periodStart, now),
+      getEmailDigestMetrics(supabase, periodStart, now),
+      getLeaderboardMetrics(supabase, periodStart, now),
+      getCampaignMetrics(supabase, periodStart, now)
     ]);
 
     const metrics = {
@@ -107,7 +111,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // Helper functions for each metric type
 
-async function getUserAcquisitionMetrics(periodStart: Date, now: Date, previousPeriodStart: Date) {
+async function getUserAcquisitionMetrics(supabase: any, periodStart: Date, now: Date, previousPeriodStart: Date) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
@@ -177,7 +181,7 @@ async function getUserAcquisitionMetrics(periodStart: Date, now: Date, previousP
   };
 }
 
-async function getUserRetentionMetrics(periodStart: Date, now: Date) {
+async function getUserRetentionMetrics(supabase: any, periodStart: Date, now: Date) {
   const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -233,7 +237,7 @@ async function getUserRetentionMetrics(periodStart: Date, now: Date) {
   };
 }
 
-async function getReferralMetrics(periodStart: Date, now: Date) {
+async function getReferralMetrics(supabase: any, periodStart: Date, now: Date) {
   const [
     { count: totalReferrals },
     { count: successfulReferrals },
@@ -292,7 +296,7 @@ async function getReferralMetrics(periodStart: Date, now: Date) {
   };
 }
 
-async function getSocialSharingMetrics(periodStart: Date, now: Date) {
+async function getSocialSharingMetrics(supabase: any, periodStart: Date, now: Date) {
   const [
     { count: totalShares },
     { data: sharesByPlatform },
@@ -360,7 +364,7 @@ async function getSocialSharingMetrics(periodStart: Date, now: Date) {
   };
 }
 
-async function getEmailDigestMetrics(periodStart: Date, now: Date) {
+async function getEmailDigestMetrics(supabase: any, periodStart: Date, now: Date) {
   const [
     { count: subscribersCount },
     { data: digestSends },
@@ -403,7 +407,7 @@ async function getEmailDigestMetrics(periodStart: Date, now: Date) {
   };
 }
 
-async function getLeaderboardMetrics(periodStart: Date, now: Date) {
+async function getLeaderboardMetrics(supabase: any, periodStart: Date, now: Date) {
   const [
     { count: activeLeaderboards },
     { data: participantData },
@@ -447,7 +451,7 @@ async function getLeaderboardMetrics(periodStart: Date, now: Date) {
   };
 }
 
-async function getCampaignMetrics(periodStart: Date, now: Date) {
+async function getCampaignMetrics(supabase: any, periodStart: Date, now: Date) {
   const [
     { count: activeCampaigns },
     { count: totalParticipants },

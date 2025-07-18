@@ -46,20 +46,20 @@ export default function ProblemDetailPage() {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Voting functionality
-  const {
-    hasVoted,
-    voteCount,
-    isLoading: voteLoading,
-    isVoting,
-    toggleVote,
-  } = useVoting(problemId);
+  // Voting functionality - temporarily simplified to avoid auth issues
+  const [hasVoted, setHasVoted] = useState(false);
+  const [voteCount, setVoteCount] = useState(0);
+  const [voteLoading, setVoteLoading] = useState(false);
+  const [isVoting, setIsVoting] = useState(false);
+  
+  const toggleVote = async () => {
+    // Placeholder for voting functionality
+    console.log('Vote toggle - temporarily disabled');
+  };
 
-  // Real-time vote updates
-  const {
-    voteCount: realtimeVoteCount,
-    isConnected: realtimeConnected
-  } = useRealtimeProblemVotes(problemId, !!problem);
+  // Real-time vote updates - temporarily disabled
+  const realtimeVoteCount = voteCount;
+  const realtimeConnected = false;
 
   // Use real-time vote count when available, otherwise fallback to regular count
   const displayVoteCount = realtimeVoteCount !== undefined ? realtimeVoteCount : (voteLoading ? problem?.vote_count || 0 : voteCount);
@@ -83,14 +83,24 @@ export default function ProblemDetailPage() {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
+        console.log('Fetching problem:', problemId);
         const response = await fetch(`/api/problems/${problemId}`);
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Problema non trovato');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('API Error:', response.status, errorData);
+          throw new Error(errorData.error || 'Problema non trovato');
         }
+        
         const data = await response.json();
+        console.log('Problem data received:', data);
         setProblem(data);
+        setVoteCount(data.vote_count || 0);
       } catch (error) {
-        toast.error('Errore nel caricamento del problema');
+        console.error('Fetch error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Errore nel caricamento del problema';
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -209,11 +219,14 @@ export default function ProblemDetailPage() {
                         )}
                       </div>
                     </div>
-                    <RealtimeVoteButtonDetailed
-                      problemId={problem.id}
-                      initialVoteCount={problem.vote_count}
-                      showCount={false}
-                    />
+                    <Button
+                      onClick={toggleVote}
+                      disabled={isVoting}
+                      variant="default"
+                      size="lg"
+                    >
+                      {hasVoted ? '❤️ Votato' : '🤍 Vota'}
+                    </Button>
                   </div>
                 </div>
                 
@@ -273,12 +286,15 @@ export default function ProblemDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Related Problems */}
-            <RelatedProblems
-              currentProblemId={problem.id}
-              categoryId={problem.category.id}
-              categoryName={problem.category.name}
-            />
+            {/* Related Problems - Temporarily disabled */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Problemi Correlati</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">Funzionalità temporaneamente disabilitata</p>
+              </CardContent>
+            </Card>
 
             {/* Category Info */}
             <Card>
@@ -305,15 +321,15 @@ export default function ProblemDetailPage() {
               </CardContent>
             </Card>
 
-            {/* Enhanced Social Sharing Widget */}
-            <SocialShareWidget
-              problemId={problem.id}
-              problemTitle={problem.title}
-              problemDescription={problem.description}
-              userId={user?.id}
-              compact={true}
-              showAnalytics={false}
-            />
+            {/* Enhanced Social Sharing Widget - Temporarily disabled */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Condividi Problema</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">Funzionalità di condivisione temporaneamente disabilitata</p>
+              </CardContent>
+            </Card>
 
             {/* Stats Card */}
             <Card>

@@ -174,18 +174,36 @@ export const getCurrentUser = async (): Promise<AuthUser | null> => {
       return null;
     }
 
-    const { data: dbUser, error: dbError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', supabaseUser.id)
-      .single();
+    // Create basic user from auth session immediately to avoid delays
+    const basicUser = {
+      id: supabaseUser.id,
+      email: supabaseUser.email || '',
+      name: supabaseUser.user_metadata?.name || supabaseUser.email || 'User',
+      avatar_url: supabaseUser.user_metadata?.avatar_url || null,
+      role: 'user' as const,
+      is_admin: false,
+      created_at: supabaseUser.created_at,
+      updated_at: supabaseUser.updated_at || supabaseUser.created_at,
+    };
 
-    if (dbError) {
-      console.error('Error fetching user from database:', dbError);
-      return null;
+    // Try to get enhanced user data from database, but don't wait too long
+    try {
+      const { data: dbUser, error: dbError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', supabaseUser.id)
+        .single();
+
+      if (dbError) {
+        console.warn('Database user query failed, using basic auth data:', dbError.message);
+        return basicUser;
+      }
+
+      return dbUser || basicUser;
+    } catch (dbError) {
+      console.warn('Database query failed, using basic auth data:', dbError);
+      return basicUser;
     }
-
-    return dbUser;
   } catch (error) {
     console.error('Error getting current user:', error);
     return null;

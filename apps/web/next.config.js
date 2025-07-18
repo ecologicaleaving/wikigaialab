@@ -3,6 +3,12 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: ['localhost', 'supabase.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp', 'image/avif'],

@@ -10,15 +10,22 @@ import { AchievementEngine } from '@wikigaialab/shared/lib/achievementEngine';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { UserAchievementsResponse } from '@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize services
-const socialService = new SocialService({ databaseClient: supabase });
-const achievementEngine = new AchievementEngine({ databaseClient: supabase });
+// Initialize services helpers
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
+
+function getAchievementEngine() {
+  return new AchievementEngine({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * GET /api/users/[id]/achievements
@@ -47,6 +54,7 @@ export async function GET(
     }
 
     // Check if requesting user can view this user's profile
+    const socialService = getSocialService();
     const canViewProfile = await socialService.canViewUserProfile(targetUserId, requestingUserId);
     if (!canViewProfile) {
       return NextResponse.json(

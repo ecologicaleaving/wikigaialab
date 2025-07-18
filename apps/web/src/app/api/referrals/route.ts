@@ -9,10 +9,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 interface ReferralData {
   referralCode: string;
@@ -45,7 +47,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Get user's referral code and create one if it doesn't exist
-    let { data: userReferral, error: referralError } = await supabase
+    let { data: userReferral, error: referralError } = await getSupabaseClient()
       .from('referrals')
       .select('referral_code, created_at')
       .eq('referrer_id', userId)
@@ -56,11 +58,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // If no referral code exists, create one
     if (!userReferral) {
-      const { data: newCode } = await supabase
+      const { data: newCode } = await getSupabaseClient()
         .rpc('create_user_referral_code', { user_id: userId });
       
       if (newCode) {
-        const { data: newReferral } = await supabase
+        const { data: newReferral } = await getSupabaseClient()
           .from('referrals')
           .select('referral_code, created_at')
           .eq('referral_code', newCode)
@@ -86,34 +88,34 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { data: recentReferrals }
     ] = await Promise.all([
       // Total referrals created
-      supabase
+      getSupabaseClient()
         .from('referrals')
         .select('id', { count: 'exact', head: true })
         .eq('referrer_id', userId),
       
       // Successful referrals
-      supabase
+      getSupabaseClient()
         .from('referrals')
         .select('id', { count: 'exact', head: true })
         .eq('referrer_id', userId)
         .eq('status', 'completed'),
       
       // Pending referrals
-      supabase
+      getSupabaseClient()
         .from('referrals')
         .select('id', { count: 'exact', head: true })
         .eq('referrer_id', userId)
         .eq('status', 'pending'),
       
       // Total rewards earned
-      supabase
+      getSupabaseClient()
         .from('referral_rewards')
         .select('reward_value')
         .eq('referrer_id', userId)
         .eq('status', 'granted'),
       
       // Recent referrals with user info
-      supabase
+      getSupabaseClient()
         .from('referrals')
         .select(`
           id, status, clicked_at, converted_at, source, created_at,
@@ -174,7 +176,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
       }
 
-      const { data: newCode, error } = await supabase
+      const { data: newCode, error } = await getSupabaseClient()
         .rpc('create_user_referral_code', { user_id: userId });
 
       if (error || !newCode) {
@@ -185,7 +187,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       // Update user's referral_code field
-      await supabase
+      await getSupabaseClient()
         .from('users')
         .update({ referral_code: newCode })
         .eq('id', userId);
@@ -210,7 +212,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const sessionId = metadata?.sessionId || `session_${Date.now()}_${Math.random()}`;
 
       // Find referral and update click timestamp
-      const { data: referral, error: referralError } = await supabase
+      const { data: referral, error: referralError } = await getSupabaseClient()
         .from('referrals')
         .select('id, referrer_id, clicked_at')
         .eq('referral_code', referralCode)
@@ -226,14 +228,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Update clicked_at if first click
       if (!referral.clicked_at) {
-        await supabase
+        await getSupabaseClient()
           .from('referrals')
           .update({ clicked_at: new Date().toISOString() })
           .eq('id', referral.id);
       }
 
       // Track analytics
-      await supabase
+      await getSupabaseClient()
         .from('referral_analytics')
         .insert({
           referral_code: referralCode,
@@ -261,7 +263,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         );
       }
 
-      const { data: success, error } = await supabase
+      const { data: success, error } = await getSupabaseClient()
         .rpc('process_referral_conversion', { 
           referral_code: referralCode, 
           referee_id: userId 
@@ -275,13 +277,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       // Update user's referred_by field
-      await supabase
+      await getSupabaseClient()
         .from('users')
         .update({ referred_by: userId })
         .eq('id', userId);
 
       // Track analytics
-      await supabase
+      await getSupabaseClient()
         .from('referral_analytics')
         .insert({
           referral_code: referralCode,

@@ -10,14 +10,18 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { UserProfile, UserProfileUpdateData, UserProfileResponse } from '@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize social service
-const socialService = new SocialService({ databaseClient: supabase });
+// Initialize social service helper
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * GET /api/users/[id]
@@ -42,6 +46,7 @@ export async function GET(
     }
 
     // Check if requesting user can view this profile
+    const socialService = getSocialService();
     if (requestingUserId && !await socialService.canViewUserProfile(targetUserId, requestingUserId)) {
       return NextResponse.json(
         { error: 'Profile is private' },
@@ -50,7 +55,7 @@ export async function GET(
     }
 
     // Get user profile data
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await getSupabaseClient()
       .from('users')
       .select(`
         id, email, name, avatar_url, bio, interests, website_url, location,
@@ -159,7 +164,7 @@ export async function PUT(
 
     // Validate JWT token and get user ID
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user: authUser }, error: authError } = await getSupabaseClient().auth.getUser(token);
 
     if (authError || !authUser) {
       return NextResponse.json(
@@ -266,7 +271,7 @@ export async function PUT(
     }
 
     // Update user profile
-    const { data: updatedUser, error: updateError } = await supabase
+    const { data: updatedUser, error: updateError } = await getSupabaseClient()
       .from('users')
       .update(updateFields)
       .eq('id', targetUserId)
@@ -289,6 +294,7 @@ export async function PUT(
     }
 
     // Create activity record for profile update
+    const socialService = getSocialService();
     await socialService.createActivity(
       targetUserId,
       'profile_updated',

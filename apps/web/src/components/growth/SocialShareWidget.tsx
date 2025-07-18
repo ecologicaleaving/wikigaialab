@@ -50,6 +50,12 @@ export function SocialShareWidget({
   const [shareAnalytics, setShareAnalytics] = useState<ShareAnalytics | null>(null);
   const [loading, setLoading] = useState(false);
   const [sharing, setSharing] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure component is only rendered on client side to prevent hydration issues
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (showAnalytics) {
@@ -98,10 +104,14 @@ export function SocialShareWidget({
         
         // Open platform-specific share URL
         if (platform === 'copy') {
-          await navigator.clipboard.writeText(data.shareUrl);
-          alert('Link copied to clipboard!');
+          if (typeof navigator !== 'undefined' && navigator.clipboard) {
+            await navigator.clipboard.writeText(data.shareUrl);
+            alert('Link copied to clipboard!');
+          }
         } else {
-          window.open(data.platformUrl, '_blank', 'width=600,height=400');
+          if (typeof window !== 'undefined') {
+            window.open(data.platformUrl, '_blank', 'width=600,height=400');
+          }
         }
         
         // Refresh analytics if shown
@@ -182,6 +192,17 @@ export function SocialShareWidget({
       color: 'bg-gray-600 hover:bg-gray-700'
     }
   ];
+
+  // Don't render on server side to prevent hydration issues
+  if (!isClient) {
+    return (
+      <Card className={className}>
+        <div className="flex items-center justify-center p-4">
+          <LoadingSpinner size="sm" />
+        </div>
+      </Card>
+    );
+  }
 
   if (compact) {
     return (

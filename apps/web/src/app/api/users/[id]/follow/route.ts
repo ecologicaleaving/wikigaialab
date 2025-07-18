@@ -11,15 +11,22 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { AchievementEngine } from '@wikigaialab/shared/lib/achievementEngine';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize services
-const socialService = new SocialService({ databaseClient: supabase });
-const achievementEngine = new AchievementEngine({ databaseClient: supabase });
+// Initialize services helpers
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
+
+function getAchievementEngine() {
+  return new AchievementEngine({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * Helper function to authenticate user
@@ -31,7 +38,7 @@ async function authenticateUser(request: NextRequest) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const { data: { user }, error } = await getSupabaseClient().auth.getUser(token);
 
   if (error || !user) {
     throw new Error('Invalid authentication token');
@@ -65,6 +72,7 @@ export async function POST(
     }
 
     // Follow the user
+    const socialService = getSocialService();
     const follow = await socialService.followUser(followerId, targetUserId);
     
     if (!follow) {
@@ -75,6 +83,7 @@ export async function POST(
     }
 
     // Trigger achievement checks
+    const achievementEngine = getAchievementEngine();
     await Promise.all([
       achievementEngine.checkAndAwardAchievements(followerId, 'user_followed'),
       achievementEngine.checkAndAwardAchievements(targetUserId, 'follower_gained')
@@ -136,6 +145,7 @@ export async function DELETE(
     }
 
     // Unfollow the user
+    const socialService = getSocialService();
     const success = await socialService.unfollowUser(followerId, targetUserId);
     
     if (!success) {
@@ -191,6 +201,7 @@ export async function GET(
     }
 
     // Check follow status
+    const socialService = getSocialService();
     const isFollowing = await socialService.isFollowing(followerId, targetUserId);
     
     // Get mutual followers count

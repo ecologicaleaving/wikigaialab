@@ -10,10 +10,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 interface Campaign {
   id: string;
@@ -69,7 +71,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const now = new Date().toISOString();
 
     // Build base query for campaigns
-    let campaignQuery = supabase
+    let campaignQuery = getSupabaseClient()
       .from('engagement_campaigns')
       .select(`
         id, name, description, campaign_type, status, target_audience,
@@ -109,7 +111,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (userId) {
       // Get user's participation in campaigns
-      const { data: participation, error: participationError } = await supabase
+      const { data: participation, error: participationError } = await getSupabaseClient()
         .from('campaign_participants')
         .select('*')
         .eq('user_id', userId);
@@ -130,7 +132,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Get total active campaigns count
-    const { count: totalActiveCampaigns } = await supabase
+    const { count: totalActiveCampaigns } = await getSupabaseClient()
       .from('engagement_campaigns')
       .select('id', { count: 'exact', head: true })
       .eq('status', 'active')
@@ -170,7 +172,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user: authUser }, error: authError } = await getSupabaseClient().auth.getUser(token);
 
     if (authError || !authUser) {
       return NextResponse.json(
@@ -180,7 +182,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if user is admin
-    const { data: userProfile, error: profileError } = await supabase
+    const { data: userProfile, error: profileError } = await getSupabaseClient()
       .from('users')
       .select('is_admin')
       .eq('id', authUser.id)
@@ -262,7 +264,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Create campaign
-    const { data: newCampaign, error: createError } = await supabase
+    const { data: newCampaign, error: createError } = await getSupabaseClient()
       .from('engagement_campaigns')
       .insert({
         name,
@@ -329,7 +331,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       }
 
       // Check if campaign is active and user is eligible
-      const { data: campaign, error: campaignError } = await supabase
+      const { data: campaign, error: campaignError } = await getSupabaseClient()
         .from('engagement_campaigns')
         .select('*')
         .eq('id', campaignId)
@@ -344,7 +346,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       }
 
       // Check if user is already participating
-      const { data: existingParticipation } = await supabase
+      const { data: existingParticipation } = await getSupabaseClient()
         .from('campaign_participants')
         .select('id')
         .eq('campaign_id', campaignId)
@@ -368,7 +370,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       }
 
       // Add user to campaign
-      const { data: participation, error: joinError } = await supabase
+      const { data: participation, error: joinError } = await getSupabaseClient()
         .from('campaign_participants')
         .insert({
           campaign_id: campaignId,
@@ -403,7 +405,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       const { progress, incrementBy } = updateData;
 
       // Get current participation
-      const { data: participation, error: participationError } = await supabase
+      const { data: participation, error: participationError } = await getSupabaseClient()
         .from('campaign_participants')
         .select('*, engagement_campaigns(goal_value, reward_type, reward_value)')
         .eq('campaign_id', campaignId)
@@ -428,7 +430,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       const goalReached = newProgress >= campaign.goal_value;
 
       // Update participation
-      const { data: updatedParticipation, error: updateError } = await supabase
+      const { data: updatedParticipation, error: updateError } = await getSupabaseClient()
         .from('campaign_participants')
         .update({
           current_progress: newProgress,
@@ -470,7 +472,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         );
       }
 
-      const { data: participation, error: participationError } = await supabase
+      const { data: participation, error: participationError } = await getSupabaseClient()
         .from('campaign_participants')
         .select('*, engagement_campaigns(reward_type, reward_value, reward_data)')
         .eq('campaign_id', campaignId)
@@ -487,7 +489,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       }
 
       // Mark reward as claimed
-      const { error: claimError } = await supabase
+      const { error: claimError } = await getSupabaseClient()
         .from('campaign_participants')
         .update({
           reward_claimed: true,
@@ -527,7 +529,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 // Helper functions
 
 async function checkCampaignEligibility(userId: string, campaign: any): Promise<boolean> {
-  const { data: user, error: userError } = await supabase
+  const { data: user, error: userError } = await getSupabaseClient()
     .from('users')
     .select('created_at, last_login_at, subscription_status, total_votes_cast')
     .eq('id', userId)
@@ -564,17 +566,17 @@ async function processReward(userId: string, campaign: any, participationId: str
     switch (campaign.reward_type) {
       case 'points':
         // Add reputation points
-        await supabase
+        await getSupabaseClient()
           .from('users')
           .update({
-            reputation_score: supabase.raw('COALESCE(reputation_score, 0) + ?', [campaign.reward_value])
+            reputation_score: getSupabaseClient().raw('COALESCE(reputation_score, 0) + ?', [campaign.reward_value])
           })
           .eq('id', userId);
         break;
 
       case 'premium_days':
         // Add premium days (implementation depends on your premium system)
-        await supabase
+        await getSupabaseClient()
           .from('users')
           .update({
             // This would need to be implemented based on your premium system

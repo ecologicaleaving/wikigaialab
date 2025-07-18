@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '../contexts/AuthContext';
 import { MonitoringProvider } from '../components/monitoring/MonitoringProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
+import PerformanceDashboard from '../components/performance/PerformanceDashboard';
 import { generateMetadata, landingPageSEO, organizationStructuredData, generateJsonLdScript } from '../lib/seo';
 import { config } from '../lib/env';
 
@@ -79,6 +80,7 @@ export default function RootLayout({
           <MonitoringProvider>
             <AuthProvider>
               {children}
+              {process.env.NODE_ENV === 'development' && <PerformanceDashboard />}
             </AuthProvider>
           </MonitoringProvider>
         </ErrorBoundary>

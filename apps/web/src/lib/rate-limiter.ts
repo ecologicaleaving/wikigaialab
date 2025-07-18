@@ -20,8 +20,8 @@ interface RateLimitConfig {
 // Default rate limit configurations for different endpoints
 export const rateLimitConfigs = {
   default: {
-    windowMs: securityConfig.rateLimit.windowMs, // 15 minutes
-    maxRequests: securityConfig.rateLimit.maxRequests, // 100 requests
+    windowMs: securityConfig.RATE_LIMIT_WINDOW_MS, // 15 minutes
+    maxRequests: securityConfig.RATE_LIMIT_MAX_REQUESTS, // 100 requests
     message: 'Too many requests, please try again later',
   },
   

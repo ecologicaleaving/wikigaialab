@@ -9,14 +9,18 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { UserActivityFeedResponse } from '@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize social service
-const socialService = new SocialService({ databaseClient: supabase });
+// Initialize social service helper
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * Helper function to authenticate user
@@ -28,7 +32,7 @@ async function authenticateUser(request: NextRequest) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const { data: { user }, error } = await getSupabaseClient().auth.getUser(token);
 
   if (error || !user) {
     throw new Error('Invalid authentication token');

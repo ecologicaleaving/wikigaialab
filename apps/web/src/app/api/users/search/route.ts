@@ -9,14 +9,18 @@ import { createClient } from '@supabase/supabase-js';
 import { SocialService } from '@wikigaialab/shared/lib/socialService';
 import { UserSearchResponse } from '@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
-// Initialize social service
-const socialService = new SocialService({ databaseClient: supabase });
+// Initialize social service helper
+function getSocialService() {
+  return new SocialService({ databaseClient: getSupabaseClient() });
+}
 
 /**
  * GET /api/users/search
@@ -41,7 +45,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const offset = (page - 1) * limit;
 
     // Build base query
-    let queryBuilder = supabase
+    let queryBuilder = getSupabaseClient()
       .from('users')
       .select(`
         id, name, email, avatar_url, bio, interests, location,

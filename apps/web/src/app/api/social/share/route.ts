@@ -9,10 +9,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 interface ShareRequest {
   problemId: string;
@@ -50,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Get problem details for sharing
-    const { data: problem, error: problemError } = await supabase
+    const { data: problem, error: problemError } = await getSupabaseClient()
       .from('problems')
       .select(`
         id, title, description, vote_count, category_id,
@@ -93,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const sessionId = `session_${Date.now()}_${Math.random()}`;
 
     // Create share record
-    const { data: shareRecord, error: shareError } = await supabase
+    const { data: shareRecord, error: shareError } = await getSupabaseClient()
       .from('social_shares')
       .insert({
         problem_id: problemId,
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Track share analytics
-    await supabase
+    await getSupabaseClient()
       .from('share_analytics')
       .insert({
         share_id: shareRecord.id,
@@ -176,7 +178,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const periodStart = new Date(Date.now() - parseInt(period) * 24 * 60 * 60 * 1000);
 
-    let query = supabase
+    let query = getSupabaseClient()
       .from('social_shares')
       .select(`
         id, platform, share_url, click_count, conversion_count, created_at,
@@ -214,7 +216,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { data: platformStats }
     ] = await Promise.all([
       // Total shares
-      supabase
+      getSupabaseClient()
         .from('social_shares')
         .select('id', { count: 'exact', head: true })
         .gte('created_at', periodStart.toISOString())
@@ -225,7 +227,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }),
 
       // Total clicks
-      supabase
+      getSupabaseClient()
         .from('social_shares')
         .select('click_count')
         .gte('created_at', periodStart.toISOString())
@@ -236,7 +238,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }),
 
       // Total conversions
-      supabase
+      getSupabaseClient()
         .from('social_shares')
         .select('conversion_count')
         .gte('created_at', periodStart.toISOString())
@@ -247,7 +249,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }),
 
       // Platform breakdown
-      supabase
+      getSupabaseClient()
         .from('social_shares')
         .select('platform, click_count, conversion_count')
         .gte('created_at', periodStart.toISOString())

@@ -22,6 +22,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { PremiumFeature, PremiumBadge } from '@/components/premium/PremiumFeature';
 import { AccessStatusCard } from '@/components/premium/AccessStatusCard';
 import { QuickVotePrompt } from '@/components/premium/UpgradePrompts';
+import { AuthenticatedLayout } from '@/components/layout';
 
 interface App {
   id: string;
@@ -146,41 +147,37 @@ export default function AppDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-300 rounded w-64 mb-6"></div>
-            <div className="bg-white rounded-lg border border-gray-200 p-8">
-              <div className="h-24 bg-gray-300 rounded mb-6"></div>
-              <div className="space-y-4">
-                <div className="h-4 bg-gray-300 rounded"></div>
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-              </div>
+      <AuthenticatedLayout title="Caricamento App...">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-300 rounded w-64 mb-6"></div>
+          <div className="bg-white rounded-lg border border-gray-200 p-8">
+            <div className="h-24 bg-gray-300 rounded mb-6"></div>
+            <div className="space-y-4">
+              <div className="h-4 bg-gray-300 rounded"></div>
+              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
             </div>
           </div>
         </div>
-      </div>
+      </AuthenticatedLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-            <h2 className="text-xl font-semibold text-red-800 mb-2">Errore</h2>
-            <p className="text-red-600 mb-4">{error}</p>
-            <Link 
-              href="/apps"
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Torna alle app
-            </Link>
-          </div>
+      <AuthenticatedLayout title="Errore">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <h2 className="text-xl font-semibold text-red-800 mb-2">Errore</h2>
+          <p className="text-red-600 mb-4">{error}</p>
+          <Link 
+            href="/apps"
+            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Torna alle app
+          </Link>
         </div>
-      </div>
+      </AuthenticatedLayout>
     );
   }
 
@@ -191,8 +188,8 @@ export default function AppDetailPage() {
   const { app, userAccess } = appData;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+    <AuthenticatedLayout title={app.name}>
+      <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <div className="mb-6">
           <Link 
@@ -428,6 +425,6 @@ export default function AppDetailPage() {
           </div>
         </div>
       </div>
-    </div>
+    </AuthenticatedLayout>
   );
 }

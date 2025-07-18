@@ -130,8 +130,8 @@ async function checkCriticalAlerts(alert: Alert): Promise<void> {
   }
 }
 
-// Health check alerts
-export async function checkSystemHealth(): Promise<void> {
+// Health check alerts - internal function, not exported
+async function checkSystemHealth(): Promise<void> {
   try {
     // Check database connectivity
     const { error: dbError } = await supabase

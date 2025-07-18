@@ -10,10 +10,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 interface LeaderboardEntry {
   rank: number;
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user: authUser }, error: authError } = await getSupabaseClient().auth.getUser(token);
 
     if (authError || !authUser) {
       return NextResponse.json(
@@ -108,7 +110,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if user is admin
-    const { data: userProfile, error: profileError } = await supabase
+    const { data: userProfile, error: profileError } = await getSupabaseClient()
       .from('users')
       .select('is_admin')
       .eq('id', authUser.id)
@@ -171,7 +173,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Create leaderboard
-    const { data: newLeaderboard, error: createError } = await supabase
+    const { data: newLeaderboard, error: createError } = await getSupabaseClient()
       .from('leaderboards')
       .insert({
         name,
@@ -266,7 +268,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
 async function getSpecificLeaderboard(leaderboardId: string, userId?: string | null, limit: number = 50): Promise<NextResponse> {
   // Get leaderboard info
-  const { data: leaderboard, error: leaderboardError } = await supabase
+  const { data: leaderboard, error: leaderboardError } = await getSupabaseClient()
     .from('leaderboards')
     .select('*')
     .eq('id', leaderboardId)
@@ -285,7 +287,7 @@ async function getSpecificLeaderboard(leaderboardId: string, userId?: string | n
   const { periodStart, periodEnd } = calculatePeriodDates(leaderboard.period, now);
 
   // Get leaderboard entries for current period
-  const { data: entries, error: entriesError } = await supabase
+  const { data: entries, error: entriesError } = await getSupabaseClient()
     .from('leaderboard_entries')
     .select(`
       rank, score, previous_rank, rank_change, streak_count, calculation_data, updated_at,
@@ -307,7 +309,7 @@ async function getSpecificLeaderboard(leaderboardId: string, userId?: string | n
   // Get current user's rank if userId provided
   let currentUserRank: number | undefined;
   if (userId) {
-    const { data: userEntry } = await supabase
+    const { data: userEntry } = await getSupabaseClient()
       .from('leaderboard_entries')
       .select('rank')
       .eq('leaderboard_id', leaderboardId)
@@ -320,7 +322,7 @@ async function getSpecificLeaderboard(leaderboardId: string, userId?: string | n
   }
 
   // Get total participants count
-  const { count: totalParticipants } = await supabase
+  const { count: totalParticipants } = await getSupabaseClient()
     .from('leaderboard_entries')
     .select('id', { count: 'exact', head: true })
     .eq('leaderboard_id', leaderboardId)
@@ -368,7 +370,7 @@ async function getSpecificLeaderboard(leaderboardId: string, userId?: string | n
 }
 
 async function getLeaderboardsList(type?: string | null, period?: string | null, categoryId?: string | null): Promise<NextResponse> {
-  let query = supabase
+  let query = getSupabaseClient()
     .from('leaderboards')
     .select(`
       id, name, description, type, period, is_active, is_featured,
@@ -407,7 +409,7 @@ async function calculateLeaderboardRankings(leaderboardId: string): Promise<numb
   const now = new Date();
   
   // Get leaderboard configuration
-  const { data: leaderboard, error: leaderboardError } = await supabase
+  const { data: leaderboard, error: leaderboardError } = await getSupabaseClient()
     .from('leaderboards')
     .select('*')
     .eq('id', leaderboardId)
@@ -421,7 +423,7 @@ async function calculateLeaderboardRankings(leaderboardId: string): Promise<numb
   const { periodStart, periodEnd } = calculatePeriodDates(leaderboard.period, now);
   
   // Call the database function to calculate rankings
-  const { data: entriesCreated, error: calcError } = await supabase
+  const { data: entriesCreated, error: calcError } = await getSupabaseClient()
     .rpc('calculate_leaderboard_rankings', {
       leaderboard_id: leaderboardId,
       period_start: periodStart.toISOString(),
@@ -434,7 +436,7 @@ async function calculateLeaderboardRankings(leaderboardId: string): Promise<numb
   }
 
   // Update leaderboard's updated_at timestamp
-  await supabase
+  await getSupabaseClient()
     .from('leaderboards')
     .update({ updated_at: new Date().toISOString() })
     .eq('id', leaderboardId);

@@ -9,11 +9,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Achievement } from '../../../../../@wikigaialab/shared/types/social';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase client helper
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+}
 
 /**
  * GET /api/achievements
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const sortOrder = url.searchParams.get('sort_order') || 'asc';
 
     // Build query
-    let query = supabase
+    let query = getSupabaseClient()
       .from('achievements')
       .select('*');
 
@@ -101,7 +103,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Validate JWT token and get user ID
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user: authUser }, error: authError } = await getSupabaseClient().auth.getUser(token);
 
     if (authError || !authUser) {
       return NextResponse.json(
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if user is admin
-    const { data: userInfo } = await supabase
+    const { data: userInfo } = await getSupabaseClient()
       .from('users')
       .select('is_admin')
       .eq('id', authUser.id)
@@ -196,7 +198,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check for duplicate names
-    const { data: existingAchievement } = await supabase
+    const { data: existingAchievement } = await getSupabaseClient()
       .from('achievements')
       .select('id')
       .eq('name', name)
@@ -210,7 +212,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Create achievement
-    const { data: newAchievement, error: createError } = await supabase
+    const { data: newAchievement, error: createError } = await getSupabaseClient()
       .from('achievements')
       .insert({
         name,
@@ -259,7 +261,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
     // Validate JWT token and get user ID
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user: authUser }, error: authError } = await getSupabaseClient().auth.getUser(token);
 
     if (authError || !authUser) {
       return NextResponse.json(
@@ -269,7 +271,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if user is admin
-    const { data: userInfo } = await supabase
+    const { data: userInfo } = await getSupabaseClient()
       .from('users')
       .select('is_admin')
       .eq('id', authUser.id)
@@ -362,7 +364,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     if (is_active !== undefined) updateFields.is_active = is_active;
 
     // Update achievement
-    const { data: updatedAchievement, error: updateError } = await supabase
+    const { data: updatedAchievement, error: updateError } = await getSupabaseClient()
       .from('achievements')
       .update(updateFields)
       .eq('id', id)
