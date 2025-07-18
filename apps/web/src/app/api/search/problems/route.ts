@@ -122,14 +122,18 @@ export const GET = withApiHandler(async (request: NextRequest): Promise<NextResp
 
   // Apply full-text search if query provided
   if (q && q.length >= 2) {
-    const sanitizedQuery = q.replace(/[%_]/g, '\\$&');
+    const sanitizedQuery = q.replace(/['"\\]/g, '');
     
     if (include_description) {
-      // Search in both title and description
-      searchQuery = searchQuery.or(`title.ilike.%${sanitizedQuery}%,description.ilike.%${sanitizedQuery}%`);
+      // Use PostgreSQL full-text search with ranking
+      searchQuery = searchQuery.textSearch('title,description', sanitizedQuery, {
+        config: 'english'
+      });
     } else {
-      // Search only in title
-      searchQuery = searchQuery.ilike('title', `%${sanitizedQuery}%`);
+      // Search only in title with full-text search
+      searchQuery = searchQuery.textSearch('title', sanitizedQuery, {
+        config: 'english'
+      });
     }
   }
 
