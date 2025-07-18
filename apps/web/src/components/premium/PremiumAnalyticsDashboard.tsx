@@ -8,7 +8,7 @@ import { PremiumFeature } from './PremiumFeature';
 import { UpgradePrompt } from './UpgradePrompts';
 import {
   ChartBarIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon as TrendingUpIcon,
   UserGroupIcon,
   ClockIcon,
   StarIcon,

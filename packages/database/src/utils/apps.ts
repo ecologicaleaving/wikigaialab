@@ -335,7 +335,7 @@ export const getAppsByProblem = async (
       return handleDatabaseError(error);
     }
 
-    const appsWithDetails: AppWithDetails[] = data.map(app => ({
+    const appsWithDetails: AppWithDetails[] = data.map((app: any) => ({
       ...app,
       baseFeatures: Array.isArray(app.base_features) ? app.base_features : [],
       premiumFeatures: Array.isArray(app.premium_features) ? app.premium_features : [],
@@ -462,7 +462,7 @@ export const getFeaturedApps = async (
       return handleDatabaseError(error);
     }
 
-    const appsWithDetails: AppWithDetails[] = data.map(app => ({
+    const appsWithDetails: AppWithDetails[] = data.map((app: any) => ({
       ...app,
       baseFeatures: Array.isArray(app.base_features) ? app.base_features : [],
       premiumFeatures: Array.isArray(app.premium_features) ? app.premium_features : [],
@@ -499,12 +499,12 @@ export const getAppStats = async (): Promise<DatabaseOperationResult<{
 
     const apps = data || [];
     const totalApps = apps.length;
-    const publishedApps = apps.filter(app => app.is_published).length;
+    const publishedApps = apps.filter((app: any) => app.is_published).length;
     const unpublishedApps = totalApps - publishedApps;
     
-    const freemiumApps = apps.filter(app => app.access_model === 'freemium').length;
-    const subscriptionApps = apps.filter(app => app.access_model === 'subscription').length;
-    const oneTimeApps = apps.filter(app => app.access_model === 'one-time').length;
+    const freemiumApps = apps.filter((app: any) => app.access_model === 'freemium').length;
+    const subscriptionApps = apps.filter((app: any) => app.access_model === 'subscription').length;
+    const oneTimeApps = apps.filter((app: any) => app.access_model === 'one-time').length;
 
     return {
       success: true,

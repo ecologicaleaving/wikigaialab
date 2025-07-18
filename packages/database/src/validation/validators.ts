@@ -346,7 +346,20 @@ export const validatePaginationParams = (
     limit: limit || 10,
   };
 
-  return validateWithSchema(paginationSchema, params);
+  const result = validateWithSchema(paginationSchema, params);
+  
+  // Ensure the data has the required properties
+  if (result.isValid && result.data) {
+    return {
+      ...result,
+      data: {
+        page: result.data.page ?? 1,
+        limit: result.data.limit ?? 10,
+      }
+    };
+  }
+  
+  return result as ValidationResult & { data?: { page: number; limit: number } };
 };
 
 /**

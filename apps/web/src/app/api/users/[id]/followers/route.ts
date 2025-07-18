@@ -6,8 +6,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { SocialService } from '../../../../../../../packages/shared/src/lib/socialService';
-import { UserFollowersResponse } from '../../../../../../../packages/shared/src/types/social';
+import { SocialService } from '@wikigaialab/shared/lib/socialService';
+import { UserFollowersResponse } from '@wikigaialab/shared/types/social';
 
 // Initialize Supabase client
 const supabase = createClient(

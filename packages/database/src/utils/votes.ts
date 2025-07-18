@@ -383,7 +383,7 @@ export const getVotingTrends = async (
     }
 
     // Group votes by day
-    const votesByDay = data.reduce((acc: any[], vote) => {
+    const votesByDay = data.reduce((acc: any[], vote: any) => {
       const date = new Date(vote.created_at).toISOString().split('T')[0];
       const existingDay = acc.find(day => day.date === date);
       

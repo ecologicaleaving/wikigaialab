@@ -134,9 +134,10 @@ export class RecommendationUtils {
   }
 
   // Generate recommendation explanation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static generateExplanation(
     reasoning: { [key: string]: number },
-    problemTitle: string
+    _problemTitle: string // eslint-disable-line @typescript-eslint/no-unused-vars
   ): string {
     const explanations: string[] = [];
 

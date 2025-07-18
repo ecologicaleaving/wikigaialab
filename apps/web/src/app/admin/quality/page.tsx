@@ -128,7 +128,7 @@ export default function QualityAnalysisPage() {
   // Calculate overview stats
   const totalProblems = qualityMetrics.length;
   const lowQualityCount = qualityMetrics.filter(m => m.quality_score < 40).length;
-  const mediumQualityCount = qualityMetrics.filter(m => m.quality_score >= 40 && m.quality_score < 70).length;
+  const mediumQualityCount = qualityMetrics.filter(m => m.quality_score >= 40 && m.quality_score < 70).length; // eslint-disable-line @typescript-eslint/no-unused-vars
   const highQualityCount = qualityMetrics.filter(m => m.quality_score >= 70).length;
   const avgQualityScore = totalProblems > 0 
     ? qualityMetrics.reduce((sum, m) => sum + m.quality_score, 0) / totalProblems 

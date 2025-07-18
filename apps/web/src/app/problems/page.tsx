@@ -8,9 +8,10 @@ import { useAuth } from '../../hooks/useAuth';
 import { useMultipleVoting } from '../../hooks/useVoting';
 import { useAdvancedSearch } from '../../hooks/useAdvancedSearch';
 import { useRecommendations } from '../../hooks/useRecommendations';
+import { useMonitoring } from '../../components/monitoring/MonitoringProvider';
 import { AdvancedSearchFilters } from '../../components/search/AdvancedSearchFilters';
 import { SearchResults } from '../../components/search/SearchResults';
-import { DiscoveryDashboard } from '../../components/recommendations/DiscoveryDashboard';
+import DiscoveryDashboard from '../../components/recommendations/DiscoveryDashboard';
 import { LeaderboardWidget } from '../../components/growth/LeaderboardWidget';
 import { CampaignWidget } from '../../components/growth/CampaignWidget';
 import Link from 'next/link';
@@ -28,6 +29,7 @@ interface User {
 
 export default function ProblemsListPage() {
   const { user } = useAuth();
+  const { recordUserAction, recordBusinessMetric } = useMonitoring();
   const [categories, setCategories] = useState<Category[]>([]);
   const [proposers, setProposers] = useState<User[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
@@ -90,16 +92,19 @@ export default function ProblemsListPage() {
 
   // Handle problem click navigation
   const handleProblemClick = (problemId: string) => {
+    recordUserAction('problem_click', { problemId, source: 'problems_page' });
     window.location.href = `/problems/${problemId}`;
   };
 
   // Handle collection click navigation
   const handleCollectionClick = (collectionId: string) => {
+    recordUserAction('collection_click', { collectionId, source: 'problems_page' });
     window.location.href = `/collections/${collectionId}`;
   };
 
   // Handle category filter
   const handleCategoryFilter = (categoryId: string) => {
+    recordUserAction('category_filter', { categoryId, source: 'problems_page' });
     setActiveView('search');
     updateFilters({ categoryIds: [categoryId] });
   };
@@ -129,7 +134,10 @@ export default function ProblemsListPage() {
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             <button
-              onClick={() => setActiveView('discover')}
+              onClick={() => {
+                recordUserAction('view_change', { view: 'discover', source: 'problems_page' });
+                setActiveView('discover');
+              }}
               className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeView === 'discover'
                   ? 'border-primary-500 text-primary-600'
@@ -143,7 +151,10 @@ export default function ProblemsListPage() {
             </button>
             
             <button
-              onClick={() => setActiveView('search')}
+              onClick={() => {
+                recordUserAction('view_change', { view: 'search', source: 'problems_page' });
+                setActiveView('search');
+              }}
               className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeView === 'search'
                   ? 'border-blue-500 text-blue-600'
@@ -157,7 +168,10 @@ export default function ProblemsListPage() {
             </button>
             
             <button
-              onClick={() => setActiveView('categories')}
+              onClick={() => {
+                recordUserAction('view_change', { view: 'categories', source: 'problems_page' });
+                setActiveView('categories');
+              }}
               className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeView === 'categories'
                   ? 'border-purple-500 text-purple-600'

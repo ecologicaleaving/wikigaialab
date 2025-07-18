@@ -1,0 +1,27 @@
+{
+  "name": "WikiGaiaLab",
+  "short_name": "WikiGaiaLab",
+  "description": "Community-driven problem solving platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "social",
+    "utilities"
+  ],
+  "lang": "it",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

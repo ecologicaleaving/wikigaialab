@@ -19,6 +19,7 @@ import {
   withAuthErrorHandling,
   getAuthErrorMessage,
 } from '../lib/auth';
+import { AuthLoadingScreen } from '../components/ui/LoadingScreen';
 
 /**
  * Initial authentication state
@@ -28,6 +29,39 @@ const initialState: AuthState = {
   loading: true,
   error: null,
   session: null,
+};
+
+/**
+ * Session cache helpers
+ */
+const SESSION_CACHE_KEY = 'wikigaialab_auth_session';
+
+const getCachedSession = (): Session | null => {
+  try {
+    const cached = localStorage.getItem(SESSION_CACHE_KEY);
+    if (cached) {
+      const session = JSON.parse(cached);
+      // Check if session is still valid
+      if (session.expires_at && new Date(session.expires_at).getTime() > Date.now()) {
+        return session;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to get cached session:', error);
+  }
+  return null;
+};
+
+const setCachedSession = (session: Session | null) => {
+  try {
+    if (session) {
+      localStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(session));
+    } else {
+      localStorage.removeItem(SESSION_CACHE_KEY);
+    }
+  } catch (error) {
+    console.warn('Failed to cache session:', error);
+  }
 };
 
 /**
@@ -107,6 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await withAuthErrorHandling(signOutAuth, 'Sign out');
       
       dispatch({ type: 'SIGN_OUT' });
+      setCachedSession(null);
       logAuthEvent('SIGNED_OUT', state.user);
     } catch (error) {
       const errorMessage = getAuthErrorMessage(error as Error);
@@ -120,9 +155,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   /**
    * Refresh session
    */
-  const refreshSession = useCallback(async () => {
+  const refreshSession = useCallback(async (showLoading = true) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
+      if (showLoading) {
+        dispatch({ type: 'SET_LOADING', payload: true });
+      }
       dispatch({ type: 'CLEAR_ERROR' });
       
       const result = await refreshSessionAuth();
@@ -133,6 +170,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         dispatch({ type: 'SET_USER', payload: result.user });
         dispatch({ type: 'SET_SESSION', payload: result.session });
+        setCachedSession(result.session);
         logAuthEvent('SESSION_REFRESHED', result.user);
       }
     } catch (error) {
@@ -140,7 +178,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'SET_ERROR', payload: errorMessage });
       logAuthEvent('SESSION_REFRESH_FAILED', null, error as Error);
     } finally {
-      dispatch({ type: 'SET_LOADING', payload: false });
+      if (showLoading) {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
     }
   }, []);
 
@@ -177,35 +217,146 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   /**
-   * Handle authentication state changes
+   * Handle authentication state changes - FIXED FOR REAL AUTH
    */
   useEffect(() => {
-    // Initialize auth state
-    initializeAuth();
+    let mounted = true;
+    let initialized = false;
+    
+    // Initialize auth state only once
+    const initialize = async () => {
+      if (initialized) return;
+      initialized = true;
+      
+      try {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        
+        // Try to get cached session first
+        const cachedSession = getCachedSession();
+        if (cachedSession && mounted) {
+          dispatch({ type: 'SET_SESSION', payload: cachedSession });
+          
+          // Try to get user from cached session
+          try {
+            const user = await getCurrentUser();
+            if (mounted) {
+              dispatch({ type: 'SET_USER', payload: user });
+              dispatch({ type: 'SET_LOADING', payload: false });
+              logAuthEvent('SESSION_RESTORED', user);
+              return; // Exit early if cached session works
+            }
+          } catch (error) {
+            console.warn('Cached session invalid, fetching new session');
+          }
+        }
+        
+        // Get current session from Supabase
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          dispatch({ type: 'SET_ERROR', payload: getAuthErrorMessage(error) });
+          return;
+        }
 
-    // Listen for auth state changes
+        dispatch({ type: 'SET_SESSION', payload: session });
+        setCachedSession(session);
+
+        // Get current user if session exists
+        if (session) {
+          const user = await getCurrentUser();
+          if (mounted) {
+            dispatch({ type: 'SET_USER', payload: user });
+            logAuthEvent('SESSION_RESTORED', user);
+          }
+        }
+      } catch (error) {
+        if (mounted) {
+          console.error('Error initializing auth:', error);
+          dispatch({ type: 'SET_ERROR', payload: getAuthErrorMessage(error as Error) });
+        }
+      } finally {
+        if (mounted) {
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
+      }
+    };
+
+    initialize();
+
+    // Listen for auth state changes but prevent tab switching issues
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      try {
-        dispatch({ type: 'SET_LOADING', payload: true });
+      if (!mounted || !initialized) return;
+      
+      // Skip automatic token refresh events to prevent tab switching issues
+      if (event === 'TOKEN_REFRESHED') {
         dispatch({ type: 'SET_SESSION', payload: session });
+        setCachedSession(session);
+        return;
+      }
+      
+      try {
+        // Only show loading for explicit sign-out events
+        if (event === 'SIGNED_OUT') {
+          dispatch({ type: 'SET_LOADING', payload: true });
+        }
+        
+        dispatch({ type: 'SET_SESSION', payload: session });
+        setCachedSession(session);
         
         const user = await handleAuthStateChange(event, session);
-        dispatch({ type: 'SET_USER', payload: user });
-        
-        logAuthEvent(event, user);
+        if (mounted) {
+          dispatch({ type: 'SET_USER', payload: user });
+          logAuthEvent(event, user);
+        }
       } catch (error) {
-        console.error('Error handling auth state change:', error);
-        dispatch({ type: 'SET_ERROR', payload: getAuthErrorMessage(error as Error) });
-        logAuthEvent('AUTH_STATE_CHANGE_ERROR', null, error as Error);
+        if (mounted) {
+          console.error('Error handling auth state change:', error);
+          dispatch({ type: 'SET_ERROR', payload: getAuthErrorMessage(error as Error) });
+          logAuthEvent('AUTH_STATE_CHANGE_ERROR', null, error as Error);
+        }
       } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
+        if (mounted && event === 'SIGNED_OUT') {
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [initializeAuth]);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []); // Empty dependency array to run only once
+
+  /**
+   * Handle visibility changes to prevent unnecessary re-auth
+   * DISABLED: This was causing infinite loading loops
+   */
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     // Only refresh token if we have a session and the tab has been hidden for a while
+  //     if (document.visibilityState === 'visible' && state.session && !state.loading) {
+  //       const now = Date.now();
+  //       const sessionTime = new Date(state.session.expires_at || 0).getTime();
+  //       const timeUntilExpiry = sessionTime - now;
+  //       
+  //       // Only refresh if token expires in less than 5 minutes
+  //       if (timeUntilExpiry < 5 * 60 * 1000) {
+  //         refreshSession(false); // Don't show loading spinner for background refresh
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   
+  //   return () => {
+  //     document.removeEventListener('visibilitychange', handleVisibilityChange);
+  //   };
+  // }, [state.session, state.loading, refreshSession]);
 
   /**
    * Clear error when user changes
@@ -226,6 +377,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     refreshSession,
     clearError,
   };
+
+  // Show loading screen only during initial authentication check and no cached session
+  if (state.loading && !state.user && !state.error && !state.session) {
+    return <AuthLoadingScreen />;
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

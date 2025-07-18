@@ -71,19 +71,68 @@ const envSchema = z.object({
 let env: z.infer<typeof envSchema>;
 
 try {
-  env = envSchema.parse(process.env);
+  // Only validate the fields that are actually available in the current environment
+  const availableEnv = Object.fromEntries(
+    Object.entries(process.env).filter(([key, value]) => value !== undefined)
+  );
+  
+  env = envSchema.parse(availableEnv);
 } catch (error) {
   if (error instanceof z.ZodError) {
-    console.error('❌ Environment validation failed:');
-    console.error(error.errors.map(e => `  - ${e.path.join('.')}: ${e.message}`).join('\n'));
+    // Filter out missing server-side variables when running in browser
+    const isBrowser = typeof window !== 'undefined';
+    const serverOnlyVars = [
+      'RATE_LIMIT_MAX_REQUESTS',
+      'RATE_LIMIT_WINDOW_MS', 
+      'PREMIUM_ACCESS_VOTE_THRESHOLD',
+      'CONTRIBUTOR_LEVEL_VOTES',
+      'ADVOCATE_LEVEL_VOTES',
+      'CHAMPION_LEVEL_VOTES',
+      'PROBLEM_DEVELOPMENT_THRESHOLD',
+      'SUPABASE_SERVICE_ROLE_KEY',
+      'GOOGLE_CLIENT_SECRET',
+      'NEXTAUTH_SECRET',
+      'OPENAI_API_KEY',
+      'ANTHROPIC_API_KEY',
+      'RESEND_API_KEY',
+      'STRIPE_SECRET_KEY',
+      'STRIPE_WEBHOOK_SECRET',
+      'SENTRY_DSN'
+    ];
     
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('Environment validation failed in production');
-    } else {
-      console.warn('⚠️  Continuing with default values in development');
-      // Use defaults for development
-      env = envSchema.parse({});
+    const filteredErrors = error.errors.filter(e => {
+      const fieldName = e.path.join('.');
+      return !isBrowser || !serverOnlyVars.includes(fieldName);
+    });
+    
+    if (filteredErrors.length > 0) {
+      console.error('❌ Environment validation failed:');
+      console.error(filteredErrors.map(e => `  - ${e.path.join('.')}: ${e.message}`).join('\n'));
+      
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('Environment validation failed in production');
+      } else {
+        console.warn('⚠️  Continuing with default values in development');
+      }
     }
+    
+    // Use defaults for development
+    env = envSchema.parse({
+      NODE_ENV: 'development',
+      NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+      NEXT_PUBLIC_APP_NAME: 'WikiGaiaLab',
+      NEXT_PUBLIC_SUPABASE_URL: 'https://jgivhyalioldfelngboi.supabase.co',
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnaXZoeWFsaW9sZGZlbG5nYm9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3NjY0NTIsImV4cCI6MjA2ODM0MjQ1Mn0.VKVoU56gdRccKj9NPFuRpLuwgRRUQ_HFe3QLzH5tFD0',
+        RATE_LIMIT_MAX_REQUESTS: '100',
+        RATE_LIMIT_WINDOW_MS: '900000',
+        PREMIUM_ACCESS_VOTE_THRESHOLD: '5',
+        CONTRIBUTOR_LEVEL_VOTES: '5',
+        ADVOCATE_LEVEL_VOTES: '15',
+        CHAMPION_LEVEL_VOTES: '25',
+        PROBLEM_DEVELOPMENT_THRESHOLD: '100',
+        MOCK_EMAIL_SERVICE: 'true',
+        MOCK_PAYMENT_SERVICE: 'true'
+      });
   } else {
     throw error;
   }

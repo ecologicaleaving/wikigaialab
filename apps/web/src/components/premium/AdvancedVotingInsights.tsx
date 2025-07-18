@@ -7,7 +7,7 @@ import { PremiumFeature } from './PremiumFeature';
 import {
   ChartBarIcon,
   ClockIcon,
-  TrendingUpIcon,
+  TrendingUpIcon as TrendingUpIcon,
   UserGroupIcon,
   StarIcon,
   CalendarIcon,
@@ -215,7 +215,7 @@ export function AdvancedVotingInsights() {
   const getInsightIcon = (type: string) => {
     switch (type) {
       case 'pattern': return ClockIcon;
-      case 'impact': return TrendingUpIcon;
+      case 'impact': return TrendingUpIcon as TrendingUpIcon;
       case 'recommendation': return LightBulbIcon;
       case 'achievement': return StarIcon;
       default: return ChartBarIcon;

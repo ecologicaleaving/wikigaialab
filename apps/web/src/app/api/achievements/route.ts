@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Achievement } from '../../../../../packages/shared/src/types/social';
+import { Achievement } from '../../../../../@wikigaialab/shared/types/social';
 
 // Initialize Supabase client
 const supabase = createClient(

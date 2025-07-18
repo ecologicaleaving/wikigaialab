@@ -1,0 +1,145 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please fill out this form to help us understand your request.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 📋 Feature Summary
+      description: A clear and concise description of the feature you'd like to see.
+      placeholder: What would you like to see added or changed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🎯 Problem Statement
+      description: What problem does this feature solve?
+      placeholder: Is your feature request related to a problem? Please describe.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: A clear and concise description of what you want to happen.
+      placeholder: Describe the solution you'd like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternative Solutions
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: What other approaches have you considered?
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 🎪 Use Cases
+      description: Describe specific use cases for this feature.
+      placeholder: |
+        1. As a [user type], I want [feature] so that [benefit]
+        2. As a [user type], I want [feature] so that [benefit]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: 👤 User Type
+      description: What type of user would primarily benefit from this feature?
+      options:
+        - End User (Community Member)
+        - Admin/Moderator
+        - Developer
+        - All Users
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 📊 Priority
+      description: How important is this feature to you?
+      options:
+        - High (Critical for my use case)
+        - Medium (Would be very helpful)
+        - Low (Nice to have)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: 🔧 Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (Small change or addition)
+        - Medium (Moderate development effort)
+        - Complex (Significant development effort)
+        - Not sure
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups/Wireframes
+      description: If applicable, add mockups, wireframes, or visual examples.
+      placeholder: Drag and drop images here or paste URLs
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: What conditions must be met for this feature to be considered complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: 🔍 Technical Considerations
+      description: Any technical aspects to consider for this feature?
+      placeholder: Database changes, API changes, performance considerations, etc.
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: 💻 Implementation
+      description: Are you interested in helping implement this feature?
+      options:
+        - label: I'd like to contribute to the implementation
+        - label: I can help with design/UX
+        - label: I can help with testing
+        - label: I can provide domain expertise
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📝 Additional Context
+      description: Add any other context, screenshots, or examples about the feature request.
+      placeholder: Any additional information that might help us understand your request.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: ✅ Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to make sure this isn't a duplicate
+          required: true
+        - label: I have provided all the requested information
+          required: true
+        - label: This feature aligns with WikiGaiaLab's mission and goals
+          required: true

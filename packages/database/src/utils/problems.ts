@@ -364,7 +364,7 @@ export const getProblemStats = async (): Promise<DatabaseOperationResult<{
     }
 
     const problems = problemsResult.data || [];
-    const statusCounts = problems.reduce((acc, problem) => {
+    const statusCounts = problems.reduce((acc: any, problem: any) => {
       acc[problem.status] = (acc[problem.status] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);

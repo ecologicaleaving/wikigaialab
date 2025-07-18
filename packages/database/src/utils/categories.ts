@@ -222,7 +222,7 @@ export const reorderCategories = async (
     );
 
     const results = await Promise.all(updates);
-    const errors = results.filter(result => result.error);
+    const errors = results.filter((result: any) => result.error);
 
     if (errors.length > 0) {
       return handleDatabaseError(errors[0].error);
@@ -254,7 +254,7 @@ export const getCategoriesWithCounts = async (): Promise<DatabaseOperationResult
       return handleDatabaseError(error);
     }
 
-    const categoriesWithStats: CategoryWithStats[] = data.map(category => ({
+    const categoriesWithStats: CategoryWithStats[] = data.map((category: any) => ({
       ...category,
       problemCount: category.problems?.length || 0,
     }));
@@ -332,12 +332,12 @@ export const getCategoryStats = async (): Promise<DatabaseOperationResult<{
 
     const categories = categoriesResult.data || [];
     const totalCategories = categories.length;
-    const activeCategories = categories.filter(cat => cat.is_active).length;
+    const activeCategories = categories.filter((cat: any) => cat.is_active).length;
     const inactiveCategories = totalCategories - activeCategories;
 
     // Get unique categories that have problems
     const uniqueCategories = new Set(
-      (problemsResult.data || []).map(problem => problem.category_id)
+      (problemsResult.data || []).map((problem: any) => problem.category_id)
     );
     const categoriesWithProblems = uniqueCategories.size;
 
@@ -379,11 +379,11 @@ export const getPopularCategories = async (
     }
 
     const categoriesWithStats: CategoryWithStats[] = data
-      .map(category => ({
+      .map((category: any) => ({
         ...category,
         problemCount: category.problems?.length || 0,
       }))
-      .sort((a, b) => (b.problemCount || 0) - (a.problemCount || 0))
+      .sort((a: any, b: any) => (b.problemCount || 0) - (a.problemCount || 0))
       .slice(0, limit);
 
     return {

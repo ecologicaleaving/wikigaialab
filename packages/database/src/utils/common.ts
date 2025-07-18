@@ -30,7 +30,7 @@ export const paginate = <T>(
 /**
  * Handle database errors consistently
  */
-export const handleDatabaseError = (error: any): DatabaseOperationResult => {
+export const handleDatabaseError = <T = unknown>(error: any): DatabaseOperationResult<T> => {
   console.error('Database error:', error);
   
   return {
@@ -122,7 +122,7 @@ export const withTransaction = async <T>(
       data: results,
     };
   } catch (error: any) {
-    return handleDatabaseError(error);
+    return handleDatabaseError<T[]>(error);
   }
 };
 
@@ -173,7 +173,12 @@ export const globalSearch = async (
       .filter(Boolean);
 
     if (errors.length > 0) {
-      return handleDatabaseError(errors[0]);
+      return handleDatabaseError<{
+        problems: any[];
+        users: any[];
+        categories: any[];
+        apps: any[];
+      }>(errors[0]);
     }
 
     return {
@@ -186,6 +191,11 @@ export const globalSearch = async (
       },
     };
   } catch (error) {
-    return handleDatabaseError(error);
+    return handleDatabaseError<{
+      problems: any[];
+      users: any[];
+      categories: any[];
+      apps: any[];
+    }>(error);
   }
 };

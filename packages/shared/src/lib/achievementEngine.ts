@@ -358,12 +358,12 @@ export class AchievementEngine {
       ]);
 
       const earnedAchievementIds = new Set(
-        userAchievements.data?.map(ua => ua.achievement_id) || []
+        userAchievements.data?.map((ua: any) => ua.achievement_id) || []
       );
 
-      const progressData = allAchievements.data?.map(achievement => {
+      const progressData = allAchievements.data?.map((achievement: any) => {
         const isEarned = earnedAchievementIds.has(achievement.id);
-        const earnedData = userAchievements.data?.find(ua => ua.achievement_id === achievement.id);
+        const earnedData = userAchievements.data?.find((ua: any) => ua.achievement_id === achievement.id);
 
         let progress = 0;
         if (!isEarned) {
@@ -381,7 +381,7 @@ export class AchievementEngine {
       return {
         achievements: progressData || [],
         totalEarned: userAchievements.data?.length || 0,
-        totalPoints: userAchievements.data?.reduce((sum, ua) => sum + (ua.achievement?.points || 0), 0) || 0,
+        totalPoints: userAchievements.data?.reduce((sum: number, ua: any) => sum + (ua.achievement?.points || 0), 0) || 0,
         recentAchievements: userAchievements.data?.slice(0, 5) || []
       };
     } catch (error) {

@@ -90,6 +90,7 @@ export async function GET(request: NextRequest) {
       .select('moderation_status')
       .not('moderation_status', 'is', null);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const statusCounts = stats?.reduce((acc, problem) => {
       const status = problem.moderation_status || 'pending';
       acc[status] = (acc[status] || 0) + 1;

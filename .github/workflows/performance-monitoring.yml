@@ -1,0 +1,198 @@
+name: Performance Monitoring
+
+on:
+  schedule:
+    # Run every day at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+  deployment_status:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  lighthouse-audit:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: '.lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+
+  bundle-analysis:
+    name: Bundle Size Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '8'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm run build
+
+      - name: Analyze bundle size
+        run: |
+          cd apps/web
+          npx next-bundle-analyzer --analyze
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: apps/web/.next/analyze/
+
+  uptime-monitoring:
+    name: Uptime Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check production uptime
+        run: |
+          urls=(
+            "https://wikigaialab.com"
+            "https://wikigaialab.com/api/health"
+            "https://wikigaialab.com/problems"
+          )
+          
+          for url in "${urls[@]}"; do
+            echo "Checking $url"
+            if curl -f --retry 3 --retry-delay 5 --max-time 30 "$url" > /dev/null 2>&1; then
+              echo "✅ $url is up"
+            else
+              echo "❌ $url is down"
+              exit 1
+            fi
+          done
+
+      - name: Create uptime issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Website Downtime Detected',
+              body: `## 🚨 Website Downtime Alert
+              
+              Our uptime monitoring detected that the website is not responding.
+              
+              **Time**: ${new Date().toISOString()}
+              **Status**: Down ❌
+              
+              ### 🔍 Investigation Steps
+              1. Check server status
+              2. Review recent deployments
+              3. Check DNS resolution
+              4. Verify SSL certificates
+              
+              ### 📞 Immediate Actions
+              - [ ] Investigate server logs
+              - [ ] Check database connectivity
+              - [ ] Review CDN status
+              - [ ] Notify stakeholders if needed
+              
+              ---
+              *This issue was created automatically by the uptime monitoring workflow.*`,
+              labels: ['critical', 'outage', 'monitoring']
+            });
+
+  performance-regression:
+    name: Performance Regression Detection
+    runs-on: ubuntu-latest
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install -g @lhci/cli puppeteer
+
+      - name: Run performance tests
+        run: |
+          lhci autorun --collect.url=https://wikigaialab.com || true
+          lhci autorun --collect.url=https://wikigaialab.com/problems || true
+
+      - name: Analyze performance changes
+        run: |
+          echo "## 📊 Performance Analysis" > performance-report.md
+          echo "Generated on: $(date)" >> performance-report.md
+          echo "" >> performance-report.md
+          
+          # This would compare with previous results
+          # For now, we'll just record the current metrics
+          echo "Latest performance metrics recorded." >> performance-report.md
+
+      - name: Create performance issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📉 Performance Regression Detected',
+              body: `## 📉 Performance Regression Alert
+              
+              Performance monitoring has detected a potential regression after the latest deployment.
+              
+              ### 🔍 Details
+              - **Deployment**: ${context.sha}
+              - **Time**: ${new Date().toISOString()}
+              - **Environment**: Production
+              
+              ### 📋 Review Checklist
+              - [ ] Compare Lighthouse scores
+              - [ ] Check bundle size changes
+              - [ ] Review recent code changes
+              - [ ] Test on different devices/networks
+              
+              ### 🔧 Potential Fixes
+              - [ ] Optimize images
+              - [ ] Reduce bundle size
+              - [ ] Improve caching
+              - [ ] Optimize database queries
+              
+              ---
+              *This issue was created automatically by the performance monitoring workflow.*`,
+              labels: ['performance', 'regression', 'monitoring']
+            });

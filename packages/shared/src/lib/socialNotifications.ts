@@ -160,16 +160,16 @@ export class SocialNotificationService {
     milestone: string
   ): Promise<void> {
     try {
-      const milestones = {
-        100: 'Hai raggiunto 100 punti reputazione! 🌟',
-        500: 'Fantastico! 500 punti reputazione! 🚀',
-        1000: 'Incredibile! 1000 punti reputazione! 🏆',
-        2500: 'Sei un veterano! 2500 punti reputazione! 💎',
-        5000: 'Leggenda della comunità! 5000 punti! 👑',
-        10000: 'Maestro supremo! 10000 punti reputazione! ⭐'
+      const milestones: Record<string, string> = {
+        '100': 'Hai raggiunto 100 punti reputazione! 🌟',
+        '500': 'Fantastico! 500 punti reputazione! 🚀',
+        '1000': 'Incredibile! 1000 punti reputazione! 🏆',
+        '2500': 'Sei un veterano! 2500 punti reputazione! 💎',
+        '5000': 'Leggenda della comunità! 5000 punti! 👑',
+        '10000': 'Maestro supremo! 10000 punti reputazione! ⭐'
       };
 
-      const message = milestones[milestone as keyof typeof milestones] || 
+      const message = milestones[milestone] || 
         `Hai raggiunto ${newScore} punti reputazione!`;
 
       await this.createNotification({
@@ -336,7 +336,7 @@ export class SocialNotificationService {
           .select('*', { count: 'exact' })
           .eq('recipient_id', userId)
           .in('type', ['follow', 'achievement_earned', 'problem_favorited', 'reputation_milestone', 'activity_milestone'])
-          .then(result => ({ count: result.count }))
+          .then((result: any) => ({ count: result.count }))
       ]);
 
       return {

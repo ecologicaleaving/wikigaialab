@@ -14,8 +14,7 @@ import {
   DocumentPlusIcon,
   StarIcon,
   CloudArrowUpIcon,
-  BeakerIcon,
-  SeedlingIcon
+  BeakerIcon
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 
@@ -59,7 +58,7 @@ const navigation = [
   {
     name: 'Seed Data',
     href: '/admin/seed',
-    icon: SeedlingIcon,
+    icon: BeakerIcon,
     current: false,
   },
   {

@@ -193,8 +193,37 @@ export const useRecommendations = (
 
   // Initial load
   useEffect(() => {
-    refreshRecommendations();
-  }, [refreshRecommendations]);
+    let isCancelled = false;
+    
+    const loadRecommendations = async () => {
+      if (isCancelled) return;
+      
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await Promise.all([
+          user ? fetchPersonalRecommendations() : Promise.resolve(),
+          fetchTrendingProblems()
+        ]);
+      } catch (err) {
+        if (!isCancelled) {
+          console.error('Error loading recommendations:', err);
+          setError(err instanceof Error ? err.message : 'Failed to load recommendations');
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadRecommendations();
+    
+    return () => {
+      isCancelled = true;
+    };
+  }, [user, limit]); // Only depend on user and limit
 
   // Auto refresh setup
   useEffect(() => {
@@ -202,7 +231,7 @@ export const useRecommendations = (
 
     const interval = setInterval(refreshRecommendations, refreshInterval);
     return () => clearInterval(interval);
-  }, [autoRefresh, refreshInterval, refreshRecommendations]);
+  }, [autoRefresh, refreshInterval]); // Remove refreshRecommendations from dependency
 
   return {
     personalRecommendations,
@@ -262,7 +291,7 @@ export const useRelatedProblems = ({
 
   useEffect(() => {
     fetchRelatedProblems();
-  }, [fetchRelatedProblems]);
+  }, [problemId, limit]); // Only depend on problemId and limit
 
   return {
     relatedProblems,
@@ -366,7 +395,7 @@ export const useCollections = (
 
   useEffect(() => {
     fetchCollections();
-  }, [fetchCollections]);
+  }, [includeProblems, featuredOnly, collectionType, limit]); // Only depend on options
 
   return {
     collections,
@@ -427,7 +456,7 @@ export const useCollection = ({
 
   useEffect(() => {
     fetchCollection();
-  }, [fetchCollection]);
+  }, [collectionId, includeProblems]); // Only depend on collectionId and includeProblems
 
   return {
     collection,

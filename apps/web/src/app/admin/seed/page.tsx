@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  SeedlingIcon,
+  BeakerIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
-  PlayIcon
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
@@ -258,7 +257,7 @@ export default function SeedDataPage() {
                 </>
               ) : (
                 <>
-                  <SeedlingIcon className="h-4 w-4 mr-2" />
+                  <BeakerIcon className="h-4 w-4 mr-2" />
                   {selectedCategories.length > 0 
                     ? `Seed ${selectedCategories.length} Categories`
                     : 'Seed All Categories'
@@ -304,7 +303,7 @@ export default function SeedDataPage() {
             
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-center">
-                <SeedlingIcon className="h-6 w-6 text-blue-400" />
+                <BeakerIcon className="h-6 w-6 text-blue-400" />
                 <div className="ml-3">
                   <p className="text-sm font-medium text-blue-800">Categories</p>
                   <p className="text-lg font-bold text-blue-900">{seedResult.categories_seeded}</p>

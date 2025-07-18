@@ -59,7 +59,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
       role: 'Proprietario Ristorante',
       company: 'Trattoria Il Borgo',
       location: 'Milano, Italia',
-      avatar: '/images/testimonials/marco-rossi.jpg',
+      avatar: '/images/testimonials/marco-rossi.svg',
       content: 'Grazie a WikiGaiaLab ho ottenuto un\'app per gestire le prenotazioni che ha rivoluzionato il mio ristorante. Ho semplicemente votato il problema e ora ho accesso gratuito a tutte le funzionalità premium!',
       rating: 5,
       problemVoted: 'Sistema Prenotazioni Ristoranti',
@@ -72,7 +72,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
       role: 'Insegnante',
       company: 'Scuola Primaria San Giuseppe',
       location: 'Roma, Italia',
-      avatar: '/images/testimonials/giulia-bianchi.jpg',
+      avatar: '/images/testimonials/giulia-bianchi.svg',
       content: 'L\'app per organizzare le attività scolastiche che ho ottenuto votando su WikiGaiaLab mi ha fatto risparmiare ore di lavoro ogni settimana. La community è fantastica!',
       rating: 5,
       problemVoted: 'Organizzatore Attività Scolastiche',
@@ -84,7 +84,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
       name: 'Andrea Verdi',
       role: 'Freelance Developer',
       location: 'Torino, Italia',
-      avatar: '/images/testimonials/andrea-verdi.jpg',
+      avatar: '/images/testimonials/andrea-verdi.svg',
       content: 'WikiGaiaLab dimostra che la democratizzazione della tecnologia funziona. Ho partecipato al voto e ora uso quotidianamente l\'app per il time tracking. Geniale!',
       rating: 5,
       problemVoted: 'Time Tracking per Freelance',
@@ -98,7 +98,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
       role: 'Event Manager',
       company: 'EventHub',
       location: 'Firenze, Italia',
-      avatar: '/images/testimonials/sofia-ferrari.jpg',
+      avatar: '/images/testimonials/sofia-ferrari.svg',
       content: 'Ho proposto il problema della gestione ospiti per eventi e la community ha votato. Ora ho un\'app personalizzata che uso per tutti i miei eventi. Incredibile!',
       rating: 5,
       problemVoted: 'Gestione Ospiti Eventi',
@@ -111,7 +111,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
       role: 'Commerciante',
       company: 'Negozio di Quartiere',
       location: 'Napoli, Italia',
-      avatar: '/images/testimonials/roberto-neri.jpg',
+      avatar: '/images/testimonials/roberto-neri.svg',
       content: 'La community di WikiGaiaLab ha creato un\'app per la gestione inventario che è perfetta per il mio negozio. Tutto gratis perché ho partecipato al voto!',
       rating: 5,
       problemVoted: 'Gestione Inventario Negozi',
@@ -274,7 +274,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
                     alt={testimonial.name}
                     className="w-16 h-16 rounded-full mr-4 object-cover"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/default-avatar.png';
+                      (e.target as HTMLImageElement).src = '/images/default-avatar.svg';
                     }}
                   />
                   <div>
@@ -368,7 +368,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = ({ classNam
               alt={testimonial.name}
               className="w-12 h-12 rounded-full mr-3 object-cover"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/images/default-avatar.png';
+                (e.target as HTMLImageElement).src = '/images/default-avatar.svg';
               }}
             />
             <div>

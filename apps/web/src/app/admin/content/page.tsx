@@ -216,7 +216,7 @@ export default function ContentManagement() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Today's Submissions</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">Today&apos;s Submissions</dt>
                     <dd className="text-lg font-medium text-gray-900">{stats.todaySubmissions}</dd>
                   </dl>
                 </div>

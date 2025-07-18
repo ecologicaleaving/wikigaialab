@@ -7,8 +7,7 @@ import {
   Shield, 
   Settings,
   HelpCircle,
-  FileText,
-  Users
+  FileText
 } from 'lucide-react';
 
 export const mainNavigationItems: NavigationItem[] = [

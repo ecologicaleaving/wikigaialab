@@ -6,9 +6,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { AchievementEngine } from '../../../../../../../packages/shared/src/lib/achievementEngine';
-import { SocialService } from '../../../../../../../packages/shared/src/lib/socialService';
-import { UserAchievementsResponse } from '../../../../../../../packages/shared/src/types/social';
+import { AchievementEngine } from '@wikigaialab/shared/lib/achievementEngine';
+import { SocialService } from '@wikigaialab/shared/lib/socialService';
+import { UserAchievementsResponse } from '@wikigaialab/shared/types/social';
 
 // Initialize Supabase client
 const supabase = createClient(

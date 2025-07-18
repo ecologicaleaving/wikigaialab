@@ -14,7 +14,7 @@ interface DiscoveryDashboardProps {
   className?: string;
 }
 
-export default function DiscoveryDashboard({
+function DiscoveryDashboard({
   onProblemClick,
   onCollectionClick,
   className = ''
@@ -314,3 +314,5 @@ export default function DiscoveryDashboard({
     </div>
   );
 }
+
+export default DiscoveryDashboard;

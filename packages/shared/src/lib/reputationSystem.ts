@@ -215,7 +215,7 @@ export class ReputationSystem {
     ]);
 
     // Calculate additional metrics
-    const totalVotesReceived = problems?.reduce((sum, p) => sum + (p.vote_count || 0), 0) || 0;
+    const totalVotesReceived = problems?.reduce((sum: number, p: any) => sum + (p.vote_count || 0), 0) || 0;
     const profileCompleteness = this.calculateProfileCompleteness(user);
 
     return {
@@ -325,7 +325,7 @@ export class ReputationSystem {
       .eq('user_id', userId);
 
     const uniqueCategories = new Set(
-      categoryInteractions?.map(v => v.problems?.category_id).filter(Boolean) || []
+      categoryInteractions?.map((v: any) => v.problems?.category_id).filter(Boolean) || []
     );
 
     const diversityBonus = Math.min(uniqueCategories.size, 5) * this.weights.diverseInteraction;

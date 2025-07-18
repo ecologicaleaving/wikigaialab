@@ -28,7 +28,7 @@ interface CategoryFormData {
 }
 
 export default function AdminCategoriesPage() {
-  const { user, isAdmin, isAuthenticated } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -158,7 +158,7 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  const handleReorder = async (dragIndex: number, hoverIndex: number) => {
+  const handleReorder = async (dragIndex: number, hoverIndex: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     const newCategories = [...categories];
     const draggedCategory = newCategories[dragIndex];
     newCategories.splice(dragIndex, 1);
@@ -289,7 +289,7 @@ export default function AdminCategoriesPage() {
 
             {/* Categories List */}
             <div className="space-y-2">
-              {categories.map((category, index) => (
+              {categories.map((category) => (
                 <div
                   key={category.id}
                   className={`p-4 border rounded-lg ${

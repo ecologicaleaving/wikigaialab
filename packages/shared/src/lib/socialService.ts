@@ -544,7 +544,7 @@ export class SocialService {
         .select('following_id')
         .eq('follower_id', userId);
 
-      const followingIds = [userId, ...(following?.map(f => f.following_id) || [])];
+      const followingIds = [userId, ...(following?.map((f: any) => f.following_id) || [])];
 
       const [{ data: activities }, { count }] = await Promise.all([
         this.db

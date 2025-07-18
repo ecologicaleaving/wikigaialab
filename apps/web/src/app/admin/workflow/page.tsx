@@ -3,12 +3,8 @@
 import { useState, useEffect } from 'react';
 import { 
   PlayIcon,
-  PauseIcon,
   CheckCircleIcon,
-  XCircleIcon,
   ClockIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
   EyeIcon
 } from '@heroicons/react/24/outline';
 import { AdminWorkflowStats } from '@/components/admin/AdminWorkflowStats';

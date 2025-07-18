@@ -2,6 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '../contexts/AuthContext';
+import { MonitoringProvider } from '../components/monitoring/MonitoringProvider';
+import ErrorBoundary from '../components/ErrorBoundary';
 import { generateMetadata, landingPageSEO, organizationStructuredData, generateJsonLdScript } from '../lib/seo';
 import { config } from '../lib/env';
 
@@ -73,9 +75,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ErrorBoundary>
+          <MonitoringProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </MonitoringProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

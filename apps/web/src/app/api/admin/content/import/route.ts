@@ -235,7 +235,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Get import history
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });

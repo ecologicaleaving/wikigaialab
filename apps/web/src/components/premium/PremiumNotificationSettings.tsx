@@ -8,7 +8,7 @@ import {
   EnvelopeIcon,
   DevicePhoneMobileIcon,
   ClockIcon,
-  TrendingUpIcon,
+  TrendingUpIcon as TrendingUpIcon,
   UserGroupIcon,
   StarIcon,
   ExclamationTriangleIcon,
@@ -199,7 +199,7 @@ export function PremiumNotificationSettings() {
       case 'instant': return BellIcon;
       case 'daily': return ClockIcon;
       case 'weekly': return EnvelopeIcon;
-      case 'trending': return TrendingUpIcon;
+      case 'trending': return TrendingUpIcon as TrendingUpIcon;
       case 'personal': return UserGroupIcon;
       default: return InformationCircleIcon;
     }

@@ -77,6 +77,11 @@ export default function AppDetailPage() {
 
   useEffect(() => {
     if (params.slug) {
+      // Redirect to actual Volantino Generator app
+      if (params.slug === 'volantino-generator') {
+        window.location.href = '/apps/volantino-generator';
+        return;
+      }
       fetchAppDetail(params.slug as string);
     }
   }, [params.slug]);

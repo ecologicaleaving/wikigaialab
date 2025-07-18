@@ -124,12 +124,14 @@ class RedisStore {
   // TODO: Implement Redis-based rate limiting for production
   // This would use Redis commands like INCR, EXPIRE for atomic operations
   
-  async get(key: string): Promise<RateLimitEntry | null> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async get(_key: string): Promise<RateLimitEntry | null> {
     // Implement Redis GET
     throw new Error('Redis store not implemented yet');
   }
   
-  async increment(key: string, windowMs: number): Promise<RateLimitEntry> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async increment(_key: string, _windowMs: number): Promise<RateLimitEntry> {
     // Implement Redis INCR with expiry
     throw new Error('Redis store not implemented yet');
   }
@@ -195,8 +197,6 @@ export function createRateLimit(configName: keyof typeof rateLimitConfigs | Rate
     windowMs,
     maxRequests,
     message = 'Rate limit exceeded',
-    skipSuccessfulRequests = false,
-    skipFailedRequests = false,
     keyGenerator = defaultKeyGenerator,
   } = limitConfig;
 
