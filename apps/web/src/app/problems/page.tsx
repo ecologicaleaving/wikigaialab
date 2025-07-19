@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { AuthenticatedLayout } from '../../components/layout';
 import { Button } from '../../components/ui/button';
 import { Plus, Compass, Filter, TrendingUp, Heart, Star } from 'lucide-react';
@@ -27,7 +27,7 @@ interface User {
   name: string;
 }
 
-export default function ProblemsListPage() {
+function ProblemsListComponent() {
   const { user } = useAuth();
   const { recordUserAction, recordBusinessMetric } = useMonitoring();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -462,5 +462,32 @@ function CategoryDiscoveryView({
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProblemsListPage() {
+  return (
+    <Suspense fallback={
+      <AuthenticatedLayout>
+        <div className="container-wide py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded w-1/3 mb-4"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/2 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} className="bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="h-4 bg-gray-300 rounded w-1/4 mb-3"></div>
+                  <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
+                  <div className="h-12 bg-gray-300 rounded w-full mb-4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AuthenticatedLayout>
+    }>
+      <ProblemsListComponent />
+    </Suspense>
   );
 }
