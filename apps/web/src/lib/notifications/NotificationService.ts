@@ -47,11 +47,19 @@ export class NotificationService {
   private resend: Resend | null = null;
 
   constructor() {
+    // Check if we have the required environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.warn('NotificationService: Missing required environment variables');
+      // Create a mock client that will fail gracefully
+      this.supabase = null as any;
+      return;
+    }
+
     // Initialize Supabase with service role for admin operations
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    );
+    this.supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Initialize Resend if API key is available
     if (process.env.RESEND_API_KEY) {
@@ -63,6 +71,10 @@ export class NotificationService {
    * Queue a notification for delivery
    */
   async queueNotification(data: NotificationData): Promise<string> {
+    if (!this.supabase) {
+      throw new Error('NotificationService not properly initialized');
+    }
+    
     try {
       const { data: notification, error } = await this.supabase
         .from('notifications')
@@ -98,6 +110,10 @@ export class NotificationService {
     problemId: string,
     milestone: number
   ): Promise<string> {
+    if (!this.supabase) {
+      throw new Error('NotificationService not properly initialized');
+    }
+    
     try {
       // Get problem details with user and category info
       const { data: problem, error: problemError } = await this.supabase
@@ -208,6 +224,10 @@ export class NotificationService {
       reason?: string;
     }
   ): Promise<string[]> {
+    if (!this.supabase) {
+      throw new Error('NotificationService not properly initialized');
+    }
+    
     try {
       // Get problem details
       const { data: problem, error: problemError } = await this.supabase
@@ -359,6 +379,10 @@ export class NotificationService {
    * Send admin alert for high-priority problems
    */
   async sendAdminAlert(problemId: string): Promise<string[]> {
+    if (!this.supabase) {
+      throw new Error('NotificationService not properly initialized');
+    }
+    
     try {
       // Get problem details
       const { data: problem, error: problemError } = await this.supabase
@@ -457,6 +481,10 @@ export class NotificationService {
     templateName: string,
     variables: TemplateVariables
   ): Promise<{ subject: string; contentText: string; contentHtml?: string }> {
+    if (!this.supabase) {
+      throw new Error('NotificationService not properly initialized');
+    }
+    
     try {
       const { data: template, error } = await this.supabase
         .from('email_templates')
@@ -493,6 +521,11 @@ export class NotificationService {
    * Send all pending notifications
    */
   async sendPendingNotifications(): Promise<void> {
+    if (!this.supabase) {
+      console.log('NotificationService not properly initialized, skipping');
+      return;
+    }
+    
     if (!this.resend) {
       console.log('Resend not configured, skipping email sending');
       return;
@@ -579,6 +612,11 @@ export class NotificationService {
    * Mark notification as failed and handle retries
    */
   private async markNotificationFailed(notificationId: string, errorMessage: string): Promise<void> {
+    if (!this.supabase) {
+      console.log('NotificationService not properly initialized, cannot mark notification as failed');
+      return;
+    }
+    
     try {
       const { data: notification, error } = await this.supabase
         .from('notifications')
