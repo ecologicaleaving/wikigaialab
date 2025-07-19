@@ -2,5 +2,8 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
   "installCommand": "pnpm install --filter @wikigaialab/web...",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_USE_LOCAL_AUTH": "true"
+  }
 }

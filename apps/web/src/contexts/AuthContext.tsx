@@ -178,6 +178,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(true);
       setError(null);
       
+      // Check if we should use local simulation
+      const useLocalAuth = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_USE_LOCAL_AUTH === 'true';
+      
+      if (useLocalAuth) {
+        // Simulate local user login
+        const mockUser: AuthUser = {
+          id: 'local-user-123',
+          email: 'demo@wikigaialab.com',
+          name: 'Demo User',
+          avatar_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          last_login_at: new Date().toISOString(),
+          is_admin: false,
+          subscription_status: 'free',
+          total_votes_cast: 0,
+          total_problems_proposed: 0,
+        };
+        
+        const mockSession = {
+          access_token: 'mock-token',
+          refresh_token: 'mock-refresh',
+          expires_in: 3600,
+          expires_at: Date.now() + 3600000,
+          user: {
+            id: mockUser.id,
+            email: mockUser.email,
+            user_metadata: {
+              name: mockUser.name,
+              avatar_url: mockUser.avatar_url,
+            }
+          }
+        } as Session;
+        
+        setUser(mockUser);
+        setSession(mockSession);
+        cacheSession(mockSession);
+        
+        // Small delay to simulate network request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
+        return;
+      }
+      
+      // Use real OAuth
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -193,7 +240,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [cacheSession]);
 
   const signOut = useCallback(async () => {
     try {
