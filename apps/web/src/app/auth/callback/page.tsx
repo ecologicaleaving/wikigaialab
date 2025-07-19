@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import { createOrUpdateUser, getAuthErrorMessage } from '../../../lib/auth';
@@ -8,10 +8,9 @@ import { AuthLoadingSpinner } from '../../../components/auth/AuthLoadingSpinner'
 import { safeLocation, getBrowserStatus } from '../../../lib/browser-utils';
 
 /**
- * OAuth Callback Page
- * Handles the OAuth callback from Google and processes the authentication result
+ * Auth Callback Component that uses search params
  */
-export default function AuthCallbackPage() {
+function AuthCallbackComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
@@ -201,5 +200,28 @@ export default function AuthCallbackPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * OAuth Callback Page with Suspense boundary
+ * Handles the OAuth callback from Google and processes the authentication result
+ */
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <AuthLoadingSpinner message="Caricamento..." />
+            <p className="mt-4 text-sm text-gray-600">
+              Preparazione dell'autenticazione...
+            </p>
+          </div>
+        </div>
+      </div>
+    }>
+      <AuthCallbackComponent />
+    </Suspense>
   );
 }
