@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
   "installCommand": "pnpm install --filter @wikigaialab/web...",
   "framework": "nextjs"
