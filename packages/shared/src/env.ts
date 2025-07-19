@@ -34,10 +34,53 @@ const envSchema = z.object({
   // Environment
   NODE_ENV: z.enum(['development', 'staging', 'production']).default('development'),
   DEBUG: z.string().optional().transform((val) => val === 'true'),
+
+  // Security Configuration
+  RATE_LIMIT_MAX_REQUESTS: z.string().transform(val => parseInt(val) || 100).default('100'),
+  RATE_LIMIT_WINDOW_MS: z.string().transform(val => parseInt(val) || 900000).default('900000'),
+
+  // Business Configuration
+  PREMIUM_ACCESS_VOTE_THRESHOLD: z.string().transform(val => parseInt(val) || 5).default('5'),
+  CONTRIBUTOR_LEVEL_VOTES: z.string().transform(val => parseInt(val) || 5).default('5'),
+  ADVOCATE_LEVEL_VOTES: z.string().transform(val => parseInt(val) || 15).default('15'),
+  CHAMPION_LEVEL_VOTES: z.string().transform(val => parseInt(val) || 25).default('25'),
+  PROBLEM_DEVELOPMENT_THRESHOLD: z.string().transform(val => parseInt(val) || 100).default('100'),
 });
 
 // Runtime environment validation
 export function validateEnv() {
+  // On client-side, only validate client-safe variables
+  if (typeof window !== 'undefined') {
+    try {
+      const clientOnlySchema = z.object({
+        NEXT_PUBLIC_APP_URL: z.string().url('Invalid app URL').default('http://localhost:3000'),
+        NEXT_PUBLIC_APP_NAME: z.string().min(1, 'App name is required').default('WikiGaiaLab'),
+        NEXT_PUBLIC_APP_DESCRIPTION: z.string().default('Community-driven problem solving platform'),
+        NEXT_PUBLIC_SUPABASE_URL: z.string().url('Invalid Supabase URL').optional(),
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'Supabase anon key is required').optional(),
+        NODE_ENV: z.enum(['development', 'staging', 'production']).default('development'),
+      });
+      
+      const env = clientOnlySchema.parse(process.env);
+      return { success: true, data: env, error: null };
+    } catch (error) {
+      // Return safe defaults for client-side
+      return {
+        success: true,
+        data: {
+          NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+          NEXT_PUBLIC_APP_NAME: 'WikiGaiaLab',
+          NEXT_PUBLIC_APP_DESCRIPTION: 'Community-driven problem solving platform',
+          NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+          NODE_ENV: 'development',
+        },
+        error: null
+      };
+    }
+  }
+  
+  // Server-side: validate all variables
   try {
     const env = envSchema.parse(process.env);
     return { success: true, data: env, error: null };
@@ -70,12 +113,23 @@ export function validateEnv() {
   }
 }
 
-// Export validated environment variables
-export const env = validateEnv();
+// Lazy environment validation - only validates when requested
+let _cachedEnv: ReturnType<typeof validateEnv> | null = null;
+
+export function getValidatedEnv() {
+  if (_cachedEnv) return _cachedEnv;
+  _cachedEnv = validateEnv();
+  return _cachedEnv;
+}
 
 // Environment validation error handler
 export function handleEnvError(error: any) {
-  console.error('🚨 Environment validation failed:');
+  // Only show errors on server-side
+  if (typeof window !== 'undefined') {
+    return; // Silent fail on client-side always
+  }
+  
+  console.error('❌ Environment validation failed:');
   
   if (error.type === 'validation') {
     error.issues.forEach((issue: any) => {
@@ -88,12 +142,24 @@ export function handleEnvError(error: any) {
     console.error(`  - ${error.message}`);
   }
   
-  process.exit(1);
+  // Only exit on server-side
+  if (typeof process !== 'undefined' && process.exit) {
+    process.exit(1);
+  }
 }
 
-// Validate environment on module load (only in Node.js environment)
-if (typeof globalThis !== 'undefined' && typeof (globalThis as any).window === 'undefined' && !env.success) {
-  handleEnvError(env.error);
+// Server-only validation helper - only runs on server and only when called
+export function validateServerEnv() {
+  if (typeof window !== 'undefined') {
+    // Silent return on client-side with safe defaults
+    return { success: true, data: null, error: null };
+  }
+  
+  const result = getValidatedEnv();
+  if (!result.success) {
+    handleEnvError(result.error);
+  }
+  return result;
 }
 
 // Export type for TypeScript

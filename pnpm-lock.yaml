@@ -1,1 +1,23 @@
 lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+  .:
+    devDependencies: {}
+  apps/web:
+    dependencies: {}
+    devDependencies: {}
+  packages/database:
+    dependencies: {}
+    devDependencies: {}
+  packages/shared:
+    dependencies: {}
+    devDependencies: {}
+  packages/ui:
+    dependencies: {}
+    devDependencies: {}
+
+packages: {}
