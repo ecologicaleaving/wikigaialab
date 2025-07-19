@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import { GoogleLoginButton } from '../../components/auth/GoogleLoginButton';
@@ -8,10 +8,9 @@ import { AuthLoadingSpinner } from '../../components/auth/AuthLoadingSpinner';
 import Link from 'next/link';
 
 /**
- * Login Page Component
- * Handles user authentication with Google OAuth
+ * Login Component that uses search params
  */
-export default function LoginPage() {
+function LoginComponent() {
   const { user, loading, error, clearError } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -198,6 +197,22 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Login Page with Suspense boundary
+ * Handles user authentication with Google OAuth
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <AuthLoadingSpinner message="Caricamento..." />
+      </div>
+    }>
+      <LoginComponent />
+    </Suspense>
   );
 }
 
