@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { AuthenticatedLayout } from '../../../components/layout';
 import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'sonner';
+import { supabase } from '../../../lib/supabase';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
@@ -60,7 +61,9 @@ export default function NewProblemPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/api/categories');
+        const response = await fetch('/api/categories', {
+          credentials: 'include'
+        });
         if (!response.ok) {
           throw new Error('Errore nel caricamento delle categorie');
         }
@@ -80,11 +83,20 @@ export default function NewProblemPage() {
   const onSubmit = async (data: ProblemProposalData) => {
     setIsSubmitting(true);
     try {
+      // Get the current session to include in API call
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session?.access_token) {
+        throw new Error('No valid session. Please log in again.');
+      }
+
       const response = await fetch('/api/problems', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
 

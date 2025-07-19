@@ -97,7 +97,14 @@ class CollectionManager {
 
       const { data: collections, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        // If table doesn't exist, return empty array instead of failing
+        if (error.message?.includes('does not exist') || error.code === 'PGRST200') {
+          console.warn('Collections table not found, returning empty collections');
+          return [];
+        }
+        throw error;
+      }
 
       // Get item counts for each collection
       const collectionsWithCounts = await Promise.all(

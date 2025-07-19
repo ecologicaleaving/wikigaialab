@@ -4,6 +4,8 @@
  * Tracks and reports performance improvements after refactoring
  */
 
+import { safePerformance, getBrowserStatus } from './browser-utils';
+
 interface PerformanceMetric {
   name: string;
   value: number;
@@ -38,13 +40,13 @@ class PerformanceMonitor {
   private apiStartTimes: Map<string, number> = new Map();
 
   constructor() {
-    this.startTime = performance.now();
+    this.startTime = safePerformance.now();
     this.setupObservers();
   }
 
   private setupObservers() {
-    // Web Vitals observer
-    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+    // Web Vitals observer - only run in browser environment
+    if (getBrowserStatus() && 'PerformanceObserver' in window) {
       try {
         // Core Web Vitals
         const observer = new PerformanceObserver((list) => {
@@ -90,12 +92,12 @@ class PerformanceMonitor {
 
   // Track authentication initialization
   startAuthTracking() {
-    this.authStartTime = performance.now();
+    this.authStartTime = safePerformance.now();
   }
 
   endAuthTracking() {
     if (this.authStartTime) {
-      const duration = performance.now() - this.authStartTime;
+      const duration = safePerformance.now() - this.authStartTime;
       this.recordMetric({
         name: 'authInitialization',
         value: duration,
@@ -109,13 +111,13 @@ class PerformanceMonitor {
 
   // Track API calls
   startApiTracking(endpoint: string) {
-    this.apiStartTimes.set(endpoint, performance.now());
+    this.apiStartTimes.set(endpoint, safePerformance.now());
   }
 
   endApiTracking(endpoint: string) {
     const startTime = this.apiStartTimes.get(endpoint);
     if (startTime) {
-      const duration = performance.now() - startTime;
+      const duration = safePerformance.now() - startTime;
       this.recordMetric({
         name: `api_${endpoint}`,
         value: duration,
@@ -129,7 +131,7 @@ class PerformanceMonitor {
 
   // Track bundle size and memory usage
   trackResourceUsage() {
-    if (typeof window !== 'undefined') {
+    if (getBrowserStatus()) {
       // Bundle size estimation
       const scripts = document.querySelectorAll('script[src]');
       let totalSize = 0;
@@ -162,7 +164,7 @@ class PerformanceMonitor {
 
   // Generate performance report
   generateReport(): PerformanceReport {
-    const startupTime = performance.now() - this.startTime;
+    const startupTime = safePerformance.now() - this.startTime;
 
     // Calculate averages for each category
     const apiMetrics = this.metrics.filter(m => m.category === 'api');
@@ -265,6 +267,22 @@ class PerformanceMonitor {
 let performanceMonitor: PerformanceMonitor | null = null;
 
 export const getPerformanceMonitor = (): PerformanceMonitor => {
+  // Only create monitor in browser environment
+  if (!getBrowserStatus()) {
+    // Return a mock monitor for SSR
+    return {
+      startAuthTracking: () => {},
+      endAuthTracking: () => {},
+      startApiTracking: () => {},
+      endApiTracking: () => {},
+      trackResourceUsage: () => {},
+      displayReport: () => {},
+      exportMetrics: () => ({ timestamp: '', metrics: [], report: {} as any }),
+      generateReport: () => ({} as any),
+      recordMetric: () => {}
+    } as any;
+  }
+  
   if (!performanceMonitor) {
     performanceMonitor = new PerformanceMonitor();
   }
@@ -273,6 +291,14 @@ export const getPerformanceMonitor = (): PerformanceMonitor => {
 
 // Helper functions for easy integration
 export const trackAuth = () => {
+  // Only track in browser environment
+  if (!getBrowserStatus()) {
+    return {
+      start: () => {},
+      end: () => {}
+    };
+  }
+  
   const monitor = getPerformanceMonitor();
   return {
     start: () => monitor.startAuthTracking(),
@@ -281,6 +307,14 @@ export const trackAuth = () => {
 };
 
 export const trackApi = (endpoint: string) => {
+  // Only track in browser environment
+  if (!getBrowserStatus()) {
+    return {
+      start: () => {},
+      end: () => {}
+    };
+  }
+  
   const monitor = getPerformanceMonitor();
   return {
     start: () => monitor.startApiTracking(endpoint),
@@ -295,8 +329,8 @@ export const generatePerformanceReport = () => {
   return monitor.exportMetrics();
 };
 
-// Auto-initialize on import
-if (typeof window !== 'undefined') {
+// Auto-initialize on import - only in browser environment
+if (getBrowserStatus()) {
   // Initialize monitoring after a short delay
   setTimeout(() => {
     const monitor = getPerformanceMonitor();

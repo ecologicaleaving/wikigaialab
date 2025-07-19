@@ -5,7 +5,8 @@ import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { AuthUser } from '../types/auth';
 import { getCurrentUser } from '../lib/auth';
-import { trackAuth } from '../lib/performance-monitor';
+// import { trackAuth } from '../lib/performance-monitor';
+import { safeLocalStorage } from '../lib/browser-utils';
 
 /**
  * REFACTORED: Simplified Authentication Context
@@ -36,13 +37,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Simplified session caching - just basic localStorage without complex validation
+  // Simplified session caching - SSR-safe localStorage access
   const cacheSession = useCallback((session: Session | null) => {
     try {
       if (session) {
-        localStorage.setItem('auth_session', JSON.stringify(session));
+        safeLocalStorage.setItem('auth_session', JSON.stringify(session));
       } else {
-        localStorage.removeItem('auth_session');
+        safeLocalStorage.removeItem('auth_session');
       }
     } catch (e) {
       // Silently fail - caching is optional
@@ -51,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getCachedSession = useCallback((): Session | null => {
     try {
-      const cached = localStorage.getItem('auth_session');
+      const cached = safeLocalStorage.getItem('auth_session');
       if (cached) {
         const session = JSON.parse(cached);
         // Simple expiration check
@@ -70,8 +71,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let mounted = true;
 
     const initAuth = async () => {
-      const authTracker = trackAuth();
-      authTracker.start();
+      // const authTracker = trackAuth();
+      // authTracker.start();
       
       try {
         // Try cache first for instant loading
@@ -129,7 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setLoading(false);
         }
       } finally {
-        authTracker.end();
+        // authTracker.end();
       }
     };
 

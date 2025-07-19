@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '../../../../lib/supabase';
-import { trackApi } from '../../../../lib/performance-monitor';
+// import { trackApi } from '../../../../lib/performance-monitor';
 
 /**
  * REFACTORED: Optimized Trending Recommendations API
@@ -99,8 +99,8 @@ async function getTrendingProblems(limit: number = 20): Promise<TrendingProblem[
 }
 
 export async function GET(request: NextRequest) {
-  const apiTracker = trackApi('trending');
-  apiTracker.start();
+  // const apiTracker = trackApi('trending');
+  // apiTracker.start();
   
   try {
     const url = new URL(request.url);
@@ -120,11 +120,11 @@ export async function GET(request: NextRequest) {
     // Add caching headers for performance
     response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
     
-    apiTracker.end();
+    // apiTracker.end();
     return response;
   } catch (error) {
     console.error('Trending API error:', error);
-    apiTracker.end();
+    // apiTracker.end();
     
     // Always return success with fallback data
     return NextResponse.json({

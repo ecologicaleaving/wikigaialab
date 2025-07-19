@@ -7,7 +7,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Achievement } from '../../../../../@wikigaialab/shared/types/social';
+// Achievement interface (temporary until shared types are properly set up)
+interface Achievement {
+  id?: string;
+  name: string;
+  description: string;
+  icon?: string;
+  category: string;
+  points: number;
+  criteria: any;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
 
 // Initialize Supabase client helper
 function getSupabaseClient() {

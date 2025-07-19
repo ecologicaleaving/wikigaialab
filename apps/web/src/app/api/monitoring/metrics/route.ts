@@ -70,23 +70,64 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { metric, value, tags } = body;
+    
+    // Handle both single metric and batch metrics formats
+    if (body.metrics && Array.isArray(body.metrics)) {
+      // Batch format from monitoring service
+      const validMetrics = body.metrics.filter(m => 
+        m.name && (m.value !== undefined && m.value !== null)
+      );
+      
+      if (validMetrics.length === 0) {
+        console.warn('No valid metrics in batch');
+        return NextResponse.json({
+          success: true,
+          processed: 0,
+          timestamp: new Date().toISOString()
+        });
+      }
 
-    // Log custom metrics
-    console.log('Custom metric:', {
-      metric,
-      value,
-      tags,
-      timestamp: new Date().toISOString()
-    });
+      // Log valid metrics
+      validMetrics.forEach(metric => {
+        console.log('Custom metric:', {
+          metric: metric.name,
+          value: metric.value,
+          tags: metric.tags,
+          timestamp: metric.timestamp || new Date().toISOString()
+        });
+      });
 
-    // In production, you would send this to your monitoring service
-    // Example: DataDog, New Relic, CloudWatch, etc.
+      return NextResponse.json({
+        success: true,
+        processed: validMetrics.length,
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      // Single metric format
+      const { metric, value, tags } = body;
 
-    return NextResponse.json({
-      success: true,
-      timestamp: new Date().toISOString()
-    });
+      // Validate that required fields are present
+      if (!metric || value === undefined || value === null) {
+        console.warn('Invalid metric data received:', { metric, value, tags });
+        return NextResponse.json({
+          error: 'Invalid metric data: metric name and value are required',
+          timestamp: new Date().toISOString()
+        }, { status: 400 });
+      }
+
+      // Log custom metrics only if valid
+      console.log('Custom metric:', {
+        metric,
+        value,
+        tags,
+        timestamp: new Date().toISOString()
+      });
+
+      return NextResponse.json({
+        success: true,
+        timestamp: new Date().toISOString()
+      });
+    }
 
   } catch (error) {
     console.error('Custom metric logging failed:', error);

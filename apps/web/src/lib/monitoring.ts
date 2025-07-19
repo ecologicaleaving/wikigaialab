@@ -346,7 +346,5 @@ export function useMonitoring() {
   };
 }
 
-// Initialize monitoring when module loads
-if (typeof window !== 'undefined') {
-  monitoring.initialize();
-}
+// Note: Monitoring should be initialized by MonitoringProvider component
+// Removing auto-initialization to prevent hydration issues

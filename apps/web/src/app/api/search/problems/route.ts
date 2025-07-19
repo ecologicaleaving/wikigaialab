@@ -184,11 +184,18 @@ export const GET = withApiHandler(async (request: NextRequest): Promise<NextResp
                                .order('created_at', { ascending: false });
       } else {
         const ascending = sort_order === 'asc';
-        finalQuery = finalQuery.order(sort_by, { ascending });
         
-        // Add secondary sort for consistency
-        if (sort_by !== 'created_at') {
-          finalQuery = finalQuery.order('created_at', { ascending: false });
+        // Handle relevance sort - fallback to vote_count + created_at since relevance column doesn't exist
+        if (sort_by === 'relevance') {
+          finalQuery = finalQuery.order('vote_count', { ascending: false })
+                                 .order('created_at', { ascending: false });
+        } else {
+          finalQuery = finalQuery.order(sort_by, { ascending });
+          
+          // Add secondary sort for consistency
+          if (sort_by !== 'created_at') {
+            finalQuery = finalQuery.order('created_at', { ascending: false });
+          }
         }
       }
 

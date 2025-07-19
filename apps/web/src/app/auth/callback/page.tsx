@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import { createOrUpdateUser, getAuthErrorMessage } from '../../../lib/auth';
 import { AuthLoadingSpinner } from '../../../components/auth/AuthLoadingSpinner';
+import { safeLocation, getBrowserStatus } from '../../../lib/browser-utils';
 
 /**
  * OAuth Callback Page
@@ -15,14 +16,24 @@ export default function AuthCallbackPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Hydration detection effect
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
+    // Only run auth callback processing after hydration
+    if (!isHydrated) return;
+
     const handleAuthCallback = async () => {
       try {
         setStatus('processing');
         
-        // Get the URL hash/fragment which contains the OAuth tokens
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        // Get the URL hash/fragment safely using browser utils
+        const hash = safeLocation.hash;
+        const hashParams = new URLSearchParams(hash.substring(1));
         const accessToken = hashParams.get('access_token');
         const refreshToken = hashParams.get('refresh_token');
         const errorParam = hashParams.get('error');
@@ -101,13 +112,22 @@ export default function AuthCallbackPage() {
     };
 
     handleAuthCallback();
-  }, [router, searchParams]);
+  }, [router, searchParams, isHydrated]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          {status === 'processing' && (
+          {!isHydrated && (
+            <>
+              <AuthLoadingSpinner message="Inizializzazione..." />
+              <p className="mt-4 text-sm text-gray-600">
+                Preparazione dell'ambiente di autenticazione...
+              </p>
+            </>
+          )}
+          
+          {isHydrated && status === 'processing' && (
             <>
               <AuthLoadingSpinner message="Completamento accesso..." />
               <p className="mt-4 text-sm text-gray-600">
@@ -116,7 +136,7 @@ export default function AuthCallbackPage() {
             </>
           )}
           
-          {status === 'success' && (
+          {isHydrated && status === 'success' && (
             <>
               <div className="mx-auto h-12 w-12 text-green-600">
                 <svg
@@ -142,7 +162,7 @@ export default function AuthCallbackPage() {
             </>
           )}
           
-          {status === 'error' && (
+          {isHydrated && status === 'error' && (
             <>
               <div className="mx-auto h-12 w-12 text-red-600">
                 <svg

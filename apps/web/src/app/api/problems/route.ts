@@ -51,9 +51,30 @@ export const POST = withApiHandler(async (request: NextRequest): Promise<NextRes
   const { body } = await validateReq(request);
   const { title, description, category_id } = body;
 
-  // Get authenticated user
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
+  // Get authenticated user - try Authorization header first, then cookies
+  const authHeader = request.headers.get('authorization');
+  let supabase: any;
+  
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    // Use Authorization header
+    const token = authHeader.replace('Bearer ', '');
+    const { createClient } = require('@supabase/supabase-js');
+    supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: {
+            Authorization: authHeader,
+          },
+        },
+      }
+    );
+  } else {
+    // Fallback to cookies
+    const cookieStore = cookies();
+    supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
+  }
   
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
