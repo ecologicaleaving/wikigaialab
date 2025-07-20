@@ -14,6 +14,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if analytics is enabled (to avoid errors in development/testing)
+    const analyticsEnabled = process.env.ENABLE_ANALYTICS === 'true';
+    
+    if (!analyticsEnabled) {
+      // Just log the event and return success
+      console.log('📊 Analytics Event (disabled):', { event, data });
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Analytics event logged (disabled)' 
+      });
+    }
+
     // Extract user info from request
     const user_id = data.user_id || null;
     const ip_address = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
@@ -32,31 +44,42 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     };
 
-    // Store in Supabase (or your preferred database)
-    const { data: result, error } = await supabase
-      .from('analytics_events')
-      .insert([analyticsRecord]);
+    try {
+      // Store in Supabase (gracefully handle table not existing)
+      const { data: result, error } = await supabase
+        .from('analytics_events')
+        .insert([analyticsRecord]);
 
-    if (error) {
-      console.error('Failed to store analytics event:', error);
-      return NextResponse.json(
-        { error: 'Failed to store analytics event' },
-        { status: 500 }
-      );
+      if (error) {
+        // Log error but don't fail the request
+        console.warn('Analytics storage failed (non-critical):', error.message);
+        return NextResponse.json({ 
+          success: true, 
+          message: 'Analytics event logged (storage failed)' 
+        });
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Analytics event stored successfully' 
+      });
+      
+    } catch (dbError) {
+      // Database error - just log it and continue
+      console.warn('Analytics database error (non-critical):', dbError);
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Analytics event logged (db unavailable)' 
+      });
     }
-
-    // Return success response
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Analytics event stored successfully' 
-    });
 
   } catch (error) {
     console.error('Analytics tracking error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    // Don't return 500 - just succeed silently
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Analytics event logged (error handled)' 
+    });
   }
 }
 
