@@ -126,7 +126,8 @@ function AuthCallbackComponent() {
                 user: {
                   id: '255ee834-959a-47f1-bef6-857166bf6253', // From token
                   email: 'dadecresce@gmail.com', // From token
-                  name: 'Davide Crescentini' // From token
+                  name: 'Davide Crescentini', // From token
+                  avatar_url: 'https://lh3.googleusercontent.com/a/ACg8ocIDd57bfchtjFbMX0VZlrU1nDre0dXX7bf6UnohaU-9Sy4tJS9rA=s96-c' // From token
                 },
                 timestamp: Date.now()
               };
