@@ -179,13 +179,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
       
       // Check if we should use local simulation
-      // You can control this via environment variable or URL parameter
+      // Only use demo mode when explicitly requested via URL parameter
       const urlParams = new URLSearchParams(window.location.search);
       const forceDemo = urlParams.get('demo') === 'true';
-      const forceReal = urlParams.get('demo') === 'false';
       
-      const useLocalAuth = forceDemo || 
-                          (!forceReal && process.env.NEXT_PUBLIC_USE_LOCAL_AUTH === 'true');
+      const useLocalAuth = forceDemo;
       
       if (useLocalAuth) {
         
@@ -254,6 +252,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(true);
       setError(null);
       
+      // Clear state immediately for demo users
+      if (user?.id === 'local-user-123') {
+        setSession(null);
+        setUser(null);
+        cacheSession(null);
+        window.location.href = '/login';
+        return;
+      }
+      
+      // For real users, use Supabase signOut
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -262,13 +270,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(null);
         setUser(null);
         cacheSession(null);
+        window.location.href = '/login';
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Sign out failed');
     } finally {
       setLoading(false);
     }
-  }, [cacheSession]);
+  }, [cacheSession, user]);
 
   const clearError = useCallback(() => {
     setError(null);
