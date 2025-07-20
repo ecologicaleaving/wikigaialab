@@ -99,9 +99,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@auth/supabase-adapter':
-        specifier: ^1.4.2
-        version: 1.10.0(@supabase/supabase-js@2.52.0)
       '@headlessui/react':
         specifier: ^2.2.4
         version: 2.2.4(react-dom@18.3.1)(react@18.3.1)
@@ -332,19 +329,6 @@ packages:
       oauth4webapi: 3.6.0
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
-    dev: false
-
-  /@auth/supabase-adapter@1.10.0(@supabase/supabase-js@2.52.0):
-    resolution: {integrity: sha512-Gix/dTRBjuj3/zqbMKVhu8z8j93QI3baZS0Fs5VIqpBoeSIxIAyXKJnZBy24B7Uazecp1VUIolbyt5yrR18gFw==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.43.1
-    dependencies:
-      '@auth/core': 0.40.0
-      '@supabase/supabase-js': 2.52.0
-    transitivePeerDependencies:
-      - '@simplewebauthn/browser'
-      - '@simplewebauthn/server'
-      - nodemailer
     dev: false
 
   /@babel/code-frame@7.27.1:
