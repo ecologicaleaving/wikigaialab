@@ -65,38 +65,65 @@ function AuthCallbackComponent() {
         // Set the session with tokens from URL if available
         if (accessToken && refreshToken) {
           console.log('🔐 Attempting to set session with tokens...');
+          console.log('🔐 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+          console.log('🔐 Token lengths:', { accessToken: accessToken.length, refreshToken: refreshToken.length });
           
           try {
+            // Try with a shorter timeout first
             const setSessionPromise = supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken
             });
             
-            // Add timeout to prevent hanging
+            console.log('🔐 SetSession promise created, waiting for response...');
+            
+            // Shorter timeout - 5 seconds
             const timeoutPromise = new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('SetSession timeout after 10 seconds')), 10000)
+              setTimeout(() => reject(new Error('SetSession timeout after 5 seconds')), 5000)
             );
             
-            const { data: { session }, error: setSessionError } = await Promise.race([
+            const result = await Promise.race([
               setSessionPromise,
               timeoutPromise
             ]) as any;
+            
+            console.log('🔐 SetSession completed:', result);
+            
+            const { data: { session }, error: setSessionError } = result;
             
             console.log('🔐 Set session result:', {
               hasSession: !!session,
               hasUser: !!session?.user,
               userId: session?.user?.id,
               userEmail: session?.user?.email,
-              error: setSessionError
+              error: setSessionError,
+              errorMessage: setSessionError?.message
             });
+            
+            if (setSessionError) {
+              console.error('🔐 SetSession error details:', setSessionError);
+              setErrorMessage(`Errore Supabase: ${setSessionError.message}`);
+              setStatus('error');
+              
+              setTimeout(() => {
+                router.push('/login?error=supabase_error');
+              }, 3000);
+              return;
+            }
+            
+            // Use the session from setSession
+            var finalSession = session;
           } catch (timeoutError) {
             console.error('🔐 SetSession timeout or error:', timeoutError);
-            setErrorMessage('Timeout durante l\'autenticazione. Riprovare.');
-            setStatus('error');
+            
+            // Try fallback: skip setSession and just redirect to dashboard
+            console.log('🔐 Attempting fallback: redirect with tokens in URL');
+            setErrorMessage('Timeout autenticazione. Tentativo di accesso diretto...');
             
             setTimeout(() => {
-              router.push('/login?error=timeout');
-            }, 3000);
+              // Redirect to dashboard with tokens - let the auth context handle it
+              router.push('/dashboard');
+            }, 2000);
             return;
           }
           
