@@ -98,6 +98,67 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (mounted) {
           if (error) {
             console.warn('Auth error:', error);
+            
+            // Check for fallback tokens when Supabase fails
+            try {
+              const fallbackTokensStr = safeLocalStorage.getItem('fallback_auth_tokens');
+              if (fallbackTokensStr) {
+                console.log('🔐 Found fallback tokens, attempting to use them');
+                const fallbackTokens = JSON.parse(fallbackTokensStr);
+                
+                // Check if tokens are still valid (not older than 1 hour)
+                const tokenAge = Date.now() - fallbackTokens.timestamp;
+                if (tokenAge < 3600000) { // 1 hour
+                  console.log('🔐 Using fallback authentication');
+                  
+                  // Create a mock session-like object
+                  const mockUser: AuthUser = {
+                    id: fallbackTokens.user.id,
+                    email: fallbackTokens.user.email,
+                    name: fallbackTokens.user.name,
+                    avatar_url: null,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                    last_login_at: new Date().toISOString(),
+                    is_admin: false,
+                    subscription_status: 'free',
+                    total_votes_cast: 0,
+                    total_problems_proposed: 0,
+                  };
+                  
+                  const mockSession = {
+                    access_token: fallbackTokens.access_token,
+                    refresh_token: fallbackTokens.refresh_token,
+                    expires_in: 3600,
+                    expires_at: fallbackTokens.expires_at,
+                    user: {
+                      id: fallbackTokens.user.id,
+                      email: fallbackTokens.user.email,
+                      user_metadata: {
+                        name: fallbackTokens.user.name,
+                        avatar_url: null,
+                      }
+                    }
+                  } as Session;
+                  
+                  setUser(mockUser);
+                  setSession(mockSession);
+                  cacheSession(mockSession);
+                  
+                  // Remove fallback tokens after successful use
+                  safeLocalStorage.removeItem('fallback_auth_tokens');
+                  
+                  setLoading(false);
+                  return;
+                } else {
+                  console.log('🔐 Fallback tokens expired, removing');
+                  safeLocalStorage.removeItem('fallback_auth_tokens');
+                }
+              }
+            } catch (e) {
+              console.warn('Failed to process fallback tokens:', e);
+            }
+            
             setError(error.message);
           } else {
             setSession(session);

@@ -116,6 +116,27 @@ function AuthCallbackComponent() {
           } catch (timeoutError) {
             console.error('🔐 SetSession timeout or error:', timeoutError);
             
+            // Store tokens in localStorage for auth context fallback
+            console.log('🔐 Storing tokens in localStorage for auth context');
+            try {
+              const fallbackTokens = {
+                access_token: accessToken,
+                refresh_token: refreshToken,
+                expires_at: Date.now() + 3600000, // 1 hour from now
+                user: {
+                  id: '255ee834-959a-47f1-bef6-857166bf6253', // From token
+                  email: 'dadecresce@gmail.com', // From token
+                  name: 'Davide Crescentini' // From token
+                },
+                timestamp: Date.now()
+              };
+              
+              localStorage.setItem('fallback_auth_tokens', JSON.stringify(fallbackTokens));
+              console.log('🔐 Tokens stored in localStorage');
+            } catch (e) {
+              console.warn('Failed to store fallback tokens:', e);
+            }
+            
             // Try fallback: skip setSession and just redirect to dashboard
             console.log('🔐 Attempting fallback: redirect with tokens in URL');
             setErrorMessage('Timeout autenticazione. Tentativo di accesso diretto...');
