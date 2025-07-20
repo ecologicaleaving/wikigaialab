@@ -32,11 +32,22 @@ function AuthCallbackComponent() {
         
         // Get the URL hash/fragment safely using browser utils
         const hash = safeLocation.hash;
+        console.log('🔐 Auth Callback Debug - Hash:', hash);
+        
         const hashParams = new URLSearchParams(hash.substring(1));
         const accessToken = hashParams.get('access_token');
         const refreshToken = hashParams.get('refresh_token');
         const errorParam = hashParams.get('error');
         const errorDescription = hashParams.get('error_description');
+        
+        console.log('🔐 Auth Callback Debug - Tokens:', {
+          hasAccessToken: !!accessToken,
+          hasRefreshToken: !!refreshToken,
+          accessTokenLength: accessToken?.length,
+          refreshTokenLength: refreshToken?.length,
+          errorParam,
+          errorDescription
+        });
 
         // Check for errors in the callback
         if (errorParam) {
@@ -53,9 +64,19 @@ function AuthCallbackComponent() {
 
         // Set the session with tokens from URL if available
         if (accessToken && refreshToken) {
+          console.log('🔐 Attempting to set session with tokens...');
+          
           const { data: { session }, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken
+          });
+          
+          console.log('🔐 Set session result:', {
+            hasSession: !!session,
+            hasUser: !!session?.user,
+            userId: session?.user?.id,
+            userEmail: session?.user?.email,
+            error: setSessionError
           });
           
           if (setSessionError) {
