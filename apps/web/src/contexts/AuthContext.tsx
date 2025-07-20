@@ -27,6 +27,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
+  forceLogout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -283,6 +284,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
   }, []);
 
+  const forceLogout = useCallback(() => {
+    // Force clear all authentication state
+    setSession(null);
+    setUser(null);
+    cacheSession(null);
+    
+    // Clear localStorage completely
+    try {
+      safeLocalStorage.removeItem('auth_session');
+      safeLocalStorage.clear();
+    } catch (e) {
+      // Ignore errors
+    }
+    
+    // Force page reload to clear any cached state
+    window.location.href = '/login';
+  }, [cacheSession]);
+
   const value: AuthContextType = {
     user,
     session,
@@ -291,6 +310,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signInWithGoogle,
     signOut,
     clearError,
+    forceLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

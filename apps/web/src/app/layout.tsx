@@ -5,6 +5,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { MonitoringProvider } from '../components/monitoring/MonitoringProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
 import PerformanceDashboard from '../components/performance/PerformanceDashboard';
+import { AuthDebug } from '../components/debug/AuthDebug';
 import { generateMetadata, landingPageSEO, organizationStructuredData, generateJsonLdScript } from '../lib/seo';
 import { config } from '../lib/env';
 
@@ -81,6 +82,7 @@ export default function RootLayout({
             <AuthProvider>
               {children}
               {process.env.NODE_ENV === 'development' && <PerformanceDashboard />}
+              <AuthDebug />
             </AuthProvider>
           </MonitoringProvider>
         </ErrorBoundary>
