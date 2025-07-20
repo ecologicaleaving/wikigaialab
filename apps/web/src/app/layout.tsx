@@ -1,11 +1,12 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { AuthProvider } from '../contexts/AuthContext';
+import { AuthProvider } from '../contexts/AuthContextNextAuth';
 import { MonitoringProvider } from '../components/monitoring/MonitoringProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
 import PerformanceDashboard from '../components/performance/PerformanceDashboard';
 import { AuthDebug } from '../components/debug/AuthDebug';
+import SessionProvider from '../components/providers/SessionProvider';
 import { generateMetadata, landingPageSEO, organizationStructuredData, generateJsonLdScript } from '../lib/seo';
 import { config } from '../lib/env';
 
@@ -79,11 +80,13 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <ErrorBoundary>
           <MonitoringProvider>
-            <AuthProvider>
-              {children}
-              {process.env.NODE_ENV === 'development' && <PerformanceDashboard />}
-              <AuthDebug />
-            </AuthProvider>
+            <SessionProvider>
+              <AuthProvider>
+                {children}
+                {process.env.NODE_ENV === 'development' && <PerformanceDashboard />}
+                <AuthDebug />
+              </AuthProvider>
+            </SessionProvider>
           </MonitoringProvider>
         </ErrorBoundary>
       </body>
