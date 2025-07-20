@@ -1,6 +1,18 @@
 import type { NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
 import { SupabaseAdapter } from "@auth/supabase-adapter"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 export const authConfig = {
   providers: [
@@ -9,10 +21,7 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    secret: process.env.SUPABASE_SERVICE_KEY!,
-  }),
+  adapter: SupabaseAdapter(supabase),
   session: { 
     strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
