@@ -34,4 +34,5 @@ export const authConfig = {
     },
   },
   debug: process.env.NODE_ENV === "development",
+  // Updated OAuth credentials - trigger deployment
 } satisfies NextAuthConfig
