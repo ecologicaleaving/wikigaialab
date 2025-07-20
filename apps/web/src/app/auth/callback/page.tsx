@@ -66,18 +66,39 @@ function AuthCallbackComponent() {
         if (accessToken && refreshToken) {
           console.log('🔐 Attempting to set session with tokens...');
           
-          const { data: { session }, error: setSessionError } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken
-          });
-          
-          console.log('🔐 Set session result:', {
-            hasSession: !!session,
-            hasUser: !!session?.user,
-            userId: session?.user?.id,
-            userEmail: session?.user?.email,
-            error: setSessionError
-          });
+          try {
+            const setSessionPromise = supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken
+            });
+            
+            // Add timeout to prevent hanging
+            const timeoutPromise = new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('SetSession timeout after 10 seconds')), 10000)
+            );
+            
+            const { data: { session }, error: setSessionError } = await Promise.race([
+              setSessionPromise,
+              timeoutPromise
+            ]) as any;
+            
+            console.log('🔐 Set session result:', {
+              hasSession: !!session,
+              hasUser: !!session?.user,
+              userId: session?.user?.id,
+              userEmail: session?.user?.email,
+              error: setSessionError
+            });
+          } catch (timeoutError) {
+            console.error('🔐 SetSession timeout or error:', timeoutError);
+            setErrorMessage('Timeout durante l\'autenticazione. Riprovare.');
+            setStatus('error');
+            
+            setTimeout(() => {
+              router.push('/login?error=timeout');
+            }, 3000);
+            return;
+          }
           
           if (setSessionError) {
             console.error('Set session error:', setSessionError);

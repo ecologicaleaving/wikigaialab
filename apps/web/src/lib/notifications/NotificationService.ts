@@ -43,27 +43,43 @@ export interface TemplateVariables {
 }
 
 export class NotificationService {
-  private supabase;
+  private supabase: any = null;
   private resend: Resend | null = null;
+  private initialized: boolean = false;
 
   constructor() {
-    // Check if we have the required environment variables
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.warn('NotificationService: Missing required environment variables');
-      // Create a mock client that will fail gracefully
-      this.supabase = null as any;
+    // Don't initialize during build time
+    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
       return;
     }
+    
+    this.initialize();
+  }
 
-    // Initialize Supabase with service role for admin operations
-    this.supabase = createClient(supabaseUrl, supabaseServiceKey);
+  private initialize() {
+    if (this.initialized) return;
 
-    // Initialize Resend if API key is available
-    if (process.env.RESEND_API_KEY) {
-      this.resend = new Resend(process.env.RESEND_API_KEY);
+    try {
+      // Check if we have the required environment variables
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+      if (!supabaseUrl || !supabaseServiceKey) {
+        console.warn('NotificationService: Missing required environment variables');
+        return;
+      }
+
+      // Initialize Supabase with service role for admin operations
+      this.supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      // Initialize Resend if API key is available
+      if (process.env.RESEND_API_KEY) {
+        this.resend = new Resend(process.env.RESEND_API_KEY);
+      }
+
+      this.initialized = true;
+    } catch (error) {
+      console.warn('Failed to initialize NotificationService:', error);
     }
   }
 
@@ -71,6 +87,8 @@ export class NotificationService {
    * Queue a notification for delivery
    */
   async queueNotification(data: NotificationData): Promise<string> {
+    this.initialize();
+    
     if (!this.supabase) {
       throw new Error('NotificationService not properly initialized');
     }
@@ -110,6 +128,8 @@ export class NotificationService {
     problemId: string,
     milestone: number
   ): Promise<string> {
+    this.initialize();
+    
     if (!this.supabase) {
       throw new Error('NotificationService not properly initialized');
     }
@@ -224,6 +244,8 @@ export class NotificationService {
       reason?: string;
     }
   ): Promise<string[]> {
+    this.initialize();
+    
     if (!this.supabase) {
       throw new Error('NotificationService not properly initialized');
     }
@@ -379,6 +401,8 @@ export class NotificationService {
    * Send admin alert for high-priority problems
    */
   async sendAdminAlert(problemId: string): Promise<string[]> {
+    this.initialize();
+    
     if (!this.supabase) {
       throw new Error('NotificationService not properly initialized');
     }
@@ -481,6 +505,8 @@ export class NotificationService {
     templateName: string,
     variables: TemplateVariables
   ): Promise<{ subject: string; contentText: string; contentHtml?: string }> {
+    this.initialize();
+    
     if (!this.supabase) {
       throw new Error('NotificationService not properly initialized');
     }
@@ -521,6 +547,8 @@ export class NotificationService {
    * Send all pending notifications
    */
   async sendPendingNotifications(): Promise<void> {
+    this.initialize();
+    
     if (!this.supabase) {
       console.log('NotificationService not properly initialized, skipping');
       return;
@@ -612,6 +640,8 @@ export class NotificationService {
    * Mark notification as failed and handle retries
    */
   private async markNotificationFailed(notificationId: string, errorMessage: string): Promise<void> {
+    this.initialize();
+    
     if (!this.supabase) {
       console.log('NotificationService not properly initialized, cannot mark notification as failed');
       return;
