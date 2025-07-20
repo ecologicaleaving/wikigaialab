@@ -34,25 +34,6 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   const handleClick = async () => {
     if (isSigningIn || disabled) return;
     
-    // Debug: Show which auth mode will be used
-    const useLocalAuth = process.env.NODE_ENV === 'development' || 
-                         process.env.NEXT_PUBLIC_USE_LOCAL_AUTH === 'true' ||
-                         (typeof window !== 'undefined' && window.location.hostname.includes('localhost')) ||
-                         (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app'));
-    
-    console.log('🚀 GoogleLoginButton Debug:', {
-      NODE_ENV: process.env.NODE_ENV,
-      USE_LOCAL_AUTH: process.env.NEXT_PUBLIC_USE_LOCAL_AUTH,
-      hostname: typeof window !== 'undefined' ? window.location.hostname : 'SSR',
-      useLocalAuth
-    });
-    
-    if (useLocalAuth) {
-      alert('🔧 LOCAL AUTH MODE DETECTED - Should use demo authentication');
-    } else {
-      alert('⚠️ REAL OAUTH MODE - Will redirect to Google');
-    }
-    
     // Call onStart callback
     if (onStart) {
       onStart();
