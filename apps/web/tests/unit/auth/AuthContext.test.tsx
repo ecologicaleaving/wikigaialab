@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth } from '../../../src/contexts/AuthContext';
+import { AuthProvider, useAuth } from '../../../src/contexts/AuthContextNextAuth';
 import { AuthUser } from '../../../src/types/auth';
 
 // Mock Supabase

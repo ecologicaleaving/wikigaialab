@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContextNextAuth';
 
 export function AuthDebug() {
-  const { user, session, loading, error, signOut, forceLogout } = useAuth();
+  const { user, loading, error, signOut } = useAuth();
 
   return (
     <div className="fixed bottom-4 right-4 bg-white border border-gray-300 rounded-lg p-4 shadow-lg z-50 max-w-sm">
@@ -16,7 +16,7 @@ export function AuthDebug() {
         </div>
         
         <div>
-          <strong>Session:</strong> {session ? 'Active' : 'None'}
+          <strong>Session:</strong> {user ? 'Active' : 'None'}
         </div>
         
         <div>
@@ -36,14 +36,7 @@ export function AuthDebug() {
                 onClick={signOut}
                 className="block w-full px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
               >
-                Normal Logout
-              </button>
-              
-              <button
-                onClick={forceLogout}
-                className="block w-full px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
-              >
-                Force Logout
+                Logout
               </button>
             </>
           )}

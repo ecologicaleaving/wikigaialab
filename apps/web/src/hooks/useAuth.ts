@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth as useAuthContext, useAuthUser, useRole, useUserDisplayName, useAuthLoading, useAuthError } from '../contexts/AuthContext';
+import { useAuth as useAuthContext, useAuthUser, useRole, useUserDisplayName, useAuthLoading, useAuthError } from '../contexts/AuthContextNextAuth';
 import { AuthUser } from '../types/auth';
 import { updateUserProfile, hasRole } from '../lib/auth';
 

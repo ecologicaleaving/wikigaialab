@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { renderHook, act } from '@testing-library/react';
-import { AuthProvider } from '../../../src/contexts/AuthContext';
+import { AuthProvider } from '../../../src/contexts/AuthContextNextAuth';
 import { useAuth, useUserProfile, useAuthState, useRoleAccess } from '../../../src/hooks/useAuth';
 import { AuthUser } from '../../../src/types/auth';
 

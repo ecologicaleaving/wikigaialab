@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
-import { AuthProvider } from '../../../src/contexts/AuthContext';
+import { AuthProvider } from '../../../src/contexts/AuthContextNextAuth';
 import LoginPage from '../../../src/app/login/page';
 import DashboardPage from '../../../src/app/dashboard/page';
 import { AuthUser } from '../../../src/types/auth';
