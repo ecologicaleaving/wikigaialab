@@ -51,21 +51,44 @@ function AuthCallbackComponent() {
           return;
         }
 
-        // Get the session from Supabase
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError) {
-          console.error('Session error:', sessionError);
-          setErrorMessage(getAuthErrorMessage(sessionError));
-          setStatus('error');
+        // Set the session with tokens from URL if available
+        if (accessToken && refreshToken) {
+          const { data: { session }, error: setSessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
           
-          setTimeout(() => {
-            router.push('/login?error=session_error');
-          }, 3000);
-          return;
+          if (setSessionError) {
+            console.error('Set session error:', setSessionError);
+            setErrorMessage(getAuthErrorMessage(setSessionError));
+            setStatus('error');
+            
+            setTimeout(() => {
+              router.push('/login?error=session_error');
+            }, 3000);
+            return;
+          }
+          
+          // Use the session from setSession
+          var finalSession = session;
+        } else {
+          // Fallback: try to get existing session
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+          var finalSession = session;
+          
+          if (sessionError) {
+            console.error('Session error:', sessionError);
+            setErrorMessage(getAuthErrorMessage(sessionError));
+            setStatus('error');
+            
+            setTimeout(() => {
+              router.push('/login?error=session_error');
+            }, 3000);
+            return;
+          }
         }
-
-        if (!session || !session.user) {
+        
+        if (!finalSession || !finalSession.user) {
           console.error('No session or user found');
           setErrorMessage('Nessuna sessione valida trovata');
           setStatus('error');
@@ -78,7 +101,7 @@ function AuthCallbackComponent() {
 
         // Create or update user in our database
         try {
-          await createOrUpdateUser(session.user);
+          await createOrUpdateUser(finalSession.user);
           setStatus('success');
           
           // Get redirect URL from state or default to dashboard
