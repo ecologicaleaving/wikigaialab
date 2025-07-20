@@ -179,7 +179,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
       
       // Check if we should use local simulation
-      const useLocalAuth = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_USE_LOCAL_AUTH === 'true';
+      const useLocalAuth = process.env.NODE_ENV === 'development' || 
+                           process.env.NEXT_PUBLIC_USE_LOCAL_AUTH === 'true' ||
+                           window.location.hostname.includes('localhost') ||
+                           window.location.hostname.includes('vercel.app');
+      
+      console.log('🔐 Auth Debug:', {
+        NODE_ENV: process.env.NODE_ENV,
+        USE_LOCAL_AUTH: process.env.NEXT_PUBLIC_USE_LOCAL_AUTH,
+        hostname: window.location.hostname,
+        useLocalAuth
+      });
       
       if (useLocalAuth) {
         // Simulate local user login
