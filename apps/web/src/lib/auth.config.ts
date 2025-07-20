@@ -1,18 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
-import { SupabaseAdapter } from "@auth/supabase-adapter"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
 
 export const authConfig = {
   providers: [
@@ -21,9 +8,8 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  adapter: SupabaseAdapter(supabase),
   session: { 
-    strategy: "database",
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
@@ -31,17 +17,20 @@ export const authConfig = {
     error: "/login",
   },
   callbacks: {
-    session: async ({ session, user }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-        },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id || user.email;
       }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (token?.id) {
+        session.user.id = token.id as string;
+      }
+      return session;
     },
     authorized: async ({ auth }) => {
-      return !!auth
+      return !!auth;
     },
   },
   debug: process.env.NODE_ENV === "development",
