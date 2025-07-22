@@ -1,29 +1,29 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
+export async function GET(request: NextRequest) {
+  try {
+    // Return empty voting history during migration
+    console.log('Mock voting history request during authentication migration');
+    
+    return NextResponse.json({
+      success: true,
+      data: {
+        votes: [],
+        total: 0,
+        pagination: {
+          page: 1,
+          limit: 20,
+          hasMore: false
+        }
+      }
+    });
 
-export async function POST() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
-
-export async function PUT() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
-
-export async function DELETE() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
+  } catch (error) {
+    console.error('Error in voting history:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to fetch voting history',
+      data: { votes: [], total: 0 }
+    }, { status: 500 });
+  }
 }

@@ -1,29 +1,60 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
+// Mock categories data for frontend during migration
+const MOCK_CATEGORIES = [
+  {
+    id: '1',
+    name: 'Ambiente',
+    description: 'Problemi legati all\'ambiente e sostenibilità',
+    color: '#10B981',
+    icon: 'leaf',
+    problem_count: 8,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '2', 
+    name: 'Mobilità',
+    description: 'Trasporti e mobilità urbana',
+    color: '#3B82F6',
+    icon: 'car',
+    problem_count: 5,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    name: 'Energia',
+    description: 'Efficienza energetica e fonti rinnovabili',
+    color: '#F59E0B',
+    icon: 'lightning-bolt',
+    problem_count: 3,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '4',
+    name: 'Sociale',
+    description: 'Problemi sociali e comunitari',
+    color: '#EF4444',
+    icon: 'users',
+    problem_count: 2,
+    created_at: new Date().toISOString()
+  }
+];
 
-export async function POST() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
+export async function GET(request: NextRequest) {
+  try {
+    console.log('Mock categories request during authentication migration');
+    
+    return NextResponse.json({
+      success: true,
+      data: MOCK_CATEGORIES
+    });
 
-export async function PUT() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
-}
-
-export async function DELETE() {
-  return NextResponse.json({
-    error: "Functionality not available during authentication migration",
-    message: "Database functionality temporarily disabled"
-  }, { status: 501 });
+  } catch (error) {
+    console.error('Error in categories:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to fetch categories',
+      data: []
+    }, { status: 500 });
+  }
 }
