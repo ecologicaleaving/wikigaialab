@@ -69,7 +69,7 @@ export default function AdminCategoriesPage() {
         throw new Error('Failed to fetch categories');
       }
       const data = await response.json();
-      setCategories(data);
+      setCategories(data.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error fetching categories');
     } finally {

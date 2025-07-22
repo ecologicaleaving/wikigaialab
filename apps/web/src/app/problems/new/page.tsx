@@ -68,7 +68,7 @@ export default function NewProblemPage() {
           throw new Error('Errore nel caricamento delle categorie');
         }
         const data = await response.json();
-        setCategories(data);
+        setCategories(data.data || []);
       } catch (error) {
         // console.error('Error fetching categories:', error);
         toast.error('Errore nel caricamento delle categorie');
