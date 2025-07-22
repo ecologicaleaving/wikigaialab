@@ -248,7 +248,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const followingIds = following?.map(f => f.following_id) || [];
     const excludeIds = [...followingIds, userId]; // Exclude self and already followed users
 
-    let suggestions: any[] = [];
+    const suggestions: any[] = [];
 
     // Strategy 1: Users with similar interests (40% of results)
     if (currentUser.interests && currentUser.interests.length > 0) {

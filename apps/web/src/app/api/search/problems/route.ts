@@ -212,8 +212,8 @@ export const GET = withApiHandler(async (request: NextRequest): Promise<NextResp
   );
 
   // Process results for highlighting and trending score
-  let processedProblems = result.problems.map(problem => {
-    let processedProblem = { ...problem };
+  const processedProblems = result.problems.map(problem => {
+    const processedProblem = { ...problem };
 
     // Apply highlighting if requested and query exists
     if (highlight && q && q.length >= 2) {

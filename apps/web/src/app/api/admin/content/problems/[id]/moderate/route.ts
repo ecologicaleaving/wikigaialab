@@ -76,7 +76,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // Prepare updates based on action
-    let updates: any = {};
+    const updates: any = {};
     let newModerationStatus = problem.moderation_status;
 
     switch (action) {

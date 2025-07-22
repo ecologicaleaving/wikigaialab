@@ -11,7 +11,9 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:e2e": "playwright test",
-    "clean": "rm -rf .next dist"
+    "clean": "rm -rf .next dist",
+    "analyze": "ANALYZE=true npm run build",
+    "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",

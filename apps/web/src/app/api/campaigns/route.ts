@@ -107,7 +107,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     let userParticipation: CampaignParticipation[] = [];
-    let eligibleCampaigns: string[] = [];
+    const eligibleCampaigns: string[] = [];
 
     if (userId) {
       // Get user's participation in campaigns

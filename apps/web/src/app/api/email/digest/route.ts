@@ -556,7 +556,7 @@ async function sendBatchDigests(digestType: string, userFilter: any = {}, dryRun
     const now = new Date();
     
     // Get users who should receive this digest
-    let query = getSupabaseClient()
+    const query = getSupabaseClient()
       .from('email_digests')
       .select(`
         user_id, frequency, last_sent_at, next_send_at,
