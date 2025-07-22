@@ -65,14 +65,14 @@ export const mainNavigationItems: NavigationItem[] = [
 export const secondaryNavigationItems: NavigationItem[] = [
   { 
     id: 'profile', 
-    label: 'Il Mio Profilo', 
+    label: 'Profilo', 
     href: '/profile', 
     icon: User, 
     requiresAuth: true 
   },
   { 
     id: 'favorites', 
-    label: 'I Miei Voti', 
+    label: 'Voti', 
     href: '/profile?tab=votes', 
     icon: Heart, 
     requiresAuth: true 
@@ -140,7 +140,7 @@ export const footerNavigation = {
   }
 };
 
-// Utility navigation items for mobile menu
+// Utility navigation items 
 export const utilityNavigationItems: NavigationItem[] = [
   { 
     id: 'settings', 
