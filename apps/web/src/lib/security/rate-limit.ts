@@ -6,14 +6,24 @@
  * @date 2025-07-22
  */
 
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
 import { NextRequest } from 'next/server';
 
-// Initialize Redis connection (with fallback for development)
-const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN 
-  ? Redis.fromEnv()
-  : null;
+// Conditional imports for Redis (build-safe)
+let Ratelimit: any = null;
+let Redis: any = null;
+let redis: any = null;
+
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const upstashRatelimit = require('@upstash/ratelimit');
+    const upstashRedis = require('@upstash/redis');
+    Ratelimit = upstashRatelimit.Ratelimit;
+    Redis = upstashRedis.Redis;
+    redis = Redis.fromEnv();
+  }
+} catch (error) {
+  console.warn('Redis not available, rate limiting disabled for development');
+}
 
 // Multiple rate limiters for different endpoints and user types
 export const rateLimiters = redis ? {

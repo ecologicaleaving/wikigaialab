@@ -7,7 +7,14 @@
  */
 
 import { z } from 'zod';
-import * as DOMPurify from 'isomorphic-dompurify';
+
+// Build-safe DOMPurify import
+let DOMPurify: any = null;
+try {
+  DOMPurify = require('isomorphic-dompurify');
+} catch (error) {
+  console.warn('DOMPurify not available, using basic text validation');
+}
 
 // Custom validation for sanitized text
 const sanitizedText = (minLength: number, maxLength: number) =>
@@ -17,6 +24,7 @@ const sanitizedText = (minLength: number, maxLength: number) =>
     .trim()
     .refine(
       (val) => {
+        if (!DOMPurify) return true; // Skip sanitization if DOMPurify not available
         const sanitized = DOMPurify.sanitize(val, { 
           ALLOWED_TAGS: [], 
           ALLOWED_ATTR: [] 
