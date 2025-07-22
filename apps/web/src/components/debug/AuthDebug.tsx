@@ -33,11 +33,15 @@ export function AuthDebug() {
         </div>
 
         <div>
-          <strong>NextAuth URL:</strong> {process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'Not set'}
+          <strong>NextAuth URL:</strong> {process.env.NEXT_PUBLIC_NEXTAUTH_URL || process.env.NEXTAUTH_URL || 'Not set'}
         </div>
 
         <div>
-          <strong>Google Client ID:</strong> {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? 'Set' : 'Missing'}
+          <strong>App URL:</strong> {process.env.NEXT_PUBLIC_APP_URL || 'Not set'}
+        </div>
+
+        <div>
+          <strong>Google Client ID:</strong> {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || (process.env.GOOGLE_CLIENT_ID ? 'Set (server-only)' : 'Missing')}
         </div>
         
         {error && (
@@ -77,6 +81,22 @@ export function AuthDebug() {
             className="block w-full px-3 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600"
           >
             Log Debug Info
+          </button>
+          
+          <button
+            onClick={async () => {
+              try {
+                console.log('🔍 Testing session API...');
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                console.log('📊 Session API Response:', data);
+              } catch (error) {
+                console.error('❌ Session API Error:', error);
+              }
+            }}
+            className="block w-full px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+          >
+            Test Session API
           </button>
         </div>
       </div>

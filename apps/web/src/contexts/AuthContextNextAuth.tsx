@@ -47,11 +47,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithGoogle = async () => {
     try {
       console.log('🚀 Starting Google OAuth sign-in...');
-      console.log('Environment:', {
+      console.log('Client Environment:', {
         NODE_ENV: process.env.NODE_ENV,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-        hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
-        callbackUrl: '/dashboard'
+        hasPublicAppUrl: !!process.env.NEXT_PUBLIC_APP_URL,
+        callbackUrl: '/dashboard',
+        currentUrl: window.location.href
       });
       
       const result = await signIn('google', { 
