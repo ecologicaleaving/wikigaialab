@@ -5,9 +5,15 @@ export interface NavigationItem {
   icon?: React.ComponentType<{ size?: number; className?: string }>;
   requiresAuth?: boolean;
   adminOnly?: boolean;
-  badge?: number;
+  badge?: {
+    text: string;
+    color: string;
+  } | number;
   active?: boolean;
   children?: NavigationItem[];
+  priority?: number;
+  description?: string;
+  showWhenAuth?: boolean;
 }
 
 export interface LayoutProps {
@@ -37,7 +43,10 @@ export interface NavigationLinkProps {
   href: string;
   children: React.ReactNode;
   icon?: React.ComponentType<{ size?: number; className?: string }>;
-  badge?: number;
+  badge?: {
+    text: string;
+    color: string;
+  } | number;
   active?: boolean;
   onClick?: () => void;
   className?: string;

@@ -137,23 +137,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             ))}
           </div>
 
-          {/* Additional Links */}
-          {user && (
-            <div className="mt-6 pt-6 border-t border-gray-200 space-y-1">
-              <MobileNavigationLink
-                href="/settings"
-                onClick={onClose}
-              >
-                Impostazioni
-              </MobileNavigationLink>
-              <MobileNavigationLink
-                href="/help"
-                onClick={onClose}
-              >
-                Centro Aiuto
-              </MobileNavigationLink>
-            </div>
-          )}
         </nav>
 
         {/* User Section / Auth */}

@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, Search, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { HeaderProps } from '@/types/navigation';
-import { mainNavigationItems, getNavigationItems } from '@/lib/navigation';
+import { getAllNavigationItems } from '@/lib/navigation';
 import { NavigationLink } from './NavigationLink';
 import { MobileMenu } from './MobileMenu';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -32,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, [pathname]);
 
   // Get filtered navigation items based on user auth status
-  const navigationItems = getNavigationItems(user, mainNavigationItems);
+  const navigationItems = getAllNavigationItems(user);
 
   // Mock notification count - replace with actual data
   useEffect(() => {

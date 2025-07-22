@@ -7,40 +7,79 @@ import {
   Shield, 
   Settings,
   HelpCircle,
-  FileText
+  FileText,
+  BarChart3,
+  Plus,
+  Search,
+  Heart
 } from 'lucide-react';
 
+// Primary Navigation - Optimized UX hierarchy
 export const mainNavigationItems: NavigationItem[] = [
   { 
     id: 'home', 
     label: 'Home', 
     href: '/', 
-    icon: Home 
+    icon: Home,
+    showWhenAuth: false, // Hide when authenticated (redirect to dashboard)
+  },
+  { 
+    id: 'dashboard', 
+    label: 'Dashboard', 
+    href: '/dashboard', 
+    icon: BarChart3, 
+    requiresAuth: true,
+    priority: 1 // Highest priority for authenticated users
   },
   { 
     id: 'problems', 
-    label: 'Problemi', 
+    label: 'Esplora', 
     href: '/problems', 
-    icon: Lightbulb, 
-    requiresAuth: true 
+    icon: Search, 
+    requiresAuth: true,
+    priority: 2,
+    description: 'Scopri e vota problemi'
+  },
+  { 
+    id: 'create', 
+    label: 'Proponi', 
+    href: '/problems/new', 
+    icon: Plus, 
+    requiresAuth: true,
+    priority: 3,
+    description: 'Proponi un problema',
+    badge: { text: 'CTA', color: 'bg-green-500' }
   },
   { 
     id: 'apps', 
     label: 'App', 
     href: '/apps', 
     icon: AppWindow, 
-    requiresAuth: false 
-  },
+    requiresAuth: false,
+    priority: 4,
+    description: 'Scopri le app sviluppate'
+  }
+];
+
+// Secondary Navigation Items (less prominent)
+export const secondaryNavigationItems: NavigationItem[] = [
   { 
     id: 'profile', 
-    label: 'Profilo', 
+    label: 'Il Mio Profilo', 
     href: '/profile', 
     icon: User, 
     requiresAuth: true 
   },
   { 
+    id: 'favorites', 
+    label: 'I Miei Voti', 
+    href: '/profile?tab=votes', 
+    icon: Heart, 
+    requiresAuth: true 
+  },
+  { 
     id: 'admin', 
-    label: 'Admin', 
+    label: 'Amministrazione', 
     href: '/admin', 
     icon: Shield, 
     adminOnly: true 
@@ -101,11 +140,18 @@ export const footerNavigation = {
   }
 };
 
-export const mobileMenuNavigation: NavigationItem[] = [
-  ...mainNavigationItems.filter(item => !item.adminOnly),
+// Utility navigation items for mobile menu
+export const utilityNavigationItems: NavigationItem[] = [
+  { 
+    id: 'settings', 
+    label: 'Impostazioni', 
+    href: '/settings', 
+    icon: Settings,
+    requiresAuth: true 
+  },
   { 
     id: 'help', 
-    label: 'Aiuto', 
+    label: 'Centro Aiuto', 
     href: '/help', 
     icon: HelpCircle 
   },
@@ -117,33 +163,61 @@ export const mobileMenuNavigation: NavigationItem[] = [
   }
 ];
 
-// Breadcrumb label mapping for dynamic routes
+// Enhanced breadcrumb label mapping with contextual information
 export const breadcrumbLabels: Record<string, string> = {
-  'problems': 'Problemi',
-  'apps': 'App',
-  'profile': 'Profilo',
+  'problems': 'Esplora Problemi',
+  'new': 'Proponi Problema',
+  'apps': 'App della Community',
+  'profile': 'Il Mio Profilo',
+  'votes': 'I Miei Voti',
   'admin': 'Amministrazione',
   'dashboard': 'Dashboard',
   'settings': 'Impostazioni',
-  'help': 'Aiuto',
+  'help': 'Centro Aiuto',
   'privacy': 'Privacy Policy',
   'terms': 'Termini di Servizio',
-  'guidelines': 'Linee Guida',
+  'guidelines': 'Linee Guida Community',
   'leaderboard': 'Classifica',
   'contact': 'Contattaci',
-  'about': 'Chi Siamo'
+  'about': 'Chi Siamo',
+  'docs': 'Documentazione',
+  'api-docs': 'API Documentation',
+  'blog': 'Blog WikiGaiaLab'
 };
 
-// Get filtered navigation items based on user auth status
+// Get filtered navigation items based on user auth status and UX context
 export const getNavigationItems = (
   user: any | null,
   items: NavigationItem[] = mainNavigationItems
 ): NavigationItem[] => {
-  return items.filter(item => {
-    if (item.adminOnly && !user?.is_admin) return false;
-    if (item.requiresAuth && !user) return false;
-    return true;
-  });
+  return items
+    .filter(item => {
+      // Admin-only items
+      if (item.adminOnly && !user?.is_admin) return false;
+      
+      // Auth-required items  
+      if (item.requiresAuth && !user) return false;
+      
+      // Items to hide when authenticated (like Home)
+      if (item.showWhenAuth === false && user) return false;
+      
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort by priority (lower number = higher priority)
+      const priorityA = a.priority || 999;
+      const priorityB = b.priority || 999;
+      return priorityA - priorityB;
+    });
+};
+
+// Get all navigation items (primary + secondary + utility) for mobile menu
+export const getAllNavigationItems = (user: any | null): NavigationItem[] => {
+  const primary = getNavigationItems(user, mainNavigationItems);
+  const secondary = getNavigationItems(user, secondaryNavigationItems);
+  const utility = getNavigationItems(user, utilityNavigationItems);
+  
+  return [...primary, ...secondary, ...utility];
 };
 
 // Generate breadcrumb items from pathname

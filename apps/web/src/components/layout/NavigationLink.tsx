@@ -30,9 +30,13 @@ export const NavigationLink: React.FC<NavigationLinkProps> = ({
     >
       {Icon && <Icon size={16} className="flex-shrink-0" />}
       <span>{children}</span>
-      {badge !== undefined && badge > 0 && (
-        <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0">
-          {badge > 99 ? '99+' : badge}
+      {badge !== undefined && (
+        <span 
+          className={`ml-2 text-white text-xs rounded-full h-5 px-2 flex items-center justify-center flex-shrink-0 ${
+            typeof badge === 'object' ? badge.color : 'bg-red-500'
+          }`}
+        >
+          {typeof badge === 'object' ? badge.text : (badge > 99 ? '99+' : badge)}
         </span>
       )}
     </Link>
@@ -64,9 +68,13 @@ export const MobileNavigationLink: React.FC<NavigationLinkProps> = ({
     >
       {Icon && <Icon size={20} className="flex-shrink-0" />}
       <span className="flex-1">{children}</span>
-      {badge !== undefined && badge > 0 && (
-        <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0">
-          {badge > 99 ? '99+' : badge}
+      {badge !== undefined && (
+        <span 
+          className={`text-white text-xs rounded-full h-5 px-2 flex items-center justify-center flex-shrink-0 ${
+            typeof badge === 'object' ? badge.color : 'bg-red-500'
+          }`}
+        >
+          {typeof badge === 'object' ? badge.text : (badge > 99 ? '99+' : badge)}
         </span>
       )}
     </Link>
