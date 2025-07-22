@@ -1,52 +1,29 @@
-import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@wikigaialab/database';
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  try {
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
-    
-    // Get featured apps
-    const { data: apps, error } = await supabase
-      .from('apps')
-      .select(`
-        id,
-        name,
-        description,
-        version,
-        slug,
-        access_model,
-        base_features,
-        premium_features,
-        created_at,
-        problems(
-          id,
-          title
-        )
-      `)
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .limit(6);
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-    if (error) {
-      console.error('Database error fetching featured apps:', error);
-      return NextResponse.json(
-        { error: 'Errore nel caricamento delle app in evidenza' },
-        { status: 500 }
-      );
-    }
+export async function POST() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-    return NextResponse.json({
-      apps: apps || []
-    });
+export async function PUT() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-  } catch (error) {
-    console.error('Unexpected error in featured apps API:', error);
-    return NextResponse.json(
-      { error: 'Errore interno del server' },
-      { status: 500 }
-    );
-  }
+export async function DELETE() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
 }

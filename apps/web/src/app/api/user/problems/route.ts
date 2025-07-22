@@ -1,55 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  try {
-    const supabase = createRouteHandlerClient({ 
-      cookies: () => cookies() 
-    });
+export async function GET() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
+export async function POST() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-    const { data: problems, error } = await supabase
-      .from('problems')
-      .select(`
-        id,
-        title,
-        description,
-        status,
-        category,
-        vote_count,
-        created_at,
-        updated_at
-      `)
-      .eq('created_by', session.user.id)
-      .order('created_at', { ascending: false });
+export async function PUT() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
+}
 
-    if (error) {
-      console.error('Database error:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch problems' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      problems: problems || [],
-      total: problems?.length || 0
-    });
-
-  } catch (error) {
-    console.error('API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+export async function DELETE() {
+  return NextResponse.json({
+    error: "Functionality not available during authentication migration",
+    message: "Database functionality temporarily disabled"
+  }, { status: 501 });
 }
