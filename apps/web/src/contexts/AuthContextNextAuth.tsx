@@ -15,15 +15,17 @@ interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   error: string | null;
+  session: any;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
+  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const loading = status === "loading";
 
   // Convert NextAuth session to our AuthUser type
@@ -44,12 +46,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
-      await signIn('google', { 
+      console.log('🚀 Starting Google OAuth sign-in...');
+      console.log('Environment:', {
+        NODE_ENV: process.env.NODE_ENV,
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+        hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
+        callbackUrl: '/dashboard'
+      });
+      
+      const result = await signIn('google', { 
         callbackUrl: '/dashboard',
         redirect: true 
       });
+      
+      console.log('✅ Google sign-in result:', result);
+      return result;
     } catch (error) {
-      console.error('Error signing in with Google:', error);
+      console.error('❌ Error signing in with Google:', error);
       throw error;
     }
   };
@@ -66,6 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshSession = async () => {
+    try {
+      await update();
+    } catch (error) {
+      console.error('Error refreshing session:', error);
+    }
+  };
+
   const clearError = () => {
     // NextAuth handles errors internally, so this is mostly for compatibility
   };
@@ -74,9 +95,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     loading,
     error: null, // NextAuth handles errors differently
+    session,
     signInWithGoogle,
     signOut,
     clearError,
+    refreshSession,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

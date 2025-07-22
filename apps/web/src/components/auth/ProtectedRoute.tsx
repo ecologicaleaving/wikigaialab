@@ -48,7 +48,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             Devi effettuare l'accesso per visualizzare questa pagina.
           </p>
           <button
-            onClick={() => router.push(redirectTo)}
+            onClick={() => {
+              console.log('🔄 Redirecting to login from ProtectedRoute');
+              router.push(redirectTo);
+            }}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Vai al Login
