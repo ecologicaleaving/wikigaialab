@@ -6,10 +6,14 @@ import type { ProblemInsert } from '@wikigaialab/database';
 
 // Initialize Supabase client
 function getSupabaseClient() {
-  return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient<Database>(supabaseUrl, supabaseKey);
 }
 
 export async function GET(request: NextRequest) {
@@ -86,29 +90,51 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Problems POST endpoint called');
+    
+    // Check environment variables first
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json({
+        success: false,
+        error: 'Database configuration error'
+      }, { status: 500 });
+    }
+    
+    console.log('Environment variables OK, checking auth...');
     const session = await auth();
     
     if (!session?.user) {
+      console.log('No authenticated user');
       return NextResponse.json({
         success: false,
         error: 'Authentication required'
       }, { status: 401 });
     }
 
+    console.log('User authenticated:', session.user.id);
+
     const body = await request.json();
     const { title, description, category_id } = body;
+    console.log('Request body:', { title: title?.length, description: description?.length, category_id });
 
     // Validate required fields
     if (!title || !description || !category_id) {
+      console.log('Validation failed: missing required fields');
       return NextResponse.json({
         success: false,
         error: 'Title, description, and category are required'
       }, { status: 400 });
     }
 
+    console.log('Validation passed, creating Supabase client...');
     const supabase = getSupabaseClient();
 
     // Verify category exists
+    console.log('Verifying category exists:', category_id);
     const { data: category, error: categoryError } = await supabase
       .from('categories')
       .select('id, name')
@@ -116,13 +142,41 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (categoryError || !category) {
+      console.error('Category verification failed:', categoryError);
       return NextResponse.json({
         success: false,
         error: 'Invalid category selected'
       }, { status: 400 });
     }
 
+    console.log('Category verified:', category.name);
+
+    // Ensure user exists in database (upsert)
+    console.log('Ensuring user exists in database...');
+    const { error: userError } = await supabase
+      .from('users')
+      .upsert({
+        id: session.user.id!,
+        email: session.user.email!,
+        name: session.user.name || 'Unknown User',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      });
+
+    if (userError) {
+      console.error('Error ensuring user exists:', userError);
+      return NextResponse.json({
+        success: false,
+        error: 'User synchronization failed: ' + userError.message
+      }, { status: 500 });
+    }
+
+    console.log('User synchronized successfully');
+
     // Create the problem
+    console.log('Creating problem data...');
     const problemData: ProblemInsert = {
       title: title.trim(),
       description: description.trim(),
@@ -134,6 +188,7 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString()
     };
 
+    console.log('Inserting problem into database...');
     const { data: problem, error: insertError } = await supabase
       .from('problems')
       .insert(problemData)
@@ -146,13 +201,17 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('Error creating problem:', insertError);
+      console.error('Problem data that failed:', problemData);
       return NextResponse.json({
         success: false,
-        error: 'Failed to create problem'
+        error: 'Failed to create problem: ' + insertError.message
       }, { status: 500 });
     }
 
+    console.log('Problem created successfully:', problem.id);
+
     // Create the initial vote from the creator
+    console.log('Creating initial vote...');
     const { error: voteError } = await supabase
       .from('votes')
       .insert({
@@ -164,8 +223,11 @@ export async function POST(request: NextRequest) {
     if (voteError) {
       console.error('Error creating initial vote:', voteError);
       // Don't fail the request, just log the error
+    } else {
+      console.log('Initial vote created successfully');
     }
 
+    console.log('Problem creation completed successfully');
     return NextResponse.json({
       success: true,
       message: 'Problema creato con successo!',
@@ -174,10 +236,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error creating problem:', error);
+    console.error('Unexpected error in problems POST:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json({
       success: false,
-      error: 'Failed to create problem'
+      error: 'Failed to create problem: ' + (error instanceof Error ? error.message : 'Unknown error')
     }, { status: 500 });
   }
 }

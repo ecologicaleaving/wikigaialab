@@ -110,12 +110,37 @@ export async function GET(request: NextRequest) {
       }
 
       if (!categories || categories.length === 0) {
-        console.log('No categories found in database, using fallback');
+        console.log('No categories found in database, attempting to seed them...');
+        
+        // Try to seed default categories
+        const { error: seedError } = await supabase
+          .from('categories')
+          .insert(FALLBACK_CATEGORIES.map(cat => ({
+            id: cat.id,
+            name: cat.name,
+            description: cat.description,
+            color: cat.color,
+            icon: cat.icon,
+            is_active: cat.is_active,
+            created_at: cat.created_at,
+            updated_at: cat.updated_at
+          })));
+
+        if (seedError) {
+          console.error('Failed to seed categories:', seedError);
+          return NextResponse.json({
+            success: true,
+            data: FALLBACK_CATEGORIES,
+            fallback: true,
+            reason: 'seed_failed'
+          });
+        }
+
+        console.log('Categories seeded successfully, returning seeded data');
         return NextResponse.json({
           success: true,
           data: FALLBACK_CATEGORIES,
-          fallback: true,
-          reason: 'no_categories'
+          seeded: true
         });
       }
 
