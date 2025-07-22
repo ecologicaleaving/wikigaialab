@@ -11,28 +11,32 @@ import { auth } from '../../../../lib/auth-nextauth';
  */
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Session API - Checking NextAuth session...');
-    
-    // Log environment configuration (server-side safe)
-    console.log('🔧 Server Environment Check:', {
-      nodeEnv: process.env.NODE_ENV,
-      hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
-      hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
-      hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
-      hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
-      nextAuthUrl: process.env.NEXTAUTH_URL,
-      timestamp: new Date().toISOString()
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 Session API - Checking NextAuth session...');
+      
+      // Log environment configuration (server-side safe)
+      console.log('🔧 Server Environment Check:', {
+        nodeEnv: process.env.NODE_ENV,
+        hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+        hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
+        hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
+        hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+        nextAuthUrl: process.env.NEXTAUTH_URL,
+        timestamp: new Date().toISOString()
+      });
+    }
 
     // Get current session using NextAuth
     const session = await auth();
     
-    console.log('📊 Session Check Result:', {
-      hasSession: !!session,
-      userId: session?.user?.id,
-      userEmail: session?.user?.email,
-      expires: session?.expires
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Session Check Result:', {
+        hasSession: !!session,
+        userId: session?.user?.id,
+        userEmail: session?.user?.email,
+        expires: session?.expires
+      });
+    }
 
     if (!session) {
       return NextResponse.json(
@@ -64,7 +68,9 @@ export async function GET(request: NextRequest) {
       total_problems_proposed: 0,
     };
 
-    console.log('✅ Session API - Returning valid session');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Session API - Returning valid session');
+    }
     
     return NextResponse.json({
       session,

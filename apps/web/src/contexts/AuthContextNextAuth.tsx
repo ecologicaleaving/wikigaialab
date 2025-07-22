@@ -46,23 +46,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
-      console.log('🚀 Starting Google OAuth sign-in...');
-      console.log('Client Environment:', {
-        NODE_ENV: process.env.NODE_ENV,
-        hasPublicAppUrl: !!process.env.NEXT_PUBLIC_APP_URL,
-        callbackUrl: '/dashboard',
-        currentUrl: window.location.href
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 Starting Google OAuth sign-in...');
+        console.log('Client Environment:', {
+          NODE_ENV: process.env.NODE_ENV,
+          hasPublicAppUrl: !!process.env.NEXT_PUBLIC_APP_URL,
+          callbackUrl: '/dashboard',
+          currentUrl: window.location.href
+        });
+      }
       
       const result = await signIn('google', { 
         callbackUrl: '/dashboard',
         redirect: true 
       });
       
-      console.log('✅ Google sign-in result:', result);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Google sign-in result:', result);
+      }
       return result;
     } catch (error) {
-      console.error('❌ Error signing in with Google:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Error signing in with Google:', error);
+      }
       throw error;
     }
   };
@@ -83,7 +89,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await update();
     } catch (error) {
-      console.error('Error refreshing session:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error refreshing session:', error);
+      }
     }
   };
 

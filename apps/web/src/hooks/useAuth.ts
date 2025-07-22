@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth as useAuthContext, useAuthUser, useRole, useUserDisplayName, useAuthLoading, useAuthError } from '../contexts/AuthContextNextAuth';
 import { AuthUser } from '../types/auth';
-import { updateUserProfile, hasRole } from '../lib/auth';
+import { updateUserProfile, hasRole } from '../lib/auth-utils';
 
 /**
  * Enhanced authentication hook with additional utilities

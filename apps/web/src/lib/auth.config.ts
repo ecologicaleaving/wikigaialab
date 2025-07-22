@@ -12,14 +12,16 @@ if (!process.env.NEXTAUTH_SECRET) {
   throw new Error('NEXTAUTH_SECRET environment variable is required');
 }
 
-// Log configuration for debugging
-console.log('🔧 NextAuth Configuration:', {
-  hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
-  hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
-  hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
-  nextAuthUrl: process.env.NEXTAUTH_URL,
-  nodeEnv: process.env.NODE_ENV,
-});
+// Log configuration only in development
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 NextAuth Configuration:', {
+    hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
+    hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+    hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
+    nextAuthUrl: process.env.NEXTAUTH_URL,
+    nodeEnv: process.env.NODE_ENV,
+  });
+}
 
 export const authConfig = {
   providers: [
@@ -79,13 +81,17 @@ export const authConfig = {
   },
   events: {
     signIn: async ({ user, account, profile }) => {
-      console.log("✅ Sign in successful:", { 
-        user: user.email, 
-        provider: account?.provider 
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log("✅ Sign in successful:", { 
+          user: user.email, 
+          provider: account?.provider 
+        });
+      }
     },
     signOut: async ({ token }) => {
-      console.log("👋 User signed out:", token?.email);
+      if (process.env.NODE_ENV === 'development') {
+        console.log("👋 User signed out:", token?.email);
+      }
     },
   },
   debug: process.env.NODE_ENV === "development",

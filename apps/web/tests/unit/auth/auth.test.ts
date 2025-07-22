@@ -2,13 +2,9 @@ import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import {
   getAuthErrorMessage,
-  createOrUpdateUser,
   hasRole,
-  getUserDisplayName,
-  isAuthenticated,
-  createAuthError,
   AUTH_ERROR_MESSAGES,
-} from '../../../src/lib/auth';
+} from '../../../src/lib/auth-utils';
 import { AuthUser } from '../../../src/types/auth';
 
 // Mock Supabase
