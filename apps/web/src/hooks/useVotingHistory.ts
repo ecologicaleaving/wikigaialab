@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@wikigaialab/database';
 
 export interface VotingHistoryItem {
   id: string;
@@ -54,43 +52,16 @@ export function useVotingHistory() {
   const fetchVotingHistory = async () => {
     try {
       setLoading(true);
-      const supabase = createClientComponentClient<Database>();
-
-      // Get voting history with problem details
-      const { data: votes, error: votesError } = await supabase
-        .from('votes')
-        .select(`
-          user_id,
-          problem_id,
-          created_at,
-          problems!inner(
-            id,
-            title,
-            description,
-            status,
-            vote_count,
-            category_id,
-            categories(
-              name,
-              color_hex
-            )
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (votesError) {
+      
+      // Fetch voting history via API route instead of direct database access
+      const response = await fetch('/api/user/voting-history');
+      
+      if (!response.ok) {
         throw new Error('Failed to fetch voting history');
       }
-
-      // Transform data to match interface
-      const historyItems: VotingHistoryItem[] = votes.map(vote => ({
-        id: `${vote.user_id}-${vote.problem_id}`,
-        problem_id: vote.problem_id,
-        voted_at: vote.created_at,
-        problem: vote.problems
-      }));
+      
+      const data = await response.json();
+      const historyItems: VotingHistoryItem[] = data.votingHistory || [];
 
       setVotingHistory(historyItems);
 

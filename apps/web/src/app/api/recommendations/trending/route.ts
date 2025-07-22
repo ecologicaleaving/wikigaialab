@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../../../lib/supabase';
 // import { trackApi } from '../../../../lib/performance-monitor';
 
 /**
@@ -60,38 +59,9 @@ const MOCK_TRENDING = [
 
 async function getTrendingProblems(limit: number = 20): Promise<TrendingProblem[]> {
   try {
-    // Simple, fast query - no complex algorithms
-    const { data: problems, error } = await supabase
-      .from('problems')
-      .select(`
-        id,
-        title,
-        description,
-        category_id,
-        vote_count,
-        created_at,
-        categories:category_id (name),
-        users:proposer_id (name)
-      `)
-      .eq('status', 'Proposed')
-      .gte('vote_count', 3) // Minimum threshold
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()) // Last week
-      .order('vote_count', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) throw error;
-
-    return (problems || []).map(problem => ({
-      id: problem.id,
-      title: problem.title,
-      description: problem.description,
-      category_id: problem.category_id,
-      vote_count: problem.vote_count,
-      created_at: problem.created_at,
-      category: { name: (problem.categories as any)?.name || 'General' },
-      proposer: { name: (problem.users as any)?.name || 'Anonymous' }
-    }));
+    // Mock trending problems since database is not available
+    console.log('Mock trending problems request, limit:', limit);
+    return MOCK_TRENDING.slice(0, limit);
   } catch (error) {
     console.warn('Database query failed, using fallback:', error);
     return MOCK_TRENDING.slice(0, limit);

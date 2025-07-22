@@ -15,15 +15,16 @@ const clientSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
   NEXT_PUBLIC_APP_NAME: z.string().default('WikiGaiaLab'),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().default('G-XXXXXXXXXX'),
 });
 
 // Server-side only schema (only available on server)
 const serverSchema = z.object({
   DATABASE_URL: z.string().url().optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  NEXTAUTH_SECRET: z.string().min(1).optional(),
+  NEXTAUTH_URL: z.string().url().optional(),
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
   RATE_LIMIT_MAX_REQUESTS: z.string().transform(val => parseInt(val) || 100).default('100'),
   RATE_LIMIT_WINDOW_MS: z.string().transform(val => parseInt(val) || 900000).default('900000'),
   PREMIUM_ACCESS_VOTE_THRESHOLD: z.string().transform(val => parseInt(val) || 5).default('5'),
@@ -45,8 +46,6 @@ function validateClientConfig(): z.infer<typeof clientSchema> {
       NODE_ENV: process.env.NODE_ENV,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
       NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     });
     return clientConfig;
@@ -65,8 +64,6 @@ function validateClientConfig(): z.infer<typeof clientSchema> {
       NODE_ENV: (process.env.NODE_ENV as any) || 'development',
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
       NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'WikiGaiaLab',
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
       NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX',
     };
     return clientConfig;
@@ -96,7 +93,10 @@ function validateServerConfig(): z.infer<typeof serverSchema> {
   try {
     serverConfig = serverSchema.parse({
       DATABASE_URL: process.env.DATABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       RATE_LIMIT_MAX_REQUESTS: process.env.RATE_LIMIT_MAX_REQUESTS || '100',
       RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS || '900000',
       PREMIUM_ACCESS_VOTE_THRESHOLD: process.env.PREMIUM_ACCESS_VOTE_THRESHOLD || '5',
@@ -115,7 +115,10 @@ function validateServerConfig(): z.infer<typeof serverSchema> {
     }
     serverConfig = {
       DATABASE_URL: process.env.DATABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       RATE_LIMIT_MAX_REQUESTS: 100,
       RATE_LIMIT_WINDOW_MS: 900000,
       PREMIUM_ACCESS_VOTE_THRESHOLD: 5,

@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@wikigaialab/database';
 
 export interface AccessLevel {
   id: string;
@@ -89,18 +87,15 @@ export function usePremiumAccess() {
   const fetchUserAccessData = async () => {
     try {
       setLoading(true);
-      const supabase = createClientComponentClient<Database>();
-
-      // Get user data with vote counts
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('total_votes_cast, subscription_status')
-        .eq('id', user.id)
-        .single();
-
-      if (userError) {
+      
+      // Fetch user data via API route instead of direct database access
+      const response = await fetch('/api/auth/user');
+      
+      if (!response.ok) {
         throw new Error('Failed to fetch user data');
       }
+      
+      const { user: userData } = await response.json();
 
       const totalVotes = userData.total_votes_cast || 0;
       const subscriptionStatus = userData.subscription_status || 'free';

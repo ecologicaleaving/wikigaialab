@@ -1,31 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 
 /**
  * Logout API Route
- * Handles server-side logout processing
+ * Redirects to NextAuth signout since we migrated from Supabase
  */
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
-    // Sign out user
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error('Logout error:', error);
-      return NextResponse.json(
-        { error: 'Logout failed', message: error.message },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: 'Logout successful' },
-      { status: 200 }
-    );
+    // Redirect to NextAuth signout endpoint
+    return NextResponse.redirect(new URL('/api/auth/signout', request.url));
     
   } catch (error) {
     console.error('Logout processing error:', error);

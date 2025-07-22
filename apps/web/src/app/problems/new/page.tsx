@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { AuthenticatedLayout } from '../../../components/layout';
 import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'sonner';
-import { supabase } from '../../../lib/supabase';
+// Using NextAuth API routes instead of direct Supabase
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
@@ -83,10 +83,8 @@ export default function NewProblemPage() {
   const onSubmit = async (data: ProblemProposalData) => {
     setIsSubmitting(true);
     try {
-      // Get the current session to include in API call
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !session?.access_token) {
+      // NextAuth handles authentication automatically via cookies
+      if (!user) {
         throw new Error('No valid session. Please log in again.');
       }
 
@@ -94,7 +92,6 @@ export default function NewProblemPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
         },
         credentials: 'include',
         body: JSON.stringify(data),

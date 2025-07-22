@@ -1,4 +1,5 @@
-import { supabase, checkDatabaseConnection } from '@/lib/supabase';
+// Supabase tests disabled during migration to NextAuth
+// import { supabase, checkDatabaseConnection } from '@/lib/supabase';
 
 // Mock the createClient function
 jest.mock('@supabase/supabase-js', () => ({
@@ -15,7 +16,7 @@ jest.mock('@supabase/supabase-js', () => ({
   })),
 }));
 
-describe('Supabase Client', () => {
+describe.skip('Supabase Client', () => {
   beforeAll(() => {
     // Set required environment variables
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost:54321';

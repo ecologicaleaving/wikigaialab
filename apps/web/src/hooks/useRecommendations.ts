@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+// Using API routes instead of direct Supabase
 import { useAuth } from './useAuth';
 
 // Types for recommendation system

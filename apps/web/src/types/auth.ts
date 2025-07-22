@@ -1,8 +1,26 @@
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
-import { User as DatabaseUser } from '../lib/supabase';
+import { Session } from 'next-auth';
+import { User } from 'next-auth';
 
 /**
- * Enhanced user type combining Supabase auth user with our database user
+ * Database user interface
+ */
+export interface DatabaseUser {
+  id: string;
+  email: string;
+  name: string;
+  avatar_url?: string | null;
+  created_at: string;
+  updated_at: string;
+  last_login_at?: string;
+  is_admin: boolean;
+  role: UserRole;
+  subscription_status?: string;
+  total_votes_cast?: number;
+  total_problems_proposed?: number;
+}
+
+/**
+ * Enhanced user type combining NextAuth user with our database user
  */
 export interface AuthUser extends DatabaseUser {
   session?: Session;
@@ -105,7 +123,7 @@ export type AuthEventType =
 export interface AuthEvent {
   type: AuthEventType;
   session: Session | null;
-  user: SupabaseUser | null;
+  user: User | null;
   timestamp: Date;
 }
 

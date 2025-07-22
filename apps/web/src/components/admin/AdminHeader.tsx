@@ -6,8 +6,7 @@ import { ChevronDownIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/o
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@wikigaialab/database';
+import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 
 interface AdminHeaderProps {
@@ -16,11 +15,9 @@ interface AdminHeaderProps {
 
 export function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
+    await signOut({ callbackUrl: '/' });
   };
 
   return (

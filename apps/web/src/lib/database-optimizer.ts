@@ -3,8 +3,9 @@
  * Phase 1 Fix: Database performance optimization
  */
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@wikigaialab/database';
+// Database optimization utilities - temporarily disabled during Supabase migration
+// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { Database } from '@wikigaialab/database';
 
 // Query performance monitoring
 interface QueryMetrics {

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../../../lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,34 +43,13 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     };
 
-    try {
-      // Store in Supabase (gracefully handle table not existing)
-      const { data: result, error } = await supabase
-        .from('analytics_events')
-        .insert([analyticsRecord]);
-
-      if (error) {
-        // Log error but don't fail the request
-        console.warn('Analytics storage failed (non-critical):', error.message);
-        return NextResponse.json({ 
-          success: true, 
-          message: 'Analytics event logged (storage failed)' 
-        });
-      }
-
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Analytics event stored successfully' 
-      });
-      
-    } catch (dbError) {
-      // Database error - just log it and continue
-      console.warn('Analytics database error (non-critical):', dbError);
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Analytics event logged (db unavailable)' 
-      });
-    }
+    // Since we've removed Supabase, just log the analytics event
+    console.log('📊 Analytics Event:', analyticsRecord);
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Analytics event logged successfully' 
+    });
 
   } catch (error) {
     console.error('Analytics tracking error:', error);

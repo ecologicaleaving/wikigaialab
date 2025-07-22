@@ -20,8 +20,6 @@
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "3.10.0",
     "@stripe/stripe-js": "7.5.0",
-    "@supabase/auth-helpers-nextjs": "0.10.0",
-    "@supabase/supabase-js": "2.52.0",
     "@wikigaialab/shared": "workspace:*",
     "@wikigaialab/ui": "workspace:*",
     "class-variance-authority": "0.7.1",

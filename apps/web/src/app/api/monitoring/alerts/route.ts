@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
 
 interface Alert {
   id: string;
@@ -133,20 +132,8 @@ async function checkCriticalAlerts(alert: Alert): Promise<void> {
 // Health check alerts - internal function, not exported
 async function checkSystemHealth(): Promise<void> {
   try {
-    // Check database connectivity
-    const { error: dbError } = await supabase
-      .from('users')
-      .select('count')
-      .limit(1);
-
-    if (dbError) {
-      await sendAlert({
-        type: 'error',
-        message: 'Database connectivity lost',
-        source: 'health-check',
-        metadata: { error: dbError.message }
-      });
-    }
+    // Mock database connectivity check since database is not available
+    console.log('Database connectivity check - mocked during migration');
 
     // Check memory usage
     const memoryUsage = process.memoryUsage();
