@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, Search, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { HeaderProps } from '@/types/navigation';
-import { getAllNavigationItems } from '@/lib/navigation';
+import { getNavigationItems, getAllNavigationItems, mainNavigationItems } from '@/lib/navigation';
 import { NavigationLink } from './NavigationLink';
 import { MobileMenu } from './MobileMenu';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -31,8 +31,11 @@ export const Header: React.FC<HeaderProps> = ({
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  // Get filtered navigation items based on user auth status
-  const navigationItems = getAllNavigationItems(user);
+  // Get filtered navigation items based on user auth status  
+  // For desktop: show only main navigation items
+  const desktopNavigationItems = getNavigationItems(user, mainNavigationItems);
+  // For mobile: show all navigation items  
+  const mobileNavigationItems = getAllNavigationItems(user);
 
   // Mock notification count - replace with actual data
   useEffect(() => {
@@ -67,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              {navigationItems.map(item => (
+              {desktopNavigationItems.map(item => (
                 <NavigationLink
                   key={item.id}
                   href={item.href}
@@ -141,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
       <MobileMenu 
         isOpen={mobileMenuOpen} 
         onClose={() => setMobileMenuOpen(false)}
-        navigationItems={navigationItems}
+        navigationItems={mobileNavigationItems}
         user={user}
       />
     </>
