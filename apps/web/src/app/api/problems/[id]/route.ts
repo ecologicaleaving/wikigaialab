@@ -36,14 +36,10 @@ export async function GET(
     
     console.log('🔍 Fetching problem with ID:', id);
     
-    // Get problem with category and user info
+    // First try simple query without JOINs
     const { data: problem, error } = await supabase
       .from('problems')
-      .select(`
-        *,
-        category:categories(name),
-        proposer:users(name, email)
-      `)
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -51,23 +47,9 @@ export async function GET(
     
     if (error) {
       console.error('Problem fetch error:', error);
-      
-      // Try a simpler query to debug
-      const { data: simpleData, error: simpleError } = await supabase
-        .from('problems')
-        .select('*')
-        .eq('id', id)
-        .single();
-        
-      console.log('🔍 Simple query result:', { simpleData: !!simpleData, simpleError });
-      
       return NextResponse.json({
         success: false,
-        error: 'Problem not found',
-        debug: {
-          originalError: error.message,
-          simpleQueryResult: simpleError ? simpleError.message : 'Success'
-        }
+        error: 'Problem not found'
       }, { status: 404 });
     }
 
