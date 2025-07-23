@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient<Database>(supabaseUrl, supabaseKey);
         
+        // First try by ID
         const { data: userData, error } = await supabase
           .from('users')
           .select('*')
@@ -71,6 +72,19 @@ export async function GET(request: NextRequest) {
         
         if (!error && userData) {
           databaseUser = userData;
+        } else {
+          // Fallback to email lookup if ID fails (common with Google OAuth numeric IDs)
+          console.log('ID lookup failed, trying email lookup for:', session.user.email);
+          const { data: userByEmail, error: emailError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', session.user.email)
+            .single();
+          
+          if (!emailError && userByEmail) {
+            databaseUser = userByEmail;
+            console.log('Found user by email with admin status:', userByEmail.is_admin);
+          }
         }
       }
     } catch (error) {
