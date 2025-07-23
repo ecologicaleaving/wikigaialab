@@ -16,55 +16,27 @@ try {
   console.warn('DOMPurify not available, using basic text validation');
 }
 
-// Custom validation for sanitized text - simplified for production stability
+// Simplified text validation for production stability
 const sanitizedText = (minLength: number, maxLength: number) =>
   z.string()
     .min(minLength, `Must be at least ${minLength} characters`)
     .max(maxLength, `Must not exceed ${maxLength} characters`)
     .trim()
     .refine(
-      (val) => {
-        // Basic safety check without DOMPurify to prevent 500 errors
-        try {
-          if (DOMPurify) {
-            const sanitized = DOMPurify.sanitize(val, { 
-              ALLOWED_TAGS: [], 
-              ALLOWED_ATTR: [] 
-            });
-            return sanitized === val;
-          }
-          return true; // Skip sanitization if DOMPurify not available
-        } catch (error) {
-          console.warn('DOMPurify validation failed, falling back to basic check:', error);
-          return true; // Don't fail on DOMPurify errors
-        }
-      },
-      'Contains invalid or potentially dangerous characters'
+      (val) => !/^\s*$/.test(val),
+      'Cannot be only whitespace'
     )
     .refine(
       (val) => !/<script|javascript:|data:|vbscript:|on\w+=/i.test(val),
       'Contains potentially malicious content'
     );
 
-// UUID validation with strict format
-const strictUUID = z.string()
-  .uuid('Invalid UUID format')
-  .refine(
-    (val) => /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val),
-    'UUID does not match required v4 format'
-  );
+// Simplified UUID validation
+const strictUUID = z.string().uuid('Invalid UUID format');
 
 export const createProblemSchema = z.object({
-  title: sanitizedText(5, 200)
-    .refine(
-      (val) => !/^\s*$/.test(val),
-      'Title cannot be only whitespace'
-    ),
-  description: sanitizedText(10, 1000)
-    .refine(
-      (val) => !/^\s*$/.test(val),
-      'Description cannot be only whitespace'
-    ),
+  title: sanitizedText(5, 200),
+  description: sanitizedText(10, 1000),
   category_id: strictUUID
 });
 
