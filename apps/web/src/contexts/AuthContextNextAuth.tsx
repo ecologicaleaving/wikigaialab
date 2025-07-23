@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession, signIn, signOut as nextAuthSignOut } from 'next-auth/react';
 import { AuthUser } from '../types/auth';
 
@@ -27,21 +27,45 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: session, status, update } = useSession();
   const loading = status === "loading";
+  const [databaseUser, setDatabaseUser] = useState<any>(null);
+  const [fetchingUser, setFetchingUser] = useState(false);
 
-  // Convert NextAuth session to our AuthUser type
+  // Fetch user data from session API when session changes
+  useEffect(() => {
+    if (session?.user && !fetchingUser) {
+      setFetchingUser(true);
+      fetch('/api/auth/session')
+        .then(r => r.json())
+        .then(data => {
+          if (data.user) {
+            setDatabaseUser(data.user);
+          }
+        })
+        .catch(error => {
+          console.warn('Failed to fetch user data:', error);
+        })
+        .finally(() => {
+          setFetchingUser(false);
+        });
+    } else if (!session?.user) {
+      setDatabaseUser(null);
+    }
+  }, [session?.user?.id, session?.user?.email]);
+
+  // Convert NextAuth session to our AuthUser type with real database data
   const user: AuthUser | null = session?.user ? {
     id: session.user.id || session.user.email || '',
     email: session.user.email || '',
     name: session.user.name || '',
     avatar_url: session.user.image || null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    last_login_at: new Date().toISOString(),
-    is_admin: false,
-    role: 'user' as const,
-    subscription_status: 'free',
-    total_votes_cast: 0,
-    total_problems_proposed: 0,
+    created_at: databaseUser?.created_at || new Date().toISOString(),
+    updated_at: databaseUser?.updated_at || new Date().toISOString(),
+    last_login_at: databaseUser?.last_login_at || new Date().toISOString(),
+    is_admin: databaseUser?.is_admin || false, // Use real database value
+    role: databaseUser?.role || 'user' as const,
+    subscription_status: databaseUser?.subscription_status || 'free',
+    total_votes_cast: databaseUser?.total_votes_cast || 0,
+    total_problems_proposed: databaseUser?.total_problems_proposed || 0,
   } : null;
 
   const signInWithGoogle = async () => {
