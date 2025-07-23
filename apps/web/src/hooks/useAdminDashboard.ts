@@ -67,7 +67,7 @@ export function useAdminDashboard() {
         
         const dashboardData = await response.json();
 
-        setData(dashboardData);
+        setData(dashboardData.data);
         setError(null);
 
       } catch (err) {
