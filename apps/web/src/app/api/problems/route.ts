@@ -208,15 +208,40 @@ export async function POST(request: NextRequest) {
 
     // STEP 3: Database Operations
     console.log('🔍 Connecting to database...');
-    const supabase = getSupabaseClient();
+    let supabase;
+    try {
+      supabase = getSupabaseClient();
+      console.log('✅ Supabase client created successfully');
+    } catch (dbError) {
+      console.log('❌ Failed to create Supabase client:', dbError);
+      return NextResponse.json({
+        success: false,
+        error: 'Database connection failed',
+        correlationId
+      }, { status: 500 });
+    }
     
     // Verify category exists
     console.log('🔍 Verifying category exists...');
-    const { data: category, error: categoryError } = await supabase
-      .from('categories')
-      .select('id, name')
-      .eq('id', validatedInput.category_id)
-      .single();
+    let category, categoryError;
+    try {
+      const result = await supabase
+        .from('categories')
+        .select('id, name')
+        .eq('id', validatedInput.category_id)
+        .single();
+      category = result.data;
+      categoryError = result.error;
+      console.log('🔍 Category query result:', { category, categoryError });
+    } catch (queryError) {
+      console.log('❌ Category query failed:', queryError);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to verify category',
+        details: queryError instanceof Error ? queryError.message : 'Unknown query error',
+        correlationId
+      }, { status: 500 });
+    }
 
     if (categoryError || !category) {
       console.log('❌ Category validation failed:', categoryError?.message);
@@ -241,12 +266,28 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
+    
+    console.log('🔍 Problem data to insert:', problemData);
 
-    const { data: problem, error: insertError } = await supabase
-      .from('problems')
-      .insert(problemData)
-      .select('*')
-      .single();
+    let problem, insertError;
+    try {
+      const result = await supabase
+        .from('problems')
+        .insert(problemData)
+        .select('*')
+        .single();
+      problem = result.data;
+      insertError = result.error;
+      console.log('🔍 Insert result:', { problem: !!problem, insertError });
+    } catch (insertException) {
+      console.log('❌ Problem insert failed with exception:', insertException);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to create problem due to database error',
+        details: insertException instanceof Error ? insertException.message : 'Unknown insert error',
+        correlationId
+      }, { status: 500 });
+    }
 
     if (insertError) {
       console.log('❌ Problem creation failed:', insertError.message);
@@ -286,10 +327,15 @@ export async function POST(request: NextRequest) {
       });
 
   } catch (error) {
-    console.error('❌ POST endpoint error:', error);
+    console.error('❌ POST endpoint unexpected error:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      correlationId
+    });
     return NextResponse.json({
       success: false,
       error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error occurred',
       correlationId
     }, { status: 500 });
   }
