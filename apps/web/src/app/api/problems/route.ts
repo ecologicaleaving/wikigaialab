@@ -163,8 +163,35 @@ export async function POST(request: NextRequest) {
 
     // STEP 2: Input Validation & Sanitization
     console.log('🔍 Validating input...');
-    const body = await request.json();
-    const validation = validateProblemInput(body);
+    let body;
+    try {
+      body = await request.json();
+      console.log('🔍 Request body received:', { 
+        hasTitle: !!body.title, 
+        hasDescription: !!body.description, 
+        hasCategoryId: !!body.category_id 
+      });
+    } catch (error) {
+      console.log('❌ Failed to parse JSON body:', error);
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid JSON in request body',
+        correlationId
+      }, { status: 400 });
+    }
+
+    let validation;
+    try {
+      validation = validateProblemInput(body);
+    } catch (error) {
+      console.log('❌ Validation error:', error);
+      return NextResponse.json({
+        success: false,
+        error: 'Validation failed due to server error',
+        details: error instanceof Error ? error.message : 'Unknown validation error',
+        correlationId
+      }, { status: 500 });
+    }
     
     if (!validation.success) {
       console.log('❌ Validation failed:', validation.errorMessage);
