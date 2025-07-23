@@ -176,16 +176,23 @@ export const useRecommendations = (
     if (!user) return;
 
     try {
-      await supabase
-        .from('recommendation_feedback')
-        .insert({
-          user_id: user.id,
+      // Use API endpoint instead of direct Supabase access
+      const response = await fetch('/api/analytics/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           problem_id: problemId,
           recommendation_type: recommendationType,
           feedback_type: feedbackType,
           context: {},
-          created_at: new Date().toISOString()
-        });
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to track feedback');
+      }
     } catch (err) {
       console.error('Error tracking recommendation feedback:', err);
     }
@@ -379,15 +386,22 @@ export const useCollections = (
 
   const trackCollectionView = useCallback(async (collectionId: string) => {
     try {
-      await supabase
-        .from('discovery_analytics')
-        .insert({
-          user_id: null, // Will be set by RLS if user is authenticated
+      // Use API endpoint instead of direct Supabase access
+      const response = await fetch('/api/analytics/discovery', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           discovery_method: 'collection',
           source_id: collectionId,
           session_id: `collection_view_${Date.now()}`,
-          created_at: new Date().toISOString()
-        });
+        }),
+      });
+
+      if (!response.ok) {
+        console.warn('Failed to track collection view');
+      }
     } catch (err) {
       console.error('Error tracking collection view:', err);
     }
