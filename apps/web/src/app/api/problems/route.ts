@@ -34,6 +34,8 @@ function getSupabaseClient() {
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🔍 Problems GET endpoint called');
+    
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50);
@@ -42,7 +44,20 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get('sort') || 'created_at';
     const order = searchParams.get('order') || 'desc';
 
-    const supabase = getSupabaseClient();
+    console.log('🔍 Query params:', { page, limit, category_id, search, sort, order });
+
+    let supabase;
+    try {
+      supabase = getSupabaseClient();
+      console.log('✅ Supabase client initialized');
+    } catch (clientError) {
+      console.error('❌ Supabase client error:', clientError);
+      return NextResponse.json({
+        success: false,
+        error: 'Database connection failed',
+        details: clientError instanceof Error ? clientError.message : 'Unknown error'
+      }, { status: 503 });
+    }
     
     // Build query
     let query = supabase
@@ -79,17 +94,21 @@ export async function GET(request: NextRequest) {
     const to = from + limit - 1;
     query = query.range(from, to);
 
+    console.log('🔍 Executing query...');
     const { data: problems, error, count } = await query;
 
     if (error) {
-      console.error('Error fetching problems:', error);
+      console.error('❌ Database query error:', error);
       return NextResponse.json({
         success: false,
         error: 'Failed to fetch problems',
         details: error.message,
-        code: error.code
+        code: error.code,
+        hint: error.hint
       }, { status: 500 });
     }
+
+    console.log('✅ Query successful:', { problemsCount: problems?.length || 0, totalCount: count });
 
     return NextResponse.json({
       success: true,
