@@ -52,7 +52,7 @@ export const createProblemSchema = z.object({
       (val) => !/^\s*$/.test(val),
       'Title cannot be only whitespace'
     ),
-  description: sanitizedText(20, 2000)
+  description: sanitizedText(10, 1000)
     .refine(
       (val) => !/^\s*$/.test(val),
       'Description cannot be only whitespace'
