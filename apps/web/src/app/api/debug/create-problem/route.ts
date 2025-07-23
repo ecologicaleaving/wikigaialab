@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       category_id: '32750fcb-6d9d-4863-8eb5-94a315430bad', // Economics
       proposer_id: session.user.id,
       status: 'Proposed',
-      vote_count: 1
+      vote_count: 0 // Start with 0 votes - users can't vote on their own problems
     };
     
     console.log('🔍 Attempting to create test problem:', testProblem);

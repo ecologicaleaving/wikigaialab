@@ -341,7 +341,7 @@ export async function POST(request: NextRequest) {
       category_id: validatedInput.category_id,
       proposer_id: user.id,
       status: 'Proposed', // Match status from screenshot
-      vote_count: 1,
+      vote_count: 0, // Start with 0 votes - users can't vote on their own problems
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
