@@ -27,15 +27,8 @@ interface Problem {
   status: string;
   vote_count: number;
   created_at: string;
-  proposer: {
-    id: string;
-    name: string;
-    avatar_url?: string;
-  };
-  category: {
-    id: string;
-    name: string;
-  };
+  proposer_id: string;
+  category_id: string;
 }
 
 export default function ProblemDetailPage() {
@@ -93,10 +86,10 @@ export default function ProblemDetailPage() {
           throw new Error(errorData.error || 'Problema non trovato');
         }
         
-        const data = await response.json();
-        console.log('Problem data received:', data);
-        setProblem(data);
-        setVoteCount(data.vote_count || 0);
+        const result = await response.json();
+        console.log('Problem data received:', result);
+        setProblem(result.data);
+        setVoteCount(result.data.vote_count || 0);
       } catch (error) {
         console.error('Fetch error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Errore nel caricamento del problema';
@@ -154,7 +147,7 @@ export default function ProblemDetailPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Problemi', href: '/problems' },
-    { label: problem.category.name, href: `/problems?category=${problem.category.id}` },
+    { label: 'Categoria', href: `/problems?category=${problem.category_id}` },
     { label: problem.title, current: true },
   ];
 
@@ -190,10 +183,10 @@ export default function ProblemDetailPage() {
                       </div>
                       <div>
                         <Link 
-                          href={`/users/${problem.proposer.id}`}
+                          href={`/users/${problem.proposer_id}`}
                           className="font-medium text-gray-900 hover:text-primary-600 transition-colors"
                         >
-                          {problem.proposer.name}
+                          Utente
                         </Link>
                         <p className="text-sm text-gray-500">
                           Proposto {formatRelativeTime(problem.created_at)}
@@ -234,7 +227,7 @@ export default function ProblemDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
                   <div className="flex items-center gap-2 text-sm">
                     <Tag className="w-4 h-4 text-gray-400" />
-                    <Badge variant="secondary">{problem.category.name}</Badge>
+                    <Badge variant="secondary">Categoria</Badge>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <Calendar className="w-4 h-4" />
@@ -303,13 +296,13 @@ export default function ProblemDetailPage() {
               </CardHeader>
               <CardContent>
                 <Link 
-                  href={`/problems?category=${problem.category.id}`}
+                  href={`/problems?category=${problem.category_id}`}
                   className="block p-4 rounded-lg border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-all group"
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium text-gray-900 group-hover:text-primary-600">
-                        {problem.category.name}
+                        Categoria
                       </h4>
                       <p className="text-sm text-gray-500 mt-1">
                         Esplora altri problemi in questa categoria
