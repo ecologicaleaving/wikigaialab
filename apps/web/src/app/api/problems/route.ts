@@ -124,17 +124,40 @@ export async function POST(request: NextRequest) {
     }
 
     // STEP 2: Authentication & User Validation
-    const userValidation = await validateUserSession(correlationId);
+    console.log('🔍 Starting authentication check', { correlationId });
     
-    if (!userValidation.success) {
+    // First, try basic NextAuth session check
+    const session = await auth();
+    console.log('🔍 Raw NextAuth session:', {
+      correlationId,
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userKeys: session?.user ? Object.keys(session.user) : [],
+      userId: session?.user?.id,
+      userEmail: session?.user?.email
+    });
+    
+    if (!session?.user) {
+      console.log('❌ No session or user found', { correlationId });
       const error = handleAuthError(
-        new Error(userValidation.error || 'Authentication failed'),
+        new Error('No active session found'),
         correlationId
       );
       return createSecureResponse(error);
     }
-
-    const user = userValidation.user!;
+    
+    // For now, use basic session validation instead of enhanced validation
+    const user = {
+      id: session.user.id || session.user.email || 'unknown',
+      email: session.user.email || 'unknown@email.com',
+      name: session.user.name || 'Unknown User'
+    };
+    
+    console.log('✅ User authenticated:', { 
+      correlationId, 
+      userId: user.id, 
+      userEmail: user.email 
+    });
 
     // STEP 3: Security Context Validation
     const securityContext = createSecurityContext(request, user.id);

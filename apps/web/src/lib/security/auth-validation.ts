@@ -53,10 +53,21 @@ export async function validateUserSession(
   correlationId: string = randomUUID()
 ): Promise<UserValidationResult> {
   try {
+    console.log('🔍 Auth validation started', { correlationId });
+    
     // Get NextAuth session
     const session = await auth();
     
+    console.log('🔍 NextAuth session:', { 
+      correlationId,
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      hasId: !!session?.user?.id,
+      userEmail: session?.user?.email
+    });
+    
     if (!session?.user?.id) {
+      console.log('❌ No active session found', { correlationId });
       return {
         success: false,
         error: 'No active session found'
