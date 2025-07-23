@@ -97,12 +97,15 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
         problem_id,
         problems:problem_id(category_id)
       `)
-      .eq('user_id', userId)
-      .eq('vote_type', 'community');
+      .eq('user_id', userId);
 
     if (votesError) {
       console.error('Error fetching user votes:', votesError);
+      // Don't fail completely, just continue with empty voting history
     }
+
+    console.log(`Found ${userVotes?.length || 0} user votes for user ${userId}`);
+    console.log('User votes data:', JSON.stringify(userVotes, null, 2));
 
     // Analyze category preferences
     const categoryPreferences: Record<string, number> = {};
@@ -146,13 +149,22 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
 
     if (error) {
       console.error('Database query error:', error);
-      throw error;
+      console.error('Query details - userId:', userId, 'votedProblemIds:', votedProblemIds);
+      // Don't throw - continue with fallback data
+      console.log('Continuing with fallback data due to database error');
+      return mockPersonalProblems.slice(0, limit);
     }
+
+    console.log(`Database returned ${problems?.length || 0} problems for user ${userId}`);
 
     if (!problems || problems.length === 0) {
       console.log('No problems found for personalization, using fallback');
+      console.log('Query was looking for problems with vote_count >= 1, status = Proposed, proposer_id != userId');
+      console.log('Excluded problem IDs:', votedProblemIds);
       return mockPersonalProblems.slice(0, limit);
     }
+
+    console.log(`Found ${problems.length} potential problems for recommendations`);
 
     // Calculate personalized scores
     const personalizedProblems: PersonalizedProblem[] = problems.map((problem: any) => {
@@ -208,6 +220,13 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
       .slice(0, limit);
 
     console.log(`Successfully generated ${sortedProblems.length} personalized recommendations`);
+    console.log('Sample recommendation data:', sortedProblems.slice(0, 2).map(p => ({
+      id: p.id,
+      title: p.title.substring(0, 50) + '...',
+      proposer: p.proposer.name,
+      vote_count: p.vote_count,
+      score: p.score
+    })));
     return sortedProblems;
 
   } catch (error) {
@@ -220,7 +239,14 @@ export async function GET(request: NextRequest) {
   try {
     // Get authenticated user
     const session = await auth();
+    console.log('Session data:', session ? {
+      hasUser: !!session.user,
+      userId: session.user?.id,
+      userEmail: session.user?.email
+    } : 'No session');
+
     if (!session?.user) {
+      console.log('No authenticated user found, returning empty recommendations');
       // Return empty recommendations for unauthenticated users
       return NextResponse.json({
         success: true,
