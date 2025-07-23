@@ -46,8 +46,39 @@ export default function ProblemDetailPage() {
   const [isVoting, setIsVoting] = useState(false);
   
   const toggleVote = async () => {
-    // Placeholder for voting functionality
-    console.log('Vote toggle - temporarily disabled');
+    if (!user) {
+      toast.error('Devi essere autenticato per votare');
+      return;
+    }
+
+    setIsVoting(true);
+    try {
+      const response = await fetch(`/api/problems/${problemId}/vote`, {
+        method: 'POST'
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Errore nel voto');
+      }
+
+      if (result.action === 'added') {
+        setHasVoted(true);
+        setVoteCount(prev => prev + 1);
+        toast.success('Voto aggiunto!');
+      } else {
+        setHasVoted(false);
+        setVoteCount(prev => prev - 1);
+        toast.success('Voto rimosso');
+      }
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Errore nel voto';
+      toast.error(errorMessage);
+    } finally {
+      setIsVoting(false);
+    }
   };
 
   // Real-time vote updates - temporarily disabled
@@ -90,6 +121,15 @@ export default function ProblemDetailPage() {
         console.log('Problem data received:', result);
         setProblem(result.data);
         setVoteCount(result.data.vote_count || 0);
+        
+        // Check if user has voted (only if authenticated)
+        if (user) {
+          const voteResponse = await fetch(`/api/problems/${problemId}/vote`);
+          if (voteResponse.ok) {
+            const voteData = await voteResponse.json();
+            setHasVoted(voteData.hasVoted && voteData.voteType === 'community');
+          }
+        }
       } catch (error) {
         console.error('Fetch error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Errore nel caricamento del problema';
