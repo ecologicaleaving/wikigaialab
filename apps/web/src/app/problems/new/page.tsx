@@ -189,9 +189,15 @@ export default function NewProblemPage() {
                 <Select 
                   onValueChange={(value) => form.setValue('category_id', value)}
                   disabled={categoriesLoading}
+                  value={form.watch('category_id')}
                 >
                   <SelectTrigger className={errors.category_id ? 'border-red-500' : ''}>
-                    <SelectValue placeholder="Seleziona una categoria" />
+                    <SelectValue placeholder="Seleziona una categoria">
+                      {form.watch('category_id') 
+                        ? categories.find(cat => cat.id === form.watch('category_id'))?.name 
+                        : 'Seleziona una categoria'
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categories?.map((category) => (
