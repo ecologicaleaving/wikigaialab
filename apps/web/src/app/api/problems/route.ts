@@ -85,7 +85,9 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching problems:', error);
       return NextResponse.json({
         success: false,
-        error: 'Failed to fetch problems'
+        error: 'Failed to fetch problems',
+        details: error.message,
+        code: error.code
       }, { status: 500 });
     }
 
