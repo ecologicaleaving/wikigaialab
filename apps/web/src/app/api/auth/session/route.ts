@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../lib/auth-nextauth';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@wikigaialab/database';
 
 /**
  * NextAuth Session API Route
@@ -52,20 +54,43 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Convert NextAuth session to our AuthUser format
+    // Get user data from database to get real admin status
+    let databaseUser = null;
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+      
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+        
+        const { data: userData, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (!error && userData) {
+          databaseUser = userData;
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to fetch user from database:', error);
+    }
+
+    // Convert NextAuth session to our AuthUser format with real database data
     const user = {
       id: session.user.id || session.user.email || '',
       email: session.user.email || '',
       name: session.user.name || '',
       avatar_url: session.user.image || null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      last_login_at: new Date().toISOString(),
-      is_admin: false,
-      role: 'user' as const,
-      subscription_status: 'free',
-      total_votes_cast: 0,
-      total_problems_proposed: 0,
+      created_at: databaseUser?.created_at || new Date().toISOString(),
+      updated_at: databaseUser?.updated_at || new Date().toISOString(),
+      last_login_at: databaseUser?.last_login_at || new Date().toISOString(),
+      is_admin: databaseUser?.is_admin || false, // Use real database value
+      role: databaseUser?.is_admin ? 'admin' : 'user' as const,
+      subscription_status: databaseUser?.subscription_status || 'free',
+      total_votes_cast: databaseUser?.total_votes_cast || 0,
+      total_problems_proposed: databaseUser?.total_problems_proposed || 0,
     };
 
     if (process.env.NODE_ENV === 'development') {
