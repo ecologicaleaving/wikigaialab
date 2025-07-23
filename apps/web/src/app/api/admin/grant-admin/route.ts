@@ -31,16 +31,49 @@ export async function POST(request: NextRequest) {
     const userEmail = session.user.email;
     console.log(`Granting admin privileges to user: ${userEmail} (${session.user.id})`);
 
-    // Update the user to be an admin
-    const { data, error } = await supabase
+    // First, ensure the user exists in the database
+    const { data: existingUser } = await supabase
       .from('users')
-      .update({ 
-        is_admin: true,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', session.user.id)
       .select('id, email, name, is_admin')
+      .eq('id', session.user.id)
       .single();
+
+    let data, error;
+
+    if (!existingUser) {
+      console.log('User not found in database, creating new user record');
+      // Create the user first
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          id: session.user.id,
+          email: session.user.email!,
+          name: session.user.name || null,
+          is_admin: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select('id, email, name, is_admin')
+        .single();
+
+      data = newUser;
+      error = createError;
+    } else {
+      console.log('User found in database, updating admin status');
+      // Update existing user
+      const { data: updatedUser, error: updateError } = await supabase
+        .from('users')
+        .update({ 
+          is_admin: true,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', session.user.id)
+        .select('id, email, name, is_admin')
+        .single();
+
+      data = updatedUser;
+      error = updateError;
+    }
 
     if (error) {
       console.error('Error granting admin privileges:', error);
