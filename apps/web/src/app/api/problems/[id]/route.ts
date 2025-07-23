@@ -34,6 +34,8 @@ export async function GET(
 
     const supabase = getSupabaseClient();
     
+    console.log('🔍 Fetching problem with ID:', id);
+    
     // Get problem with category and user info
     const { data: problem, error } = await supabase
       .from('problems')
@@ -45,11 +47,27 @@ export async function GET(
       .eq('id', id)
       .single();
 
+    console.log('🔍 Problem query result:', { problem: !!problem, error });
+    
     if (error) {
       console.error('Problem fetch error:', error);
+      
+      // Try a simpler query to debug
+      const { data: simpleData, error: simpleError } = await supabase
+        .from('problems')
+        .select('*')
+        .eq('id', id)
+        .single();
+        
+      console.log('🔍 Simple query result:', { simpleData: !!simpleData, simpleError });
+      
       return NextResponse.json({
         success: false,
-        error: 'Problem not found'
+        error: 'Problem not found',
+        debug: {
+          originalError: error.message,
+          simpleQueryResult: simpleError ? simpleError.message : 'Success'
+        }
       }, { status: 404 });
     }
 
