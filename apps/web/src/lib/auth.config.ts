@@ -46,12 +46,23 @@ export const authConfig = {
     error: "/login",
   },
   callbacks: {
-    jwt: async ({ token, user, account }) => {
-      if (user) {
-        token.id = user.id || user.email;
+    jwt: async ({ token, user, account, profile }) => {
+      if (user && account) {
+        // Use Google's stable 'sub' identifier as the user ID
+        // This ensures the same user always gets the same ID across sessions
+        token.id = account.providerAccountId || profile?.sub || user.id || user.email;
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔐 JWT callback - Setting user ID:', {
+            id: token.id,
+            email: token.email,
+            providerAccountId: account.providerAccountId,
+            sub: profile?.sub
+          });
+        }
       }
       if (account) {
         token.accessToken = account.access_token;
