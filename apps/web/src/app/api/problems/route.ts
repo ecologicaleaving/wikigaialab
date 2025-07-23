@@ -5,20 +5,8 @@ import type { Database } from '@wikigaialab/database';
 import type { ProblemInsert } from '@wikigaialab/database';
 import { randomUUID } from 'crypto';
 
-// A+ Security Implementation imports
+// Input validation import
 import { validateProblemInput, type CreateProblemInput } from '@/lib/validation/problem-schema';
-import { rateLimitMiddleware, createRateLimitHeaders, isWhitelisted } from '@/lib/security/rate-limit';
-import { 
-  createSecureError, 
-  createSecureResponse, 
-  handleValidationError,
-  handleDatabaseError,
-  handleAuthError,
-  handleRateLimitError,
-  ErrorCategory,
-  ErrorSeverity 
-} from '@/lib/security/error-handling';
-import { validateUserSession, ensureUserExists, createSecurityContext, validateSecurityContext } from '@/lib/security/auth-validation';
 
 // Initialize Supabase client
 function getSupabaseClient() {
@@ -135,8 +123,8 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * A+ Security Implementation - Problem Creation Endpoint
- * Features: Rate limiting, input validation, secure error handling, comprehensive logging
+ * Problem Creation Endpoint
+ * Features: Authentication, input validation, database operations
  */
 export async function POST(request: NextRequest) {
   const correlationId = randomUUID();
