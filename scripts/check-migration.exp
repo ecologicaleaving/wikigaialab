@@ -1,0 +1,18 @@
+#!/usr/bin/expect -f
+
+# Check if migration was applied correctly
+set timeout 30
+set password "kPjEcmjWlgN4trQ9"
+
+spawn psql "postgresql://postgres:$password@jgivhyalioldfelngboi.pooler.supabase.com:5432/postgres"
+
+expect "postgres=>"
+send "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'votes' AND column_name = 'vote_type';\r"
+
+expect "postgres=>"
+send "SELECT COUNT(*) FROM information_schema.views WHERE table_name = 'vote_analytics';\r"
+
+expect "postgres=>"
+send "\\q\r"
+
+expect eof

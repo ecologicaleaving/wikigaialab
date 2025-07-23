@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+
+# Check if vote_type column exists in votes table
+set timeout 30
+set password "kPjEcmjWlgN4trQ9"
+
+spawn supabase db pull --schema public
+
+expect "Enter your database password:"
+send "$password\r"
+
+expect eof

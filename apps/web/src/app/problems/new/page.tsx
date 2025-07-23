@@ -106,7 +106,7 @@ export default function NewProblemPage() {
       toast.success('Problema creato con successo!', {
         description: 'Il tuo voto è stato automaticamente aggiunto.',
       });
-      router.push(`/problems/${result.id}`);
+      router.push(`/problems/${result.data.id}`);
     } catch (error: unknown) {
       toast.error('Errore nella creazione del problema', {
         description: error instanceof Error ? error.message : 'Errore sconosciuto',
