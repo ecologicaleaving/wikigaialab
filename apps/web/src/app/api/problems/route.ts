@@ -184,124 +184,155 @@ export async function POST(request: NextRequest) {
     const validatedInput = validation.data!;
 
     // STEP 5: Database Operations with Error Handling
-    const supabase = getSupabaseClient();
-    
-    // Ensure user exists in database
-    const userSync = await ensureUserExists({
-      id: user.id,
-      email: user.email,
-      name: user.name
-    }, correlationId);
+    let supabase;
+    try {
+      supabase = getSupabaseClient();
+      
+      // Ensure user exists in database
+      const userSync = await ensureUserExists({
+        id: user.id,
+        email: user.email,
+        name: user.name
+      }, correlationId);
 
-    if (!userSync.success) {
-      const error = handleDatabaseError(
-        new Error(userSync.error || 'User synchronization failed'),
-        correlationId
-      );
-      return createSecureResponse(error);
-    }
+      if (!userSync.success) {
+        const error = handleDatabaseError(
+          new Error(userSync.error || 'User synchronization failed'),
+          correlationId
+        );
+        return createSecureResponse(error);
+      }
 
-    // Verify category exists (with prepared statement protection)
-    const { data: category, error: categoryError } = await supabase
-      .from('categories')
-      .select('id, name')
-      .eq('id', validatedInput.category_id)
-      .eq('is_active', true)
-      .single();
+      // Verify category exists (with prepared statement protection)
+      const { data: category, error: categoryError } = await supabase
+        .from('categories')
+        .select('id, name')
+        .eq('id', validatedInput.category_id)
+        .eq('is_active', true)
+        .single();
 
-    if (categoryError || !category) {
-      const error = handleValidationError(
-        new Error('Invalid or inactive category selected'),
-        correlationId
-      );
-      return createSecureResponse(error);
-    }
+      if (categoryError || !category) {
+        const error = handleValidationError(
+          new Error('Invalid or inactive category selected'),
+          correlationId
+        );
+        return createSecureResponse(error);
+      }
 
-    // STEP 6: Create Problem with Transaction Safety
-    const problemData: ProblemInsert = {
-      title: validatedInput.title,
-      description: validatedInput.description,
-      category_id: validatedInput.category_id,
-      proposer_id: user.id,
-      status: 'published',
-      vote_count: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+      // STEP 6: Create Problem with Transaction Safety
+      const problemData: ProblemInsert = {
+        title: validatedInput.title,
+        description: validatedInput.description,
+        category_id: validatedInput.category_id,
+        proposer_id: user.id,
+        status: 'published',
+        vote_count: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
-    const { data: problem, error: insertError } = await supabase
-      .from('problems')
-      .insert(problemData)
-      .select(`
-        id,
-        title,
-        description,
-        vote_count,
-        status,
-        created_at,
-        proposer:users!proposer_id(id, name),
-        category:categories!category_id(id, name, color, icon)
-      `)
-      .single();
+      const { data: problem, error: insertError } = await supabase
+        .from('problems')
+        .insert(problemData)
+        .select(`
+          id,
+          title,
+          description,
+          vote_count,
+          status,
+          created_at,
+          proposer:users!proposer_id(id, name),
+          category:categories!category_id(id, name, color, icon)
+        `)
+        .single();
 
-    if (insertError) {
-      const error = handleDatabaseError(insertError, correlationId);
-      return createSecureResponse(error);
-    }
+      if (insertError) {
+        const error = handleDatabaseError(insertError, correlationId);
+        return createSecureResponse(error);
+      }
 
-    // STEP 7: Create Initial Vote (non-blocking)
-    const { error: voteError } = await supabase
-      .from('votes')
-      .insert({
-        problem_id: problem.id,
-        user_id: user.id,
-        created_at: new Date().toISOString()
-      });
+      // STEP 7: Create Initial Vote (non-blocking)
+      const { error: voteError } = await supabase
+        .from('votes')
+        .insert({
+          problem_id: problem.id,
+          user_id: user.id,
+          created_at: new Date().toISOString()
+        });
 
-    // Log vote error but don't fail the request
-    if (voteError) {
-      console.warn('Initial vote creation failed:', {
+      // Log vote error but don't fail the request
+      if (voteError) {
+        console.warn('Initial vote creation failed:', {
+          correlationId,
+          problemId: problem.id,
+          userId: user.id,
+          error: voteError.message
+        });
+      }
+
+      // STEP 8: Success Response with Metrics
+      const duration = Date.now() - startTime;
+      
+      console.info('Problem created successfully:', {
         correlationId,
         problemId: problem.id,
         userId: user.id,
-        error: voteError.message
+        duration,
+        category: category.name
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Problem created successfully',
+        data: {
+          id: problem.id,
+          title: problem.title,
+          description: problem.description,
+          voteCount: problem.vote_count,
+          status: problem.status,
+          createdAt: problem.created_at,
+          proposer: problem.proposer,
+          category: problem.category
+        },
+        metadata: {
+          correlationId,
+          duration
+        }
+      }, {
+        headers: {
+          'X-Request-ID': correlationId,
+          'X-Response-Time': duration.toString()
+        }
+      });
+
+    } catch (envError) {
+      console.error('❌ Environment configuration error:', envError);
+      
+      // Return configuration error with instructions
+      return NextResponse.json({
+        success: false,
+        error: 'Service configuration incomplete',
+        message: 'Database connection not configured. Please set up Supabase environment variables.',
+        code: 'CONFIG_ERROR',
+        correlationId,
+        instructions: {
+          variables: [
+            'NEXT_PUBLIC_SUPABASE_URL',
+            'SUPABASE_SERVICE_KEY'
+          ],
+          values: {
+            'NEXT_PUBLIC_SUPABASE_URL': 'https://jgivhyalioldfelngboi.supabase.co',
+            'SUPABASE_SERVICE_KEY': '[Contact admin for service key]'
+          }
+        }
+      }, { 
+        status: 503,
+        headers: {
+          'X-Request-ID': correlationId,
+          'Retry-After': '300' // Retry after 5 minutes
+        }
       });
     }
-
-    // STEP 8: Success Response with Metrics
-    const duration = Date.now() - startTime;
-    
-    console.info('Problem created successfully:', {
-      correlationId,
-      problemId: problem.id,
-      userId: user.id,
-      duration,
-      category: category.name
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Problem created successfully',
-      data: {
-        id: problem.id,
-        title: problem.title,
-        description: problem.description,
-        voteCount: problem.vote_count,
-        status: problem.status,
-        createdAt: problem.created_at,
-        proposer: problem.proposer,
-        category: problem.category
-      },
-      metadata: {
-        correlationId,
-        duration
-      }
-    }, {
-      headers: {
-        'X-Request-ID': correlationId,
-        'X-Response-Time': duration.toString()
-      }
-    });
 
   } catch (error) {
     // STEP 9: Comprehensive Error Handling

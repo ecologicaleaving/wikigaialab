@@ -42,6 +42,11 @@ function getSupabaseClient() {
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
   
   if (!supabaseUrl || !supabaseKey) {
+    console.error('❌ Missing Supabase environment variables:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      url: supabaseUrl?.substring(0, 20) + '...',
+    });
     throw new Error('Missing Supabase environment variables');
   }
   
