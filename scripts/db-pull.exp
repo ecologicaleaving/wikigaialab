@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+
+# Expect script to pull current database state
+set timeout 60
+set password "kPjEcmjWlgN4trQ9"
+
+spawn supabase db pull
+
+expect "Enter your database password:"
+send "$password\r"
+
+expect eof

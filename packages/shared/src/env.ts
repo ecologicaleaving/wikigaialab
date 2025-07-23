@@ -50,7 +50,7 @@ const envSchema = z.object({
 // Runtime environment validation
 export function validateEnv() {
   // On client-side, only validate client-safe variables
-  if (typeof window !== 'undefined') {
+  if (typeof globalThis !== 'undefined' && typeof (globalThis as any).window !== 'undefined') {
     try {
       const clientOnlySchema = z.object({
         NEXT_PUBLIC_APP_URL: z.string().url('Invalid app URL').default('http://localhost:3000'),
@@ -125,7 +125,7 @@ export function getValidatedEnv() {
 // Environment validation error handler
 export function handleEnvError(error: any) {
   // Only show errors on server-side
-  if (typeof window !== 'undefined') {
+  if (typeof globalThis !== 'undefined' && typeof (globalThis as any).window !== 'undefined') {
     return; // Silent fail on client-side always
   }
   
@@ -150,7 +150,7 @@ export function handleEnvError(error: any) {
 
 // Server-only validation helper - only runs on server and only when called
 export function validateServerEnv() {
-  if (typeof window !== 'undefined') {
+  if (typeof globalThis !== 'undefined' && typeof (globalThis as any).window !== 'undefined') {
     // Silent return on client-side with safe defaults
     return { success: true, data: null, error: null };
   }

@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+
+# Check migration list
+set timeout 30
+set password "kPjEcmjWlgN4trQ9"
+
+spawn supabase migration list
+
+expect "Enter your database password:"
+send "$password\r"
+
+expect eof

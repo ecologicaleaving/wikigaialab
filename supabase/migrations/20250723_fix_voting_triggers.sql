@@ -5,9 +5,18 @@
 -- STEP 1: Add vote_type column to votes table
 ALTER TABLE votes ADD COLUMN IF NOT EXISTS vote_type TEXT DEFAULT 'community';
 
--- Add constraint to ensure only valid vote types
-ALTER TABLE votes ADD CONSTRAINT vote_type_check 
-CHECK (vote_type IN ('community', 'creator_interest'));
+-- Add constraint to ensure only valid vote types (only if it doesn't exist)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints 
+        WHERE constraint_name = 'vote_type_check' 
+        AND table_name = 'votes'
+    ) THEN
+        ALTER TABLE votes ADD CONSTRAINT vote_type_check 
+        CHECK (vote_type IN ('community', 'creator_interest'));
+    END IF;
+END $$;
 
 -- STEP 2: Update existing votes to be 'community' type (they're all community votes)
 UPDATE votes SET vote_type = 'community' WHERE vote_type IS NULL;
@@ -15,6 +24,8 @@ UPDATE votes SET vote_type = 'community' WHERE vote_type IS NULL;
 -- STEP 3: Drop existing problematic triggers
 DROP TRIGGER IF EXISTS trigger_prevent_self_voting ON votes;
 DROP TRIGGER IF EXISTS trigger_auto_vote_on_problem_creation ON problems;
+DROP TRIGGER IF EXISTS trigger_update_vote_count ON votes;
+DROP TRIGGER IF EXISTS trigger_vote_rate_limit ON votes;
 
 -- STEP 4: Create improved prevent_self_voting function
 CREATE OR REPLACE FUNCTION prevent_self_voting()
@@ -150,7 +161,8 @@ COMMENT ON FUNCTION auto_vote_on_problem_creation() IS 'Automatically creates cr
 COMMENT ON FUNCTION check_vote_rate_limit() IS 'Rate limiting: max 10 votes per minute per user';
 
 -- STEP 12: Create helpful view for vote analytics
-CREATE OR REPLACE VIEW vote_analytics AS
+DROP VIEW IF EXISTS vote_analytics;
+CREATE VIEW vote_analytics AS
 SELECT 
     p.id as problem_id,
     p.title,

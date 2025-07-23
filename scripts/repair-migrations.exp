@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+
+# Expect script to repair migration history
+set timeout 30
+set password "kPjEcmjWlgN4trQ9"
+
+# Repair each migration as applied
+spawn supabase migration repair --status applied 20240101000000
+expect "Enter your database password:"
+send "$password\r"
+expect eof
+
+spawn supabase migration repair --status applied 20240101000001
+expect "Enter your database password:"
+send "$password\r"
+expect eof
+
+spawn supabase migration repair --status applied 20241201000100
+expect "Enter your database password:"
+send "$password\r"
+expect eof
+
+spawn supabase migration repair --status applied 20241201000200
+expect "Enter your database password:"
+send "$password\r"
+expect eof
