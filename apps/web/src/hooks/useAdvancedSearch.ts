@@ -149,32 +149,26 @@ export function useAdvancedSearch(options: UseAdvancedSearchOptions = {}) {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '20',
-        highlight: highlightResults.toString(),
-        search_id: searchId,
+        limit: '20'
       });
 
-      // Add search filters to params
-      if (searchFilters.query) params.set('q', searchFilters.query);
-      if (searchFilters.category) params.set('category', searchFilters.category);
+      // Add search filters to params - Updated for /api/problems endpoint
+      if (searchFilters.query) params.set('search', searchFilters.query);
+      if (searchFilters.category) params.set('category_id', searchFilters.category);
       if (searchFilters.status) params.set('status', searchFilters.status);
-      if (searchFilters.proposer) params.set('proposer', searchFilters.proposer);
-      if (searchFilters.minVotes !== undefined) params.set('min_votes', searchFilters.minVotes.toString());
-      if (searchFilters.maxVotes !== undefined) params.set('max_votes', searchFilters.maxVotes.toString());
-      if (searchFilters.dateFrom) params.set('date_from', searchFilters.dateFrom);
-      if (searchFilters.dateTo) params.set('date_to', searchFilters.dateTo);
-      params.set('sort_by', searchFilters.sortBy);
-      params.set('sort_order', searchFilters.sortOrder);
+      // Note: Other filters not yet supported by /api/problems
+      params.set('sort', searchFilters.sortBy === 'relevance' ? 'created_at' : searchFilters.sortBy);
+      params.set('order', searchFilters.sortOrder);
 
-      const response = await fetch(`/api/search/problems?${params.toString()}`);
+      const response = await fetch(`/api/problems?${params.toString()}`);
       
       if (!response.ok) {
         throw new Error('Errore nella ricerca');
       }
 
-      const data: { data: SearchResponse } = await response.json();
-      setResults(data.data.problems);
-      setPagination(data.data.pagination);
+      const data: { data: { problems: SearchResult[], pagination: any } } = await response.json();
+      setResults(data.data.problems || []);
+      setPagination(data.data.pagination || { page: 1, totalPages: 1, totalCount: 0, hasMore: false });
       setCurrentPage(page);
 
     } catch (err) {

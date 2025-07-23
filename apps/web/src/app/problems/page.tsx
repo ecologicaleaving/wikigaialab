@@ -317,10 +317,10 @@ function CategoryDiscoveryView({
   const fetchCategoryProblems = async (categoryId: string) => {
     setLoadingProblems(true);
     try {
-      const response = await fetch(`/api/search/problems?categoryIds=${categoryId}&limit=12&sortBy=vote_count&sortOrder=desc`);
+      const response = await fetch(`/api/problems?category_id=${categoryId}&limit=12&sort=vote_count&order=desc`);
       if (response.ok) {
         const data = await response.json();
-        setCategoryProblems(data.data || []);
+        setCategoryProblems(data.data?.problems || []);
       }
     } catch (error) {
       console.error('Error fetching category problems:', error);
