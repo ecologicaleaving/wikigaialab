@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
-import { getSupabaseClient } from '@/lib/supabase/client';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@wikigaialab/database';
+
+// Initialize Supabase client
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient<Database>(supabaseUrl, supabaseKey);
+}
 
 interface RouteContext {
   params: { id: string };
