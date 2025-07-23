@@ -48,10 +48,17 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('problems')
       .select(`
-        *,
-        proposer:users!proposer_id(id, name, email),
-        category:categories!category_id(id, name, color, icon),
-        vote_count
+        id,
+        title,
+        description,
+        category_id,
+        proposer_id,
+        status,
+        vote_count,
+        created_at,
+        updated_at,
+        proposer:users(id, name, email),
+        category:categories(id, name, color, icon)
       `)
       .eq('status', 'published'); // Only show published problems
 
