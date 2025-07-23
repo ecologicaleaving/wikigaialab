@@ -44,6 +44,21 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Testing database connection...');
     const supabase = getSupabaseClient();
     
+    // Ensure user exists in database (same fix as main endpoint)
+    console.log('🔍 Ensuring user exists in database...');
+    const { error: userUpsertError } = await supabase
+      .from('users')
+      .upsert({
+        id: session.user.id,
+        email: session.user.email || 'unknown@email.com',
+        name: session.user.name || 'Unknown User',
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      });
+    
+    console.log('🔍 User sync result:', { userUpsertError });
+    
     // Test category access
     const { data: categories, error: catError } = await supabase
       .from('categories')
@@ -77,6 +92,8 @@ export async function POST(request: NextRequest) {
       debug: {
         authenticated: true,
         userId: session.user.id,
+        userSynced: !userUpsertError,
+        userSyncError: userUpsertError,
         categoriesWork: !catError,
         problemCreated: !insertError,
         problem: problem,
