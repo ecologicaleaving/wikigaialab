@@ -59,15 +59,42 @@ export async function GET(request: NextRequest) {
       }, { status: 503 });
     }
     
-    // Build query - Start simple and add complexity
-    console.log('🔍 Building initial query...');
+    // Build query with explicit columns (no foreign keys for now)
+    console.log('🔍 Building query without foreign key joins...');
     let query = supabase
       .from('problems')
-      .select('*')
-      .limit(10); // Start with basic query
+      .select(`
+        id,
+        title, 
+        description,
+        category_id,
+        proposer_id,
+        status,
+        vote_count,
+        created_at,
+        updated_at
+      `)
+      .eq('status', 'published')
+      .limit(20);
 
-    // Skip filters for now - just test basic query
-    console.log('🔍 Skipping filters for initial test...');
+    // Apply filters
+    if (category_id) {
+      console.log('🔍 Adding category filter:', category_id);
+      query = query.eq('category_id', category_id);
+    }
+
+    if (search) {
+      console.log('🔍 Adding search filter:', search);
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+    }
+
+    // Apply sorting
+    query = query.order(sort as any, { ascending: order === 'asc' });
+
+    // Apply pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
 
     console.log('🔍 Executing query...');
     const { data: problems, error, count } = await query;
