@@ -143,224 +143,139 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    // STEP 1: Rate Limiting & Security Checks
-    if (!isWhitelisted(request)) {
-      const rateLimitResult = await rateLimitMiddleware(request, 'problemCreation');
-      
-      if (!rateLimitResult.success) {
-        const error = handleRateLimitError(rateLimitResult.retryAfter!, correlationId);
-        return createSecureResponse(error, createRateLimitHeaders(rateLimitResult));
-      }
-    }
-
-    // STEP 2: Authentication & User Validation
+    console.log('🔍 POST endpoint called', { correlationId });
+    
+    // STEP 1: Simple Authentication Check
+    console.log('🔍 Checking authentication...');
     const session = await auth();
     
-    if (!session?.user) {
-      const error = handleAuthError(
-        new Error('No active session found'),
+    if (!session?.user?.id) {
+      console.log('❌ No valid session found', { 
+        hasSession: !!session, 
+        hasUser: !!session?.user, 
+        hasUserId: !!session?.user?.id 
+      });
+      return NextResponse.json({
+        success: false,
+        error: 'Authentication required. Please sign in and try again.',
         correlationId
-      );
-      return createSecureResponse(error);
+      }, { status: 401 });
     }
     
-    // Use basic session validation
     const user = {
-      id: session.user.id || session.user.email || 'unknown',
+      id: session.user.id,
       email: session.user.email || 'unknown@email.com',
       name: session.user.name || 'Unknown User'
     };
-
-    // STEP 3: Security Context Validation
-    const securityContext = createSecurityContext(request, user.id);
     
-    if (!validateSecurityContext(securityContext)) {
-      const error = createSecureError(
-        new Error('Security validation failed'),
-        ErrorCategory.AUTHORIZATION,
-        ErrorSeverity.HIGH,
-        correlationId
-      );
-      return createSecureResponse(error);
-    }
+    console.log('✅ User authenticated:', { 
+      userId: user.id, 
+      userEmail: user.email 
+    });
 
-    // STEP 4: Input Validation & Sanitization
+    // STEP 2: Input Validation & Sanitization
+    console.log('🔍 Validating input...');
     const body = await request.json();
     const validation = validateProblemInput(body);
     
     if (!validation.success) {
-      const error = handleValidationError(
-        new Error(validation.errorMessage || 'Input validation failed'),
+      console.log('❌ Validation failed:', validation.errorMessage);
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid input data',
+        details: validation.errorMessage,
         correlationId
-      );
-      return createSecureResponse(error);
+      }, { status: 400 });
     }
 
     const validatedInput = validation.data!;
+    console.log('✅ Input validated:', { title: validatedInput.title });
 
-    // STEP 5: Database Operations with Error Handling
-    let supabase;
-    try {
-      supabase = getSupabaseClient();
-      
-      // Ensure user exists in database
-      const userSync = await ensureUserExists({
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }, correlationId);
+    // STEP 3: Database Operations
+    console.log('🔍 Connecting to database...');
+    const supabase = getSupabaseClient();
+    
+    // Verify category exists
+    console.log('🔍 Verifying category exists...');
+    const { data: category, error: categoryError } = await supabase
+      .from('categories')
+      .select('id, name')
+      .eq('id', validatedInput.category_id)
+      .single();
 
-      if (!userSync.success) {
-        const error = handleDatabaseError(
-          new Error(userSync.error || 'User synchronization failed'),
-          correlationId
-        );
-        return createSecureResponse(error);
-      }
-
-      // Verify category exists (with prepared statement protection)
-      const { data: category, error: categoryError } = await supabase
-        .from('categories')
-        .select('id, name')
-        .eq('id', validatedInput.category_id)
-        .eq('is_active', true)
-        .single();
-
-      if (categoryError || !category) {
-        const error = handleValidationError(
-          new Error('Invalid or inactive category selected'),
-          correlationId
-        );
-        return createSecureResponse(error);
-      }
-
-      // STEP 6: Create Problem with Transaction Safety
-      const problemData: ProblemInsert = {
-        title: validatedInput.title,
-        description: validatedInput.description,
-        category_id: validatedInput.category_id,
-        proposer_id: user.id,
-        status: 'published',
-        vote_count: 1,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-
-      const { data: problem, error: insertError } = await supabase
-        .from('problems')
-        .insert(problemData)
-        .select(`
-          id,
-          title,
-          description,
-          vote_count,
-          status,
-          created_at,
-          proposer:users!proposer_id(id, name),
-          category:categories!category_id(id, name, color, icon)
-        `)
-        .single();
-
-      if (insertError) {
-        const error = handleDatabaseError(insertError, correlationId);
-        return createSecureResponse(error);
-      }
-
-      // STEP 7: Create Initial Vote (non-blocking)
-      const { error: voteError } = await supabase
-        .from('votes')
-        .insert({
-          problem_id: problem.id,
-          user_id: user.id,
-          created_at: new Date().toISOString()
-        });
-
-      // Log vote error but don't fail the request
-      if (voteError) {
-        console.warn('Initial vote creation failed:', {
-          correlationId,
-          problemId: problem.id,
-          userId: user.id,
-          error: voteError.message
-        });
-      }
-
-      // STEP 8: Success Response with Metrics
-      const duration = Date.now() - startTime;
-      
-      console.info('Problem created successfully:', {
-        correlationId,
-        problemId: problem.id,
-        userId: user.id,
-        duration,
-        category: category.name
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: 'Problem created successfully',
-        data: {
-          id: problem.id,
-          title: problem.title,
-          description: problem.description,
-          voteCount: problem.vote_count,
-          status: problem.status,
-          createdAt: problem.created_at,
-          proposer: problem.proposer,
-          category: problem.category
-        },
-        metadata: {
-          correlationId,
-          duration
-        }
-      }, {
-        headers: {
-          'X-Request-ID': correlationId,
-          'X-Response-Time': duration.toString()
-        }
-      });
-
-    } catch (envError) {
-      console.error('❌ Environment configuration error:', envError);
-      
-      // Return configuration error with instructions
+    if (categoryError || !category) {
+      console.log('❌ Category validation failed:', categoryError?.message);
       return NextResponse.json({
         success: false,
-        error: 'Service configuration incomplete',
-        message: 'Database connection not configured. Please set up Supabase environment variables.',
-        code: 'CONFIG_ERROR',
-        correlationId,
-        instructions: {
-          variables: [
-            'NEXT_PUBLIC_SUPABASE_URL',
-            'SUPABASE_SERVICE_KEY'
-          ],
-          values: {
-            'NEXT_PUBLIC_SUPABASE_URL': 'https://jgivhyalioldfelngboi.supabase.co',
-            'SUPABASE_SERVICE_KEY': '[Contact admin for service key]'
-          }
-        }
-      }, { 
-        status: 503,
-        headers: {
-          'X-Request-ID': correlationId,
-          'Retry-After': '300' // Retry after 5 minutes
-        }
-      });
+        error: 'Invalid category selected',
+        correlationId
+      }, { status: 400 });
+    }
+    
+    console.log('✅ Category verified:', category.name);
+
+    // STEP 4: Create Problem
+    console.log('🔍 Creating problem...');
+    const problemData = {
+      title: validatedInput.title,
+      description: validatedInput.description,
+      category_id: validatedInput.category_id,
+      proposer_id: user.id,
+      status: 'Proposed', // Match status from screenshot
+      vote_count: 1,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data: problem, error: insertError } = await supabase
+      .from('problems')
+      .insert(problemData)
+      .select('*')
+      .single();
+
+    if (insertError) {
+      console.log('❌ Problem creation failed:', insertError.message);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to create problem',
+        details: insertError.message,
+        correlationId
+      }, { status: 500 });
     }
 
-  } catch (error) {
-    // STEP 9: Comprehensive Error Handling
-    const secureError = createSecureError(
-      error,
-      ErrorCategory.UNKNOWN,
-      ErrorSeverity.HIGH,
-      correlationId
-    );
+    console.log('✅ Problem created successfully:', problem.id);
 
-    return createSecureResponse(secureError, {
-      'X-Request-ID': correlationId,
-      'X-Response-Time': (Date.now() - startTime).toString()
-    });
+    // STEP 5: Success Response
+    const duration = Date.now() - startTime;
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Problem created successfully',
+      data: {
+        id: problem.id,
+        title: problem.title,
+        description: problem.description,
+        vote_count: problem.vote_count,
+        status: problem.status,
+        created_at: problem.created_at
+      },
+      metadata: {
+        correlationId,
+        duration
+      }
+    }, {
+      headers: {
+        'X-Request-ID': correlationId,
+        'X-Response-Time': duration.toString()
+        }
+      });
+
+  } catch (error) {
+    console.error('❌ POST endpoint error:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Internal server error',
+      correlationId
+    }, { status: 500 });
   }
 }
