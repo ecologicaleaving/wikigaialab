@@ -71,6 +71,7 @@ export const Footer: React.FC = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
+                    prefetch={false}
                     className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     {link.label}
@@ -88,6 +89,7 @@ export const Footer: React.FC = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
+                    prefetch={false}
                     className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     {link.label}
@@ -105,6 +107,7 @@ export const Footer: React.FC = () => {
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
+                    prefetch={false}
                     className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     {link.label}
@@ -182,23 +185,23 @@ export const Footer: React.FC = () => {
 
           {/* Legal Links */}
           <div className="mt-6 flex flex-wrap justify-center sm:justify-start gap-4 text-xs text-gray-500">
-            <Link href="/privacy" className="hover:text-primary-600 transition-colors">
+            <Link href="/privacy" prefetch={false} className="hover:text-primary-600 transition-colors">
               Privacy Policy
             </Link>
             <span className="hidden sm:inline">·</span>
-            <Link href="/terms" className="hover:text-primary-600 transition-colors">
+            <Link href="/terms" prefetch={false} className="hover:text-primary-600 transition-colors">
               Termini di Servizio
             </Link>
             <span className="hidden sm:inline">·</span>
-            <Link href="/cookies" className="hover:text-primary-600 transition-colors">
+            <Link href="/cookies" prefetch={false} className="hover:text-primary-600 transition-colors">
               Cookie Policy
             </Link>
             <span className="hidden sm:inline">·</span>
-            <Link href="/gdpr" className="hover:text-primary-600 transition-colors">
+            <Link href="/gdpr" prefetch={false} className="hover:text-primary-600 transition-colors">
               GDPR
             </Link>
             <span className="hidden sm:inline">·</span>
-            <Link href="/accessibility" className="hover:text-primary-600 transition-colors">
+            <Link href="/accessibility" prefetch={false} className="hover:text-primary-600 transition-colors">
               Accessibilità
             </Link>
           </div>
