@@ -176,7 +176,7 @@ export const useRecommendations = (
     if (!user) return;
 
     try {
-      // Use API endpoint instead of direct Supabase access
+      // Optional analytics tracking - don't fail if endpoint doesn't exist
       const response = await fetch('/api/analytics/feedback', {
         method: 'POST',
         headers: {
@@ -190,11 +190,13 @@ export const useRecommendations = (
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to track feedback');
+      // Don't throw error for 404/405 - analytics is optional
+      if (!response.ok && response.status !== 404 && response.status !== 405) {
+        console.warn('Failed to track recommendation feedback:', response.status);
       }
     } catch (err) {
-      console.error('Error tracking recommendation feedback:', err);
+      // Don't throw - analytics tracking is optional
+      console.warn('Error tracking recommendation feedback:', err);
     }
   }, [user]);
 
@@ -386,7 +388,7 @@ export const useCollections = (
 
   const trackCollectionView = useCallback(async (collectionId: string) => {
     try {
-      // Use API endpoint instead of direct Supabase access
+      // Optional analytics tracking - don't fail if endpoint doesn't exist
       const response = await fetch('/api/analytics/discovery', {
         method: 'POST',
         headers: {
@@ -399,11 +401,13 @@ export const useCollections = (
         }),
       });
 
-      if (!response.ok) {
-        console.warn('Failed to track collection view');
+      // Don't warn for 404/405 - analytics is optional
+      if (!response.ok && response.status !== 404 && response.status !== 405) {
+        console.warn('Failed to track collection view:', response.status);
       }
     } catch (err) {
-      console.error('Error tracking collection view:', err);
+      // Don't throw - analytics tracking is optional
+      console.warn('Error tracking collection view:', err);
     }
   }, []);
 
