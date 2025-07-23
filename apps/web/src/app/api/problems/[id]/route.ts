@@ -36,7 +36,7 @@ export async function GET(
     
     console.log('🔍 Fetching problem with ID:', id);
     
-    // First try simple query without JOINs
+    // Get problem without JOINs first (since simple query worked according to debug)
     const { data: problem, error } = await supabase
       .from('problems')
       .select('*')
