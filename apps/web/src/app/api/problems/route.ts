@@ -220,6 +220,41 @@ export async function POST(request: NextRequest) {
         correlationId
       }, { status: 500 });
     }
+
+    // STEP 3.1: Ensure user exists in database (fix foreign key constraint)
+    console.log('🔍 Ensuring user exists in database...');
+    try {
+      const { error: userUpsertError } = await supabase
+        .from('users')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (userUpsertError) {
+        console.log('❌ Failed to ensure user exists:', userUpsertError);
+        return NextResponse.json({
+          success: false,
+          error: 'Failed to synchronize user data',
+          details: userUpsertError.message,
+          correlationId
+        }, { status: 500 });
+      }
+
+      console.log('✅ User synchronized with database');
+    } catch (userSyncError) {
+      console.log('❌ User synchronization failed:', userSyncError);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to synchronize user with database',
+        details: userSyncError instanceof Error ? userSyncError.message : 'Unknown sync error',
+        correlationId
+      }, { status: 500 });
+    }
     
     // Verify category exists
     console.log('🔍 Verifying category exists...');
