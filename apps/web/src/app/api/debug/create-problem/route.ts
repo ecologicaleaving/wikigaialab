@@ -44,20 +44,56 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Testing database connection...');
     const supabase = getSupabaseClient();
     
-    // Ensure user exists in database (same fix as main endpoint)
+    // Ensure user exists in database (robust logic)
     console.log('🔍 Ensuring user exists in database...');
-    const { error: userUpsertError } = await supabase
-      .from('users')
-      .upsert({
-        id: session.user.id,
-        email: session.user.email || 'unknown@email.com',
-        name: session.user.name || 'Unknown User',
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'id'
-      });
+    let userSyncSuccess = false;
+    let userSyncError = null;
     
-    console.log('🔍 User sync result:', { userUpsertError });
+    try {
+      // Check if user exists
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', session.user.id)
+        .single();
+
+      if (!existingUser && (!checkError || checkError.code === 'PGRST116')) {
+        // User doesn't exist, create them
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: session.user.id,
+            email: session.user.email || 'unknown@email.com',
+            name: session.user.name || 'Unknown User',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+
+        if (insertError && insertError.code === '23505') {
+          // Email conflict, try update
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({
+              name: session.user.name || 'Unknown User',
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', session.user.id);
+          
+          userSyncError = updateError;
+          userSyncSuccess = !updateError;
+        } else {
+          userSyncError = insertError;
+          userSyncSuccess = !insertError;
+        }
+      } else {
+        userSyncSuccess = true; // User already exists
+      }
+    } catch (syncError) {
+      userSyncError = syncError;
+      userSyncSuccess = false;
+    }
+    
+    console.log('🔍 User sync result:', { userSyncSuccess, userSyncError });
     
     // Test category access
     const { data: categories, error: catError } = await supabase
@@ -92,8 +128,8 @@ export async function POST(request: NextRequest) {
       debug: {
         authenticated: true,
         userId: session.user.id,
-        userSynced: !userUpsertError,
-        userSyncError: userUpsertError,
+        userSynced: userSyncSuccess,
+        userSyncError: userSyncError,
         categoriesWork: !catError,
         problemCreated: !insertError,
         problem: problem,

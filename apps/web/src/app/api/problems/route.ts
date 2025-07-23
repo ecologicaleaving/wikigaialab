@@ -224,25 +224,69 @@ export async function POST(request: NextRequest) {
     // STEP 3.1: Ensure user exists in database (fix foreign key constraint)
     console.log('🔍 Ensuring user exists in database...');
     try {
-      const { error: userUpsertError } = await supabase
+      // First check if user already exists
+      const { data: existingUser, error: checkError } = await supabase
         .from('users')
-        .upsert({
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'id'
-        });
+        .select('id')
+        .eq('id', user.id)
+        .single();
 
-      if (userUpsertError) {
-        console.log('❌ Failed to ensure user exists:', userUpsertError);
+      if (!existingUser && (!checkError || checkError.code === 'PGRST116')) {
+        // User doesn't exist, try to create them
+        console.log('🔍 User not found, creating new user...');
+        
+        // Use insert instead of upsert to avoid email conflicts
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+
+        if (insertError) {
+          // If insert fails due to email conflict, try update instead
+          if (insertError.code === '23505') {
+            console.log('🔍 Email conflict, trying to update existing user...');
+            const { error: updateError } = await supabase
+              .from('users')
+              .update({
+                name: user.name,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', user.id);
+
+            if (updateError) {
+              console.log('❌ Failed to update user:', updateError);
+              return NextResponse.json({
+                success: false,
+                error: 'Failed to synchronize user data',
+                details: updateError.message,
+                correlationId
+              }, { status: 500 });
+            }
+          } else {
+            console.log('❌ Failed to create user:', insertError);
+            return NextResponse.json({
+              success: false,
+              error: 'Failed to create user',
+              details: insertError.message,
+              correlationId
+            }, { status: 500 });
+          }
+        }
+      } else if (checkError && checkError.code !== 'PGRST116') {
+        console.log('❌ Error checking user existence:', checkError);
         return NextResponse.json({
           success: false,
-          error: 'Failed to synchronize user data',
-          details: userUpsertError.message,
+          error: 'Failed to verify user existence',
+          details: checkError.message,
           correlationId
         }, { status: 500 });
+      } else {
+        console.log('✅ User already exists in database');
       }
 
       console.log('✅ User synchronized with database');
