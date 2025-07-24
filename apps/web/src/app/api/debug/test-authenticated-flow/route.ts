@@ -60,16 +60,25 @@ export async function POST(request: NextRequest) {
       name: session.user.name || 'Unknown User'
     };
     
-    tracker.setUser(user.id, {
+    // Convert numeric OAuth IDs to UUID format for database compatibility
+    const userId = /^\d+$/.test(user.id) 
+      ? require('crypto').createHash('sha256').update(user.id).digest('hex').slice(0, 32).replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
+      : user.id;
+    
+    tracker.setUser(userId, {
       email: user.email,
       name: user.name,
-      sessionId: session.id
+      sessionId: session.id,
+      originalId: user.id,
+      converted: user.id !== userId
     });
     
     console.log('✅ Step 1: REAL authentication successful:', { 
-      userId: user.id, 
+      originalId: user.id, 
+      convertedId: userId,
       userEmail: user.email,
-      sessionId: session.id
+      sessionId: session.id,
+      wasConverted: user.id !== userId
     });
 
     // STEP 2: Input Validation (use real test data)
@@ -120,11 +129,11 @@ export async function POST(request: NextRequest) {
     console.log('🧪 Step 4: REAL user synchronization...');
     try {
       // Check if user exists in database
-      console.log('🧪 Checking if user exists in database:', user.id);
+      console.log('🧪 Checking if user exists in database:', userId);
       const { data: existingUser, error: checkError } = await supabase
         .from('users')
         .select('id, email, name, created_at')
-        .eq('id', user.id)
+        .eq('id', userId)
         .single();
 
       console.log('🧪 User check result:', { 
@@ -138,7 +147,7 @@ export async function POST(request: NextRequest) {
         console.log('🧪 User not found, attempting to create...');
         
         const newUserData = {
-          id: user.id,
+          id: userId,
           email: user.email,
           name: user.name,
           created_at: new Date().toISOString(),
@@ -166,7 +175,7 @@ export async function POST(request: NextRequest) {
                 name: user.name,
                 updated_at: new Date().toISOString()
               })
-              .eq('id', user.id)
+              .eq('id', userId)
               .select('id, email, name')
               .single();
 
@@ -180,7 +189,7 @@ export async function POST(request: NextRequest) {
                 error: 'Failed to synchronize user data',
                 details: {
                   operation: 'update',
-                  userId: user.id,
+                  userId: userId,
                   email: user.email,
                   errorCode: updateError.code,
                   errorMessage: updateError.message,
@@ -201,7 +210,7 @@ export async function POST(request: NextRequest) {
               error: 'Failed to create user',
               details: {
                 operation: 'insert',
-                userId: user.id,
+                userId: userId,
                 email: user.email,
                 errorCode: insertError.code,
                 errorMessage: insertError.message,
@@ -224,7 +233,7 @@ export async function POST(request: NextRequest) {
           error: 'Failed to verify user existence',
           details: {
             operation: 'check',
-            userId: user.id,
+            userId: userId,
             errorCode: checkError.code,
             errorMessage: checkError.message,
             errorHint: checkError.hint
@@ -245,7 +254,7 @@ export async function POST(request: NextRequest) {
         step: 'user-synchronization',
         error: 'User synchronization failed with exception',
         details: {
-          userId: user.id,
+          userId: userId,
           email: user.email,
           exception: userSyncError instanceof Error ? userSyncError.message : 'Unknown exception'
         },
@@ -287,7 +296,7 @@ export async function POST(request: NextRequest) {
       title: testInput.title,
       description: testInput.description,
       category_id: testInput.category_id,
-      proposer_id: user.id,
+      proposer_id: userId,
       status: 'Proposed' as const,
       vote_count: 0,
       created_at: new Date().toISOString(),
@@ -310,8 +319,10 @@ export async function POST(request: NextRequest) {
       ],
       realUserData: {
         sessionId: session.id,
-        userId: user.id,
-        userEmail: user.email
+        originalUserId: user.id,
+        convertedUserId: userId,
+        userEmail: user.email,
+        wasConverted: user.id !== userId
       },
       correlationId: tracker.getCorrelationId()
     }));

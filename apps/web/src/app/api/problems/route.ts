@@ -158,11 +158,17 @@ export async function POST(request: NextRequest) {
       name: session.user.name || 'Unknown User'
     };
     
+    // Convert numeric OAuth IDs to UUID format for database compatibility
+    const userId = /^\d+$/.test(user.id) 
+      ? require('crypto').createHash('sha256').update(user.id).digest('hex').slice(0, 32).replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
+      : user.id;
+    
     // Set user context for tracking
-    tracker.setUser(user.id, {
+    tracker.setUser(userId, {
       email: user.email,
       name: user.name,
-      sessionId: session.id
+      sessionId: session.id,
+      originalId: user.id
     });
 
     // STEP 2: Enhanced Input Validation & Sanitization
@@ -239,7 +245,7 @@ export async function POST(request: NextRequest) {
       const { data: existingUser, error: checkError } = await supabase
         .from('users')
         .select('id')
-        .eq('id', user.id)
+        .eq('id', userId)
         .single();
 
       if (!existingUser && (!checkError || checkError.code === 'PGRST116')) {
@@ -250,7 +256,7 @@ export async function POST(request: NextRequest) {
         const { error: insertError } = await supabase
           .from('users')
           .insert({
-            id: user.id,
+            id: userId,
             email: user.email,
             name: user.name,
             created_at: new Date().toISOString(),
@@ -267,7 +273,7 @@ export async function POST(request: NextRequest) {
                 name: user.name,
                 updated_at: new Date().toISOString()
               })
-              .eq('id', user.id);
+              .eq('id', userId);
 
             if (updateError) {
               console.log('❌ Failed to update user:', updateError);
@@ -350,7 +356,7 @@ export async function POST(request: NextRequest) {
       title: validatedInput.title,
       description: validatedInput.description,
       category_id: validatedInput.category_id,
-      proposer_id: user.id,
+      proposer_id: userId,
       status: 'Proposed', // Match status from screenshot
       vote_count: 0, // Start with 0 votes - users can't vote on their own problems
       created_at: new Date().toISOString(),
