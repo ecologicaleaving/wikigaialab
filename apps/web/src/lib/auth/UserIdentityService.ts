@@ -77,8 +77,18 @@ export class UserIdentityService {
   private logger: ReturnType<typeof createRequestLogger>;
 
   constructor(correlationId?: string) {
-    this.supabase = this.getSupabaseClient();
+    // Initialize logger first to ensure it's available for error logging
     this.logger = createRequestLogger(correlationId || 'user-identity-service', 'system');
+    
+    try {
+      // Then initialize Supabase client (which may throw errors)
+      this.supabase = this.getSupabaseClient();
+    } catch (error) {
+      this.logger.error('UserIdentityService constructor failed', error as Error, {}, {
+        correlationId: correlationId || 'user-identity-service'
+      });
+      throw error; // Re-throw to maintain error propagation
+    }
   }
 
   /**
@@ -595,9 +605,20 @@ export { UserIdentityError, DatabaseError, ValidationError };
 
 // Export factory function for proper instance management
 export function getUserIdentityService(correlationId?: string): UserIdentityService {
-  // Always create a new instance for proper correlation tracking
-  // This ensures each request has its own service instance with correct correlation ID
-  return new UserIdentityService(correlationId);
+  try {
+    // Always create a new instance for proper correlation tracking
+    // This ensures each request has its own service instance with correct correlation ID
+    return new UserIdentityService(correlationId);
+  } catch (error) {
+    // If service creation fails, provide a more detailed error
+    const serviceError = new Error(`Failed to create UserIdentityService: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('❌ getUserIdentityService factory failed:', {
+      correlationId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    throw serviceError;
+  }
 }
 
 // Export class for custom instances when needed
