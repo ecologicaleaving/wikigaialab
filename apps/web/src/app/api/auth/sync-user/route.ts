@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-nextauth';
-import { createUserIdentityService } from '@/lib/auth/UserIdentityService';
+import { getUserIdentityService } from '@/lib/auth/UserIdentityService';
 
 export async function POST(request: NextRequest) {
   const correlationId = `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -24,8 +24,12 @@ export async function POST(request: NextRequest) {
     });
 
     // Use UserIdentityService for atomic user synchronization
-    const userIdentityService = createUserIdentityService(correlationId);
-    const syncedUser = await userIdentityService.syncUserSession(session);
+    const userIdentityService = getUserIdentityService(correlationId);
+    const syncedUser = await userIdentityService.syncUserSession(session.user.id, {
+      email: session.user.email,
+      name: session.user.name,
+      image: session.user.image
+    });
 
     console.log('✅ User sync completed via UserIdentityService:', {
       id: syncedUser.id,
