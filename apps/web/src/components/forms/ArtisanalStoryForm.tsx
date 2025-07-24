@@ -49,11 +49,23 @@ export const ArtisanalStoryForm: React.FC<ArtisanalStoryFormProps> = ({
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isValid }
+    formState: { errors, isValid, isDirty, dirtyFields }
   } = useForm<StoryData>({
     resolver: zodResolver(storySchema),
     mode: 'onChange'
   });
+
+  // Debug form state in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Form Debug:', {
+      isValid,
+      isDirty,
+      errors,
+      dirtyFields,
+      watchedValues,
+      selectedCategory: selectedCategory?.id
+    });
+  }
 
   const watchedValues = watch();
   const titleLength = watchedValues.title?.length || 0;
@@ -111,7 +123,7 @@ export const ArtisanalStoryForm: React.FC<ArtisanalStoryFormProps> = ({
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
-    setValue('category_id', category.id);
+    setValue('category_id', category.id, { shouldValidate: true, shouldDirty: true });
   };
 
   const encouragement = getEncouragementMessage();
@@ -257,6 +269,9 @@ export const ArtisanalStoryForm: React.FC<ArtisanalStoryFormProps> = ({
             ))}
           </div>
 
+          {/* Hidden input to register category_id with react-hook-form */}
+          <input type="hidden" {...register('category_id')} />
+
           {errors.category_id && (
             <div className="mt-4 flex items-center gap-2 text-amber-600">
               <AlertCircle className="w-4 h-4" />
@@ -290,6 +305,7 @@ export const ArtisanalStoryForm: React.FC<ArtisanalStoryFormProps> = ({
                   ? 'bg-orange-600 hover:bg-orange-700 hover:shadow-xl'
                   : 'bg-gray-400 cursor-not-allowed'
               }`}
+              title={!isValid ? `Form non valido: ${Object.keys(errors).join(', ')}` : 'Invia storia'}
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
