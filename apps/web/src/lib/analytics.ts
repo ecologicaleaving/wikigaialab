@@ -352,6 +352,7 @@ export const initializeTimeTracking = (): void => {
   const startTime = Date.now();
   const trackingPoints = new Set<number>();
 
+  // Use longer interval to reduce performance impact
   const timeTracker = setInterval(() => {
     const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
     
@@ -366,7 +367,7 @@ export const initializeTimeTracking = (): void => {
     if (elapsedSeconds > 600) {
       clearInterval(timeTracker);
     }
-  }, 1000);
+  }, 5000); // Reduced frequency from 1s to 5s
 
   // Return cleanup function
   return () => clearInterval(timeTracker);

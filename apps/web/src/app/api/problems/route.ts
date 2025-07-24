@@ -167,12 +167,85 @@ export async function POST(request: NextRequest) {
       const userSyncError = new Error('Failed to resolve user identity');
       tracker.trackError(userSyncError, 500);
       
-      return tracker.complete(NextResponse.json({
-        success: false,
-        error: 'Failed to resolve user identity. Please try signing out and back in.',
-        correlationId: tracker.getCorrelationId(),
-        details: error instanceof Error ? error.message : 'Unknown sync error'
-      }, { status: 500 }));
+      // Enhanced error logging for production debugging
+      const errorDetails = {
+        sessionUserId: session.user.id,
+        sessionUserEmail: session.user.email,
+        sessionUserName: session.user.name,
+        sessionUserImage: session.user.image,
+        errorType: error instanceof Error ? error.constructor.name : 'unknown',
+        errorMessage: error instanceof Error ? error.message : 'Unknown sync error',
+        stack: error instanceof Error ? error.stack : undefined,
+        nodeEnv: process.env.NODE_ENV,
+        hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
+        timestamp: new Date().toISOString()
+      };
+      
+      console.error('❌ UserIdentityService.syncUserSession failed:', errorDetails);
+      
+      // Try fallback approach - attempt direct user creation
+      try {
+        console.log('🔄 Attempting fallback user resolution...');
+        
+        // Create a new UserIdentityService instance with clean state
+        const fallbackService = getUserIdentityService(`fallback-${tracker.getCorrelationId()}`);
+        
+        // Try to resolve user with OAuth data format
+        const oauthData = {
+          id: session.user.id,
+          email: session.user.email!,
+          name: session.user.name || 'Unknown User',
+          image: session.user.image,
+          provider: 'google' // Assume Google OAuth for now
+        };
+        
+        console.log('🔄 Fallback OAuth data:', { 
+          id: oauthData.id, 
+          email: oauthData.email, 
+          hasName: !!oauthData.name 
+        });
+        
+        resolvedUser = await fallbackService.resolveUser(oauthData);
+        
+        console.log('✅ Fallback user resolution succeeded:', {
+          id: resolvedUser.id,
+          email: resolvedUser.email,
+          role: resolvedUser.role
+        });
+        
+      } catch (fallbackError) {
+        console.error('❌ Fallback user resolution also failed:', {
+          fallbackErrorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
+          fallbackErrorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error',
+          originalError: errorDetails
+        });
+        
+        return tracker.complete(NextResponse.json({
+          success: false,
+          error: 'Failed to resolve user identity. Please try signing out and back in.',
+          correlationId: tracker.getCorrelationId(),
+          details: process.env.NODE_ENV === 'development' ? {
+            original: errorDetails,
+            fallback: {
+              errorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
+              errorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error'
+            }
+          } : 'User identity resolution failed',
+          troubleshooting: {
+            steps: [
+              '1. Sign out of your account completely',
+              '2. Clear your browser cache and cookies for this site',
+              '3. Close all browser tabs for this site',
+              '4. Sign back in with the same Google account',
+              '5. If the problem persists, try a different browser or incognito mode',
+              '6. Contact support with this correlation ID if issue continues'
+            ],
+            correlationId: tracker.getCorrelationId(),
+            supportEmail: 'support@wikigaialab.com'
+          }
+        }, { status: 500 }));
+      }
     }
 
     const userId = resolvedUser.id;

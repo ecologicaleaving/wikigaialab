@@ -54,10 +54,11 @@ export const ReputationDisplay: React.FC<ReputationDisplayProps> = ({
     }
   }, [targetUserId]);
 
-  // Auto-refresh if interval is set
+  // Auto-refresh if interval is set (with minimum 30s interval for performance)
   useEffect(() => {
     if (refreshInterval && refreshInterval > 0) {
-      const interval = setInterval(loadReputation, refreshInterval * 1000);
+      const safeInterval = Math.max(refreshInterval, 30); // Minimum 30 seconds
+      const interval = setInterval(loadReputation, safeInterval * 1000);
       return () => clearInterval(interval);
     }
   }, [refreshInterval, targetUserId]);

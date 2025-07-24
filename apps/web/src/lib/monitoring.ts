@@ -174,11 +174,11 @@ class MonitoringService {
     });
   }
 
-  // Health monitoring
+  // Health monitoring (reduced frequency for performance)
   startHealthCheck(): void {
     setInterval(() => {
       this.performHealthCheck();
-    }, 60000); // Every minute
+    }, 300000); // Every 5 minutes instead of 1 minute
   }
 
   private performHealthCheck(): void {
@@ -211,12 +211,12 @@ class MonitoringService {
       });
   }
 
-  // Private methods
+  // Private methods (optimized for performance)
   private startPeriodicFlush(): void {
     this.flushInterval = setInterval(() => {
       this.flushMetrics();
       this.flushAlerts();
-    }, 30000); // Flush every 30 seconds
+    }, 60000); // Flush every 60 seconds instead of 30 for better performance
   }
 
   private async flushMetrics(): Promise<void> {
