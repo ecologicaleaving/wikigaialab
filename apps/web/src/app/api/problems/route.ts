@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
           originalError: errorDetails
         });
 
-        // Last resort: use session data directly with deterministic UUID
+        // Last resort: use session data directly with deterministic UUID and create in database
         try {
           console.log('🆘 DIAGNOSTIC: Attempting direct session-based user creation...');
           
@@ -260,20 +260,45 @@ export async function POST(request: NextRequest) {
           const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
           const directUserId = uuidv5(session.user.email!.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE);
           
+          // Actually create the user in the database
+          const supabase = getSupabaseClient();
+          const { data: createdUser, error: createError } = await supabase
+            .from('users')
+            .upsert({
+              id: directUserId,
+              email: session.user.email!,
+              name: session.user.name || 'Unknown User',
+              image: session.user.image,
+              role: 'user',
+              is_admin: false,
+              updated_at: new Date().toISOString()
+            }, {
+              onConflict: 'id',
+              ignoreDuplicates: false
+            })
+            .select('id, email, name, image, role, is_admin, created_at, updated_at')
+            .single();
+
+          if (createError) {
+            console.error('❌ DIAGNOSTIC: Direct database user creation failed:', createError);
+            throw createError;
+          }
+
           resolvedUser = {
-            id: directUserId,
-            email: session.user.email!,
-            name: session.user.name || 'Unknown User',
-            image: session.user.image,
-            role: 'user' as const,
-            isAdmin: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            id: createdUser.id,
+            email: createdUser.email,
+            name: createdUser.name || 'Unknown User',
+            image: createdUser.image || undefined,
+            role: (createdUser.role as 'user' | 'admin') || 'user',
+            isAdmin: createdUser.is_admin || false,
+            created_at: createdUser.created_at,
+            updated_at: createdUser.updated_at
           };
           
           console.log('✅ DIAGNOSTIC: Direct session-based user creation succeeded:', {
             id: resolvedUser.id,
-            email: resolvedUser.email
+            email: resolvedUser.email,
+            createdInDatabase: true
           });
           
         } catch (directError) {

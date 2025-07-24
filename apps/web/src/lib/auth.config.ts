@@ -93,10 +93,48 @@ export const authConfig = {
             provider: account.provider
           });
           
-          // Generate deterministic ID manually as fallback
+          // Generate deterministic ID manually as fallback and ensure user exists in database
           const { v5: uuidv5 } = require('uuid');
           const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
           const fallbackId = user.email ? uuidv5(user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE) : 'unknown';
+          
+          // Try to create user directly in database as fallback
+          try {
+            const { createClient } = require('@supabase/supabase-js');
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            
+            if (supabaseUrl && supabaseKey && user.email) {
+              const supabase = createClient(supabaseUrl, supabaseKey);
+              const { data: fallbackUser, error: fallbackDbError } = await supabase
+                .from('users')
+                .upsert({
+                  id: fallbackId,
+                  email: user.email,
+                  name: user.name || 'Unknown User',
+                  image: user.image,
+                  role: 'user',
+                  is_admin: false,
+                  updated_at: new Date().toISOString()
+                }, {
+                  onConflict: 'id',
+                  ignoreDuplicates: false
+                })
+                .select('id, email, name, image, role, is_admin')
+                .single();
+
+              if (!fallbackDbError && fallbackUser) {
+                console.log('✅ JWT callback - Fallback database user creation succeeded:', {
+                  id: fallbackUser.id,
+                  email: fallbackUser.email
+                });
+              } else {
+                console.error('❌ JWT callback - Fallback database user creation failed:', fallbackDbError);
+              }
+            }
+          } catch (dbFallbackError) {
+            console.error('❌ JWT callback - Database fallback attempt failed:', dbFallbackError);
+          }
           
           // Fallback to basic token data to prevent auth failure
           token.id = fallbackId;
