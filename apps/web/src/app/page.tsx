@@ -5,7 +5,7 @@ import { Heart, Users, Zap, ArrowRight, TrendingUp, BookOpen } from 'lucide-reac
 import { useAuth } from '../hooks/useAuth';
 import { analytics } from '../lib/analytics';
 import { abTesting } from '../lib/ab-testing';
-import HeroSection from '../components/landing/HeroSection';
+import ArtisanalHeroSection from '../components/landing/ArtisanalHeroSection';
 import InteractiveDemo from '../components/landing/InteractiveDemo';
 import OnboardingFlow from '../components/landing/OnboardingFlow';
 import SocialProofSection from '../components/landing/SocialProofSection';
@@ -75,8 +75,8 @@ export default function HomePage() {
 
   return (
     <UnauthenticatedLayout>
-      {/* Enhanced Hero Section */}
-      <HeroSection />
+      {/* Artisanal Workshop Hero Section */}
+      <ArtisanalHeroSection />
       
       {/* Interactive Demo */}
       <InteractiveDemo />
@@ -84,38 +84,71 @@ export default function HomePage() {
       {/* Onboarding Flow */}
       <OnboardingFlow />
 
-      {/* How It Works */}
-      <section id="come-funziona" className="py-20">
+      {/* Come Funziona la Bottega - Artisanal Workshop Style */}
+      <section id="come-funziona-bottega" className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="container-narrow">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Come Funziona
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-primary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-primary-600" />
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Come Funziona la Nostra Bottega
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Come in ogni bottega artigianale che si rispetti, qui si lavora insieme 
+              con semplicità, pazienza e il calore della comunità.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-12">
+            {/* Step 1: Racconta */}
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+                <div className="text-3xl">🗣️</div>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Proponi</h3>
-              <p className="text-neutral-600">
-                Condividi problemi quotidiani che potrebbero essere risolti con semplici app digitali.
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Racconta</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Come al tavolo della bottega, condividi con i vicini 
+                i piccoli problemi quotidiani che ti assillano. 
+                <strong>Nessun problema è troppo semplice</strong> per non essere ascoltato.
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-secondary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-8 w-8 text-secondary-600" />
+
+            {/* Step 2: Ascolta */}
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-red-100 to-pink-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+                <Heart className="h-12 w-12 text-red-500" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Vota</h3>
-              <p className="text-neutral-600">
-                Vota i problemi che ti interessano di più. A 100 voti, iniziamo lo sviluppo!
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Ascolta</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Ascolta le storie degli altri e se ti riconosci, 
+                dona il tuo cuore. <strong>Quando siamo in 100</strong>, 
+                il maestro artigiano si mette al lavoro per tutti.
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-accent-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-accent-600" />
+
+            {/* Step 3: Impara */}
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+                <div className="text-3xl">🛠️</div>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Accedi</h3>
-              <p className="text-neutral-600">
-                Chi ha votato ottiene accesso gratuito alle funzionalità premium dell&apos;app sviluppata.
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Impara</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Chi ha donato il cuore può usare <strong>tutti gli attrezzi della bottega</strong> 
+                gratuitamente. L'intelligenza artificiale diventa il vostro aiutante personale.
+              </p>
+            </div>
+          </div>
+
+          {/* Workshop Promise */}
+          <div className="mt-16 text-center">
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto border border-orange-200 shadow-sm">
+              <div className="text-2xl mb-4">🤝</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                La Promessa della Bottega
+              </h4>
+              <p className="text-gray-700 leading-relaxed">
+                Come in ogni bottega degna di questo nome, qui non si lavora per il profitto 
+                ma per la soddisfazione di vedere le persone che usano con gioia 
+                quello che abbiamo creato insieme. <strong>L'intelligenza artificiale 
+                è solo un attrezzo</strong> - quello che conta è il cuore che ci mettete.
               </p>
             </div>
           </div>

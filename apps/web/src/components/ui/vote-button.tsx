@@ -16,6 +16,9 @@ interface VoteButtonProps {
   variant?: 'default' | 'card' | 'detail';
   showCount?: boolean;
   className?: string;
+  // Artisanal workshop additions
+  showEncouragement?: boolean;
+  milestone?: 25 | 50 | 75 | 100;
 }
 
 export const VoteButton: React.FC<VoteButtonProps> = ({
@@ -29,11 +32,25 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
   variant = 'default',
   showCount = true,
   className = '',
+  showEncouragement = true,
+  milestone,
 }) => {
-  const formatVoteCount = (count: number): string => {
-    if (count < 1000) return count.toString();
-    if (count < 10000) return `${(count / 1000).toFixed(1)}K`;
-    return `${Math.floor(count / 1000)}K`;
+  // Artisanal workshop approach to showing community support
+  const formatCommunitySupport = (count: number): string => {
+    if (count === 0) return "Sii il primo!";
+    if (count === 1) return "1 persona";
+    if (count < 1000) return `${count} persone`;
+    if (count < 10000) return `${(count / 1000).toFixed(1)}k persone`;
+    return `${Math.floor(count / 1000)}k persone`;
+  };
+
+  // Warm encouragement based on progress toward 100 votes
+  const getEncouragementText = (count: number): string => {
+    if (count >= 100) return "Iniziamo a lavorare!";
+    if (count >= 75) return `Mancano solo ${100 - count}!`;
+    if (count >= 50) return "Ci siamo quasi!";
+    if (count >= 25) return "Sta crescendo!";
+    return "Serve anche a me!";
   };
 
   const sizeClasses = {
@@ -48,28 +65,32 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
     lg: 'w-5 h-5',
   };
 
+  // Warm artisanal workshop colors - warmer tones like terracotta and golden brown
   const getVariantClasses = () => {
     switch (variant) {
       case 'card':
         return hasVoted
-          ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'
-          : 'bg-white text-gray-600 border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200';
+          ? 'bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100 shadow-sm'
+          : 'bg-white text-amber-700 border-amber-200 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 shadow-sm';
       case 'detail':
         return hasVoted
-          ? 'bg-red-600 text-white hover:bg-red-700'
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-200';
+          ? 'bg-orange-600 text-white hover:bg-orange-700 shadow-md'
+          : 'bg-white text-amber-700 border-amber-300 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 shadow-sm';
       default:
         return hasVoted
-          ? 'bg-red-600 text-white hover:bg-red-700'
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-red-600 hover:text-white';
+          ? 'bg-orange-600 text-white hover:bg-orange-700 shadow-md'
+          : 'bg-white text-amber-700 border-amber-300 hover:bg-orange-600 hover:text-white shadow-sm';
     }
   };
 
+  // Enhanced heart animation for workshop warmth
   const heartClasses = clsx(
     iconSizes[size],
-    'transition-all duration-200',
-    hasVoted ? 'fill-current scale-110' : '',
-    isVoting ? 'animate-pulse' : ''
+    'transition-all duration-300 ease-out',
+    hasVoted ? 'fill-current scale-110 drop-shadow-sm' : 'hover:scale-105',
+    isVoting ? 'animate-pulse scale-105' : '',
+    // Add a gentle golden glow when voted
+    hasVoted && variant !== 'detail' ? 'filter drop-shadow-sm' : ''
   );
 
   if (variant === 'card' && !showCount) {
@@ -115,7 +136,18 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
       
       {showCount && (
         <span className="font-medium">
-          {isLoading ? '...' : formatVoteCount(voteCount)}
+          {isLoading ? 'Controllo...' : (
+            <span className="flex flex-col items-center">
+              <span className="text-xs leading-tight">
+                {formatCommunitySupport(voteCount)}
+              </span>
+              {voteCount > 0 && voteCount < 100 && (
+                <span className="text-xs opacity-75 leading-tight">
+                  {getEncouragementText(voteCount)}
+                </span>
+              )}
+            </span>
+          )}
         </span>
       )}
     </Button>
