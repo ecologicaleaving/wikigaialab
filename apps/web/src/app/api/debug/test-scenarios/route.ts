@@ -149,9 +149,9 @@ export async function GET(request: NextRequest) {
           const startTime = Date.now();
           try {
             const supabase = getSupabaseClient();
-            const { data, error } = await supabase
+            const { data, error, count } = await supabase
               .from('problems')
-              .select('count(*)')
+              .select('id', { count: 'exact' })
               .limit(1);
 
             return {

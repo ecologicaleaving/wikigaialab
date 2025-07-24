@@ -152,9 +152,9 @@ async function performDatabaseCheck(): Promise<HealthCheck> {
     const supabase = getSupabaseClient();
     
     // Test basic connectivity
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('problems')
-      .select('count(*)')
+      .select('id', { count: 'exact' })
       .limit(1);
 
     if (error) {
