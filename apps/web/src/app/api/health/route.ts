@@ -4,9 +4,6 @@ export async function GET() {
   const startTime = Date.now();
   
   try {
-    // Mock health check since database is not available
-    console.log('Health check - database not available, returning mock status');
-
     // Check essential services
     const healthChecks = {
       database: false, // Database not available during migration
@@ -17,9 +14,39 @@ export async function GET() {
       environment: process.env.NODE_ENV || 'development'
     };
 
+    // Add UserIdentityService diagnostics
+    const diagnostics = {
+      environment: {
+        hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
+        nodeEnv: process.env.NODE_ENV
+      },
+      userIdentityService: {
+        importable: false,
+        instantiable: false,
+        error: null
+      }
+    };
+
+    // Test UserIdentityService import and instantiation
+    try {
+      const { getUserIdentityService } = await import('@/lib/auth/UserIdentityService');
+      diagnostics.userIdentityService.importable = true;
+      
+      try {
+        const service = getUserIdentityService('health-check');
+        diagnostics.userIdentityService.instantiable = true;
+      } catch (error) {
+        diagnostics.userIdentityService.error = error instanceof Error ? error.message : 'Instantiation failed';
+      }
+    } catch (error) {
+      diagnostics.userIdentityService.error = error instanceof Error ? error.message : 'Import failed';
+    }
+
     return NextResponse.json({
       status: 'healthy',
-      ...healthChecks
+      ...healthChecks,
+      diagnostics
     });
 
   } catch (error) {
