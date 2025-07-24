@@ -153,15 +153,46 @@ export async function POST(request: NextRequest) {
     }
 
     // Use UserIdentityService to ensure consistent user ID
-    const userIdentityService = getUserIdentityService(tracker.getCorrelationId());
+    console.log('🔍 DIAGNOSTIC: About to initialize UserIdentityService', {
+      correlationId: tracker.getCorrelationId(),
+      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
+      nodeEnv: process.env.NODE_ENV
+    });
+
+    let userIdentityService;
+    try {
+      userIdentityService = getUserIdentityService(tracker.getCorrelationId());
+      console.log('✅ DIAGNOSTIC: UserIdentityService created successfully');
+    } catch (initError) {
+      console.error('❌ DIAGNOSTIC: Failed to initialize UserIdentityService:', {
+        error: initError instanceof Error ? initError.message : 'Unknown error',
+        stack: initError instanceof Error ? initError.stack : undefined,
+        type: initError instanceof Error ? initError.constructor.name : 'unknown'
+      });
+      throw initError;
+    }
     
     let resolvedUser;
     try {
+      console.log('🔍 DIAGNOSTIC: About to sync user session', {
+        sessionUserId: session.user.id,
+        sessionEmail: session.user.email,
+        hasName: !!session.user.name,
+        hasImage: !!session.user.image
+      });
+
       // Sync user from session to ensure database consistency
       resolvedUser = await userIdentityService.syncUserSession(session.user.id, {
         email: session.user.email,
         name: session.user.name,
         image: session.user.image
+      });
+
+      console.log('✅ DIAGNOSTIC: User session sync successful', {
+        resolvedUserId: resolvedUser.id,
+        resolvedEmail: resolvedUser.email,
+        resolvedRole: resolvedUser.role
       });
     } catch (error) {
       const userSyncError = new Error('Failed to resolve user identity');
@@ -182,11 +213,11 @@ export async function POST(request: NextRequest) {
         timestamp: new Date().toISOString()
       };
       
-      console.error('❌ UserIdentityService.syncUserSession failed:', errorDetails);
+      console.error('❌ DIAGNOSTIC: UserIdentityService.syncUserSession failed:', errorDetails);
       
       // Try fallback approach - attempt direct user creation
       try {
-        console.log('🔄 Attempting fallback user resolution...');
+        console.log('🔄 DIAGNOSTIC: Attempting fallback user resolution...');
         
         // Create a new UserIdentityService instance with clean state
         const fallbackService = getUserIdentityService(`fallback-${tracker.getCorrelationId()}`);
