@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       id: syncedUser.id,
       email: syncedUser.email,
       role: syncedUser.role,
-      isAdmin: syncedUser.is_admin,
+      isAdmin: syncedUser.isAdmin,
       correlationId
     });
 
