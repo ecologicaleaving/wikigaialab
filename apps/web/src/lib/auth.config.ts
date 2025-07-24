@@ -49,56 +49,32 @@ export const authConfig = {
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
       if (user && account) {
+        console.log('🔐 JWT callback started:', { 
+          email: user.email, 
+          provider: account.provider 
+        });
+
+        // Generate deterministic UUID directly without UserIdentityService dependency
         try {
-          // Generate correlation ID for tracking
-          const correlationId = `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          const userIdentityService = getUserIdentityService(correlationId);
-
-          // Prepare OAuth data for UserIdentityService
-          const oauthData: OAuthUserData = {
-            id: account.providerAccountId,
-            email: user.email || '',
-            name: user.name || '',
-            image: user.image || undefined,
-            provider: account.provider
-          };
-
-          // Resolve user with deterministic ID generation
-          const resolvedUser = await userIdentityService.resolveUser(oauthData);
-
-          // Set standardized token data
-          token.id = resolvedUser.id;
-          token.email = resolvedUser.email;
-          token.name = resolvedUser.name;
-          token.picture = resolvedUser.image;
-          token.isAdmin = resolvedUser.isAdmin;
-          token.role = resolvedUser.role;
-          token.correlationId = correlationId;
-
-          if (process.env.NODE_ENV === 'development') {
-            console.log('🔐 JWT callback - User resolved:', {
-              id: token.id,
-              email: token.email,
-              role: token.role,
-              correlationId: correlationId,
-              originalProvider: account.provider,
-              originalId: account.providerAccountId
-            });
-          }
-        } catch (error) {
-          console.error('❌ JWT callback - User resolution failed:', {
-            error: error instanceof Error ? error.message : 'Unknown error',
-            stack: error instanceof Error ? error.stack : undefined,
-            user: user.email,
-            provider: account.provider
-          });
-          
-          // Generate deterministic ID manually as fallback and ensure user exists in database
           const { v5: uuidv5 } = require('uuid');
           const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-          const fallbackId = user.email ? uuidv5(user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE) : 'unknown';
+          const deterministicId = user.email ? uuidv5(user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE) : account.providerAccountId;
           
-          // Try to create user directly in database as fallback
+          // Set basic token data
+          token.id = deterministicId;
+          token.email = user.email || '';
+          token.name = user.name || '';
+          token.picture = user.image || '';
+          token.isAdmin = false;
+          token.role = 'user';
+
+          console.log('✅ JWT callback - Basic auth successful:', {
+            id: token.id,
+            email: token.email,
+            provider: account.provider
+          });
+
+          // Try to ensure user exists in database (non-blocking)
           try {
             const { createClient } = require('@supabase/supabase-js');
             const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -106,10 +82,12 @@ export const authConfig = {
             
             if (supabaseUrl && supabaseKey && user.email) {
               const supabase = createClient(supabaseUrl, supabaseKey);
-              const { data: fallbackUser, error: fallbackDbError } = await supabase
+              
+              // Try to upsert user (don't fail auth if this fails)
+              const { data: dbUser, error: dbError } = await supabase
                 .from('users')
                 .upsert({
-                  id: fallbackId,
+                  id: deterministicId,
                   email: user.email,
                   name: user.name || 'Unknown User',
                   image: user.image,
@@ -123,33 +101,34 @@ export const authConfig = {
                 .select('id, email, name, image, role, is_admin')
                 .single();
 
-              if (!fallbackDbError && fallbackUser) {
-                console.log('✅ JWT callback - Fallback database user creation succeeded:', {
-                  id: fallbackUser.id,
-                  email: fallbackUser.email
+              if (!dbError && dbUser) {
+                console.log('✅ JWT callback - Database user sync successful:', {
+                  id: dbUser.id,
+                  email: dbUser.email
                 });
+                
+                // Update token with database info
+                token.isAdmin = dbUser.is_admin || false;
+                token.role = dbUser.role || 'user';
               } else {
-                console.error('❌ JWT callback - Fallback database user creation failed:', fallbackDbError);
+                console.warn('⚠️ JWT callback - Database user sync failed (non-blocking):', dbError?.message);
               }
             }
-          } catch (dbFallbackError) {
-            console.error('❌ JWT callback - Database fallback attempt failed:', dbFallbackError);
+          } catch (dbError) {
+            console.warn('⚠️ JWT callback - Database sync error (non-blocking):', dbError);
+            // Don't fail authentication if database sync fails
           }
+        } catch (uuidError) {
+          console.error('❌ JWT callback - UUID generation failed:', uuidError);
           
-          // Fallback to basic token data to prevent auth failure
-          token.id = fallbackId;
+          // Last resort: use provider account ID
+          token.id = account.providerAccountId;
           token.email = user.email || '';
           token.name = user.name || '';
           token.picture = user.image || '';
           token.isAdmin = false;
           token.role = 'user';
-          token.error = 'user_resolution_failed';
-          
-          console.log('🔄 JWT callback - Using fallback auth data:', {
-            id: token.id,
-            email: token.email,
-            role: token.role
-          });
+          token.error = 'uuid_generation_failed';
         }
       }
       
