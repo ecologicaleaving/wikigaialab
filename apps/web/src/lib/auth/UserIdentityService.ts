@@ -86,28 +86,59 @@ export class UserIdentityService {
    * CRITICAL: Same email will ALWAYS produce the same UUID
    */
   generateDeterministicUserId(email: string): string {
-    if (!email || typeof email !== 'string') {
-      throw new ValidationError('Email is required for user ID generation', 'email');
+    try {
+      this.logger.debug('Starting UUID generation', {}, {
+        hasEmail: !!email,
+        emailType: typeof email,
+        emailLength: email?.length || 0
+      });
+
+      if (!email || typeof email !== 'string') {
+        const error = new ValidationError('Email is required for user ID generation', 'email');
+        this.logger.error('UUID generation failed: invalid email input', error, {}, {
+          receivedEmail: email,
+          emailType: typeof email
+        });
+        throw error;
+      }
+
+      // Normalize email: lowercase, trim whitespace
+      const normalizedEmail = email.toLowerCase().trim();
+      
+      this.logger.debug('Email normalized', {}, {
+        originalEmail: email,
+        normalizedEmail,
+        changed: email !== normalizedEmail
+      });
+      
+      // Validate email format
+      if (!this.isValidEmail(normalizedEmail)) {
+        const error = new ValidationError('Invalid email format', 'email');
+        this.logger.error('UUID generation failed: invalid email format', error, {}, {
+          normalizedEmail,
+          emailPattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        });
+        throw error;
+      }
+
+      // Generate deterministic UUID using namespace and normalized email
+      const userId = uuidv5(normalizedEmail, WIKIGAIALAB_NAMESPACE);
+      
+      this.logger.debug('Generated deterministic user ID', {}, {
+        email: normalizedEmail,
+        userId,
+        namespace: WIKIGAIALAB_NAMESPACE,
+        uuidValid: this.validateUserId(userId)
+      });
+
+      return userId;
+    } catch (error) {
+      this.logger.error('UUID generation failed with unexpected error', error as Error, {}, {
+        email,
+        errorType: error instanceof Error ? error.constructor.name : 'unknown'
+      });
+      throw error;
     }
-
-    // Normalize email: lowercase, trim whitespace
-    const normalizedEmail = email.toLowerCase().trim();
-    
-    // Validate email format
-    if (!this.isValidEmail(normalizedEmail)) {
-      throw new ValidationError('Invalid email format', 'email');
-    }
-
-    // Generate deterministic UUID using namespace and normalized email
-    const userId = uuidv5(normalizedEmail, WIKIGAIALAB_NAMESPACE);
-    
-    this.logger.debug('Generated deterministic user ID', {}, {
-      email: normalizedEmail,
-      userId,
-      namespace: WIKIGAIALAB_NAMESPACE
-    });
-
-    return userId;
   }
 
   /**
@@ -188,21 +219,32 @@ export class UserIdentityService {
     try {
       this.logger.debug('Ensuring user exists in database', {}, {
         userId: userData.id,
-        email: userData.email
+        email: userData.email,
+        hasName: !!userData.name,
+        hasImage: !!userData.image,
+        role: userData.role
+      });
+
+      // Prepare upsert data
+      const upsertData = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        image: userData.image,
+        role: userData.role || 'user',
+        is_admin: userData.role === 'admin',
+        updated_at: new Date().toISOString()
+      };
+
+      this.logger.debug('Preparing database upsert', {}, {
+        upsertData: { ...upsertData, image: upsertData.image ? 'present' : 'null' },
+        tableName: 'users'
       });
 
       // Use atomic upsert operation to prevent race conditions
       const { data: user, error } = await this.supabase
         .from('users')
-        .upsert({
-          id: userData.id,
-          email: userData.email,
-          name: userData.name,
-          image: userData.image,
-          role: userData.role || 'user',
-          is_admin: userData.role === 'admin',
-          updated_at: new Date().toISOString()
-        }, {
+        .upsert(upsertData, {
           onConflict: 'id',
           ignoreDuplicates: false
         })
@@ -214,15 +256,38 @@ export class UserIdentityService {
           userId: userData.id,
           email: userData.email,
           errorCode: error.code,
-          errorMessage: error.message
+          errorMessage: error.message,
+          errorDetails: error.details,
+          errorHint: error.hint,
+          upsertData: { ...upsertData, image: upsertData.image ? 'present' : 'null' }
         });
         
         throw new DatabaseError('Failed to create or update user', error);
       }
 
       if (!user) {
+        this.logger.error('Database upsert returned no data', new Error('No user data returned'), {}, {
+          userId: userData.id,
+          email: userData.email,
+          upsertData: { ...upsertData, image: upsertData.image ? 'present' : 'null' }
+        });
         throw new DatabaseError('User upsert returned no data');
       }
+
+      this.logger.debug('Database upsert successful', {}, {
+        userId: user.id,
+        email: user.email,
+        returnedData: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          hasImage: !!user.image,
+          role: user.role,
+          is_admin: user.is_admin,
+          created_at: user.created_at,
+          updated_at: user.updated_at
+        }
+      });
 
       // Transform to AuthUser format
       const authUser: AuthUser = {
@@ -252,7 +317,10 @@ export class UserIdentityService {
       
       this.logger.error('Unexpected error in ensureUserExists', error as Error, {}, {
         userId: userData.id,
-        email: userData.email
+        email: userData.email,
+        errorType: error instanceof Error ? error.constructor.name : 'unknown',
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
       });
       
       throw new UserIdentityError('Failed to ensure user exists', {
@@ -265,6 +333,7 @@ export class UserIdentityService {
   /**
    * Sync user session data
    * Updates user information from fresh OAuth data
+   * Supports both UUID and email-based user resolution
    */
   async syncUserSession(userId: string, sessionData: Partial<UserData>): Promise<AuthUser> {
     try {
@@ -274,25 +343,53 @@ export class UserIdentityService {
         hasName: !!sessionData.name
       });
 
-      // Validate user ID format
+      // If userId is not a valid UUID, try to resolve from email
+      let resolvedUserId = userId;
       if (!this.validateUserId(userId)) {
-        throw new ValidationError('Invalid user ID format', 'userId');
+        this.logger.debug('Invalid UUID format, attempting email-based resolution', {}, {
+          providedUserId: userId,
+          email: sessionData.email
+        });
+        
+        if (!sessionData.email) {
+          throw new ValidationError('Either valid user ID or email is required for session sync', 'userId');
+        }
+        
+        // Generate deterministic UUID from email
+        resolvedUserId = this.generateDeterministicUserId(sessionData.email);
+        
+        this.logger.debug('Generated deterministic user ID from email', {}, {
+          originalId: userId,
+          generatedId: resolvedUserId,
+          email: sessionData.email
+        });
       }
 
-      // Get current user data
+      // Get current user data using resolved user ID
       const { data: currentUser, error: fetchError } = await this.supabase
         .from('users')
         .select('id, email, name, image, role, is_admin, created_at, updated_at')
-        .eq('id', userId)
+        .eq('id', resolvedUserId)
         .single();
 
       if (fetchError) {
         if (fetchError.code === 'PGRST116') {
-          // User not found - this shouldn't happen with deterministic IDs
-          throw new UserIdentityError('User not found during session sync', {
-            userId,
-            errorCode: fetchError.code
+          // User not found - create user with session data
+          this.logger.debug('User not found, creating new user', {}, {
+            resolvedUserId,
+            email: sessionData.email
           });
+          
+          // Create new user with session data
+          const userData: UserData = {
+            id: resolvedUserId,
+            email: sessionData.email || '',
+            name: sessionData.name || 'Unknown User',
+            image: sessionData.image,
+            role: 'user'
+          };
+          
+          return await this.ensureUserExists(userData);
         }
         
         throw new DatabaseError('Failed to fetch user for session sync', fetchError);
@@ -308,7 +405,7 @@ export class UserIdentityService {
       const { data: updatedUser, error: updateError } = await this.supabase
         .from('users')
         .update(updatedData)
-        .eq('id', userId)
+        .eq('id', resolvedUserId)
         .select('id, email, name, image, role, is_admin, created_at, updated_at')
         .single();
 
@@ -336,11 +433,22 @@ export class UserIdentityService {
 
     } catch (error) {
       this.logger.error('User session sync failed', error as Error, {}, {
-        userId,
-        sessionData
+        originalUserId: userId,
+        resolvedUserId: resolvedUserId || 'not-resolved',
+        sessionData,
+        errorType: error instanceof Error ? error.constructor.name : 'unknown'
       });
       
-      throw error;
+      // Re-throw with more context for production debugging
+      if (error instanceof UserIdentityError || error instanceof DatabaseError || error instanceof ValidationError) {
+        throw error;
+      }
+      
+      throw new UserIdentityError('Failed to sync user session', {
+        originalUserId: userId,
+        sessionData,
+        originalError: error
+      });
     }
   }
 
@@ -425,17 +533,59 @@ export class UserIdentityService {
   }
 
   /**
-   * Initialize Supabase client
+   * Initialize Supabase client with enhanced error handling
    */
   private getSupabaseClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase environment variables');
+    this.logger.debug('Initializing Supabase client', {}, {
+      nodeEnv: process.env.NODE_ENV,
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      urlPreview: supabaseUrl?.substring(0, 50) + '...'
+    });
+    
+    if (!supabaseUrl) {
+      const error = new Error('NEXT_PUBLIC_SUPABASE_URL environment variable is required');
+      this.logger.error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable', error, {}, {
+        nodeEnv: process.env.NODE_ENV,
+        hasUrl: false,
+        hasKey: !!supabaseKey,
+        allEnvKeys: Object.keys(process.env).filter(key => key.includes('SUPABASE'))
+      });
+      throw error;
     }
     
-    return createClient<Database>(supabaseUrl, supabaseKey);
+    if (!supabaseKey) {
+      const error = new Error('SUPABASE_SERVICE_KEY environment variable is required');
+      this.logger.error('Missing SUPABASE_SERVICE_KEY environment variable', error, {}, {
+        nodeEnv: process.env.NODE_ENV,
+        hasUrl: !!supabaseUrl,
+        hasKey: false,
+        allEnvKeys: Object.keys(process.env).filter(key => key.includes('SUPABASE'))
+      });
+      throw error;
+    }
+    
+    try {
+      const client = createClient<Database>(supabaseUrl, supabaseKey);
+      
+      this.logger.debug('Supabase client initialized successfully', {}, {
+        supabaseUrl: supabaseUrl.substring(0, 30) + '...',
+        hasServiceKey: !!supabaseKey,
+        clientCreated: !!client
+      });
+      
+      return client;
+    } catch (error) {
+      this.logger.error('Failed to initialize Supabase client', error as Error, {}, {
+        supabaseUrl: supabaseUrl?.substring(0, 30) + '...',
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorName: error instanceof Error ? error.constructor.name : 'unknown'
+      });
+      throw new Error('Failed to initialize Supabase client: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
   }
 }
 
@@ -443,14 +593,11 @@ export class UserIdentityService {
 export type { OAuthUserData, UserData, AuthUser };
 export { UserIdentityError, DatabaseError, ValidationError };
 
-// Export singleton instance for consistent usage
-let serviceInstance: UserIdentityService | null = null;
-
+// Export factory function for proper instance management
 export function getUserIdentityService(correlationId?: string): UserIdentityService {
-  if (!serviceInstance) {
-    serviceInstance = new UserIdentityService(correlationId);
-  }
-  return serviceInstance;
+  // Always create a new instance for proper correlation tracking
+  // This ensures each request has its own service instance with correct correlation ID
+  return new UserIdentityService(correlationId);
 }
 
 // Export class for custom instances when needed
