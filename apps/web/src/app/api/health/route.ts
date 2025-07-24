@@ -43,10 +43,34 @@ export async function GET() {
       diagnostics.userIdentityService.error = error instanceof Error ? error.message : 'Import failed';
     }
 
+    // Test UUID generation for the existing user
+    const testEmail = 'dadecresce@gmail.com';
+    let uuidTest = { error: 'not tested' };
+    try {
+      const { v5: uuidv5 } = await import('uuid');
+      const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+      const normalizedEmail = testEmail.toLowerCase().trim();
+      const generatedUuid = uuidv5(normalizedEmail, WIKIGAIALAB_NAMESPACE);
+      
+      uuidTest = {
+        testEmail,
+        normalizedEmail,
+        generatedUuid,
+        existingUserInDb: '90fbc024-98c1-41fa-b01a-7cd7f096c70a',
+        match: generatedUuid === '90fbc024-98c1-41fa-b01a-7cd7f096c70a',
+        namespace: WIKIGAIALAB_NAMESPACE
+      };
+    } catch (error) {
+      uuidTest = {
+        error: error instanceof Error ? error.message : 'UUID test failed'
+      };
+    }
+
     return NextResponse.json({
       status: 'healthy',
       ...healthChecks,
-      diagnostics
+      diagnostics,
+      uuidTest
     });
 
   } catch (error) {
