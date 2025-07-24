@@ -14,50 +14,51 @@ import {
   Heart
 } from 'lucide-react';
 
-// Primary Navigation - Optimized UX hierarchy
+// Artisanal Workshop Navigation - Community-focused hierarchy
 export const mainNavigationItems: NavigationItem[] = [
   { 
     id: 'home', 
-    label: 'Home', 
+    label: 'Bottega', 
     href: '/', 
     icon: Home,
-    showWhenAuth: false, // Hide when authenticated (redirect to dashboard)
+    showWhenAuth: false, // Hide when authenticated (redirect to workshop)
   },
   { 
     id: 'dashboard', 
-    label: 'Dashboard', 
+    label: 'Il Mio Banco', 
     href: '/dashboard', 
     icon: BarChart3, 
     requiresAuth: true,
-    priority: 1 // Highest priority for authenticated users
+    priority: 1, // Personal workspace for workshop neighbors
+    description: 'Il vostro spazio nella bottega'
   },
   { 
     id: 'problems', 
-    label: 'Esplora', 
+    label: 'Storie del Quartiere', 
     href: '/problems', 
     icon: Search, 
     requiresAuth: true,
     priority: 2,
-    description: 'Scopri e vota problemi'
+    description: 'Ascolta e sostieni le storie dei vicini'
   },
   { 
     id: 'create', 
-    label: 'Proponi', 
+    label: 'Racconta', 
     href: '/problems/new', 
     icon: Plus, 
     requiresAuth: true,
     priority: 3,
-    description: 'Proponi un problema',
-    badge: { text: 'CTA', color: 'bg-green-500' }
+    description: 'Condividi la tua storia',
+    badge: { text: '💭', color: 'bg-orange-500' }
   },
   { 
     id: 'apps', 
-    label: 'App', 
+    label: 'Attrezzi', 
     href: '/apps', 
     icon: AppWindow, 
     requiresAuth: false,
     priority: 4,
-    description: 'Scopri le app sviluppate'
+    description: 'Gli strumenti creati insieme'
   }
 ];
 

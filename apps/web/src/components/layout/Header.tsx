@@ -47,24 +47,25 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 border-b border-orange-200 shadow-sm backdrop-blur-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo and Branding */}
+            {/* Artisanal Workshop Logo and Branding */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="relative w-8 h-8">
-                  <Image
-                    src="/images/wikigaialab-logo.svg"
-                    alt="WikiGaiaLab"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
+              <Link href="/" className="flex items-center space-x-3 group">
+                <div className="relative w-10 h-10 transition-transform group-hover:scale-105">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-600 to-amber-600 rounded-xl flex items-center justify-center shadow-sm">
+                    <span className="text-white font-bold text-lg">🛠️</span>
+                  </div>
                 </div>
-                <span className="text-xl font-bold text-primary-900 hidden sm:block">
-                  WikiGaiaLab
-                </span>
+                <div className="hidden sm:block">
+                  <div className="text-lg font-bold text-orange-800 leading-tight">
+                    WikiGaiaLab
+                  </div>
+                  <div className="text-xs text-orange-600 leading-none">
+                    Bottega Digitale
+                  </div>
+                </div>
               </Link>
             </div>
 
