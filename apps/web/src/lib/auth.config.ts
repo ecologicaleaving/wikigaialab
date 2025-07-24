@@ -86,16 +86,32 @@ export const authConfig = {
             });
           }
         } catch (error) {
-          console.error('❌ JWT callback - User resolution failed:', error);
+          console.error('❌ JWT callback - User resolution failed:', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+            user: user.email,
+            provider: account.provider
+          });
+          
+          // Generate deterministic ID manually as fallback
+          const { v5: uuidv5 } = require('uuid');
+          const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+          const fallbackId = user.email ? uuidv5(user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE) : 'unknown';
           
           // Fallback to basic token data to prevent auth failure
-          token.id = user.email || 'unknown';
+          token.id = fallbackId;
           token.email = user.email || '';
           token.name = user.name || '';
           token.picture = user.image || '';
           token.isAdmin = false;
           token.role = 'user';
           token.error = 'user_resolution_failed';
+          
+          console.log('🔄 JWT callback - Using fallback auth data:', {
+            id: token.id,
+            email: token.email,
+            role: token.role
+          });
         }
       }
       

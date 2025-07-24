@@ -239,43 +239,78 @@ export async function POST(request: NextRequest) {
         
         resolvedUser = await fallbackService.resolveUser(oauthData);
         
-        console.log('✅ Fallback user resolution succeeded:', {
+        console.log('✅ DIAGNOSTIC: Fallback user resolution succeeded:', {
           id: resolvedUser.id,
           email: resolvedUser.email,
           role: resolvedUser.role
         });
         
       } catch (fallbackError) {
-        console.error('❌ Fallback user resolution also failed:', {
+        console.error('❌ DIAGNOSTIC: Fallback user resolution also failed:', {
           fallbackErrorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
           fallbackErrorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error',
           originalError: errorDetails
         });
-        
-        return tracker.complete(NextResponse.json({
-          success: false,
-          error: 'Failed to resolve user identity. Please try signing out and back in.',
-          correlationId: tracker.getCorrelationId(),
-          details: process.env.NODE_ENV === 'development' ? {
-            original: errorDetails,
-            fallback: {
-              errorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
-              errorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error'
-            }
-          } : 'User identity resolution failed',
-          troubleshooting: {
-            steps: [
-              '1. Sign out of your account completely',
-              '2. Clear your browser cache and cookies for this site',
-              '3. Close all browser tabs for this site',
-              '4. Sign back in with the same Google account',
-              '5. If the problem persists, try a different browser or incognito mode',
-              '6. Contact support with this correlation ID if issue continues'
-            ],
+
+        // Last resort: use session data directly with deterministic UUID
+        try {
+          console.log('🆘 DIAGNOSTIC: Attempting direct session-based user creation...');
+          
+          const { v5: uuidv5 } = require('uuid');
+          const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+          const directUserId = uuidv5(session.user.email!.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE);
+          
+          resolvedUser = {
+            id: directUserId,
+            email: session.user.email!,
+            name: session.user.name || 'Unknown User',
+            image: session.user.image,
+            role: 'user' as const,
+            isAdmin: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          
+          console.log('✅ DIAGNOSTIC: Direct session-based user creation succeeded:', {
+            id: resolvedUser.id,
+            email: resolvedUser.email
+          });
+          
+        } catch (directError) {
+          console.error('❌ DIAGNOSTIC: Direct session-based user creation failed:', {
+            directErrorType: directError instanceof Error ? directError.constructor.name : 'unknown',
+            directErrorMessage: directError instanceof Error ? directError.message : 'Unknown direct error'
+          });
+          
+          return tracker.complete(NextResponse.json({
+            success: false,
+            error: 'Failed to resolve user identity. Please try signing out and back in.',
             correlationId: tracker.getCorrelationId(),
-            supportEmail: 'support@wikigaialab.com'
-          }
-        }, { status: 500 }));
+            details: process.env.NODE_ENV === 'development' ? {
+              original: errorDetails,
+              fallback: {
+                errorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
+                errorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error'
+              },
+              direct: {
+                errorType: directError instanceof Error ? directError.constructor.name : 'unknown',
+                errorMessage: directError instanceof Error ? directError.message : 'Unknown direct error'
+              }
+            } : 'User identity resolution failed',
+            troubleshooting: {
+              steps: [
+                '1. Sign out of your account completely',
+                '2. Clear your browser cache and cookies for this site',
+                '3. Close all browser tabs for this site',
+                '4. Sign back in with the same Google account',
+                '5. If the problem persists, try a different browser or incognito mode',
+                '6. Contact support with this correlation ID if issue continues'
+              ],
+              correlationId: tracker.getCorrelationId(),
+              supportEmail: 'support@wikigaialab.com'
+            }
+          }, { status: 500 }));
+        }
       }
     }
 
