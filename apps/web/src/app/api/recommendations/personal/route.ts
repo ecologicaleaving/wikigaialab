@@ -134,7 +134,7 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
         categories:category_id(name),
         users:proposer_id(name)
       `)
-      .eq('status', 'Proposed')
+      .in('status', ['Proposed', 'In Development', 'Completed'])
       .neq('proposer_id', userId); // Don't recommend user's own problems
 
     // Exclude voted problems if there are any
@@ -152,7 +152,7 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
       console.error('Query details - userId:', userId, 'votedProblemIds:', votedProblemIds);
       // Don't throw - continue with fallback data
       console.log('Continuing with fallback data due to database error');
-      return mockPersonalProblems.slice(0, limit);
+      return [];
     }
 
     console.log(`Database returned ${problems?.length || 0} problems for user ${userId}`);
@@ -161,7 +161,7 @@ async function getPersonalRecommendations(userId: string, limit: number = 10): P
       console.log('No problems found for personalization, using fallback');
       console.log('Query was looking for problems with vote_count >= 1, status = Proposed, proposer_id != userId');
       console.log('Excluded problem IDs:', votedProblemIds);
-      return mockPersonalProblems.slice(0, limit);
+      return [];
     }
 
     console.log(`Found ${problems.length} potential problems for recommendations`);
@@ -296,7 +296,7 @@ export async function GET(request: NextRequest) {
     // Always return success with fallback data
     return NextResponse.json({
       success: true,
-      data: mockPersonalProblems.slice(0, 10),
+      data: [],
       metadata: {
         total: mockPersonalProblems.length,
         calculated_at: new Date().toISOString(),

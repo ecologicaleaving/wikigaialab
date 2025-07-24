@@ -101,7 +101,7 @@ async function getTrendingProblems(limit: number = 20): Promise<TrendingProblem[
         categories:category_id(name),
         users:proposer_id(name)
       `)
-      .eq('status', 'Proposed')
+      .in('status', ['Proposed', 'In Development', 'Completed'])
       .gte('vote_count', 1) // At least 1 vote to be considered trending
       .order('vote_count', { ascending: false })
       .limit(limit * 2); // Get more to allow for scoring and filtering
@@ -112,8 +112,8 @@ async function getTrendingProblems(limit: number = 20): Promise<TrendingProblem[
     }
 
     if (!problems || problems.length === 0) {
-      console.log('No problems found in database, using fallback');
-      return MOCK_TRENDING.slice(0, limit);
+      console.log('No problems found in database');
+      return [];
     }
 
     // Transform and calculate trending scores
@@ -155,8 +155,8 @@ async function getTrendingProblems(limit: number = 20): Promise<TrendingProblem[
     return sortedProblems;
 
   } catch (error) {
-    console.error('Database connection failed, using fallback:', error);
-    return MOCK_TRENDING.slice(0, limit);
+    console.error('Database connection failed:', error);
+    return [];
   }
 }
 
@@ -188,15 +188,16 @@ export async function GET(request: NextRequest) {
     console.error('Trending API error:', error);
     // apiTracker.end();
     
-    // Always return success with fallback data
+    // Return error response
     return NextResponse.json({
-      success: true,
-      data: MOCK_TRENDING,
+      success: false,
+      error: 'Failed to fetch trending problems',
+      data: [],
       metadata: {
-        total: MOCK_TRENDING.length,
+        total: 0,
         timestamp: new Date().toISOString(),
-        fallback: true
+        fallback: false
       }
-    });
+    }, { status: 500 });
   }
 }

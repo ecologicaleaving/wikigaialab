@@ -62,8 +62,8 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .eq('status', 'published')
-      .limit(20);
+      .in('status', ['Proposed', 'In Development', 'Completed'])
+      .limit(limit);
 
     // Apply filters
     if (category_id) {
