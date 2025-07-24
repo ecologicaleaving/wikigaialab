@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './button';
 import { Heart } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -35,6 +35,36 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
   showEncouragement = true,
   milestone,
 }) => {
+  // Workshop animation states
+  const [isHeartbeating, setIsHeartbeating] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
+  const [justVoted, setJustVoted] = useState(false);
+
+  // Trigger heartbeat animation when vote changes
+  useEffect(() => {
+    if (justVoted) {
+      setIsHeartbeating(true);
+      
+      // Check for milestone sparkles
+      if (voteCount > 0 && (voteCount % 25 === 0 || voteCount === 50 || voteCount === 75 || voteCount === 100)) {
+        setShowSparkles(true);
+        setTimeout(() => setShowSparkles(false), 2000);
+      }
+      
+      // Reset heartbeat after animation
+      setTimeout(() => {
+        setIsHeartbeating(false);
+        setJustVoted(false);
+      }, 600);
+    }
+  }, [voteCount, justVoted]);
+
+  // Enhanced vote handler with animation triggers
+  const handleVoteClick = () => {
+    setJustVoted(true);
+    onClick();
+  };
+
   // Artisanal workshop approach to showing community support
   const formatCommunitySupport = (count: number): string => {
     if (count === 0) return "Sii il primo!";
@@ -83,29 +113,54 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
     }
   };
 
-  // Enhanced heart animation for workshop warmth
+  // Enhanced heart animation for workshop warmth with heartbeat
   const heartClasses = clsx(
     iconSizes[size],
-    'transition-all duration-300 ease-out',
+    'transition-all duration-300 ease-out relative',
     hasVoted ? 'fill-current scale-110 drop-shadow-sm' : 'hover:scale-105',
     isVoting ? 'animate-pulse scale-105' : '',
+    // Heartbeat animation for workshop warmth
+    isHeartbeating ? 'animate-bounce' : '',
     // Add a gentle golden glow when voted
     hasVoted && variant !== 'detail' ? 'filter drop-shadow-sm' : ''
   );
+
+  // Sparkles animation for milestones
+  const SparklesEffect = () => {
+    if (!showSparkles) return null;
+    
+    return (
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-yellow-400 rounded-full animate-ping"
+            style={{
+              left: `${20 + Math.random() * 60}%`,
+              top: `${20 + Math.random() * 60}%`,
+              animationDelay: `${i * 100}ms`,
+              animationDuration: '1s'
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
 
   if (variant === 'card' && !showCount) {
     return (
       <Button
         size={size}
         variant="outline"
-        onClick={onClick}
+        onClick={handleVoteClick}
         disabled={disabled || isLoading || isVoting}
         className={clsx(
           getVariantClasses(),
-          'transition-all duration-200',
+          'transition-all duration-200 relative overflow-hidden',
           className
         )}
       >
+        <SparklesEffect />
         {isVoting ? (
           <div className={clsx(iconSizes[size], 'animate-spin border-2 border-current border-t-transparent rounded-full')} />
         ) : (
@@ -119,15 +174,16 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
     <Button
       size={size}
       variant="outline"
-      onClick={onClick}
+      onClick={handleVoteClick}
       disabled={disabled || isLoading || isVoting}
       className={clsx(
         sizeClasses[size],
         getVariantClasses(),
-        'flex items-center gap-2 transition-all duration-200',
+        'flex items-center gap-2 transition-all duration-200 relative overflow-hidden',
         className
       )}
     >
+      <SparklesEffect />
       {isVoting ? (
         <div className={clsx(iconSizes[size], 'animate-spin border-2 border-current border-t-transparent rounded-full')} />
       ) : (
@@ -141,7 +197,7 @@ export const VoteButton: React.FC<VoteButtonProps> = ({
               <span className="text-xs leading-tight">
                 {formatCommunitySupport(voteCount)}
               </span>
-              {voteCount > 0 && voteCount < 100 && (
+              {voteCount > 0 && voteCount < 100 && showEncouragement && (
                 <span className="text-xs opacity-75 leading-tight">
                   {getEncouragementText(voteCount)}
                 </span>

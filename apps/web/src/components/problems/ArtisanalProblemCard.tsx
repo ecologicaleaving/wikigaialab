@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Heart, Users, Clock, ArrowRight } from 'lucide-react';
+import { Heart, Users, Clock, ArrowRight, Calendar, User } from 'lucide-react';
 import { Card } from '../ui/card';
 import { VoteButton } from '../ui/vote-button';
+import MilestoneCelebration from '../ui/MilestoneCelebration';
 
 interface Problem {
   id: string;
@@ -41,8 +42,21 @@ export const ArtisanalProblemCard: React.FC<ArtisanalProblemCardProps> = ({
   showRealtimeIndicator = false,
   className = ''
 }) => {
+  // Progressive disclosure states
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationMilestone, setCelebrationMilestone] = useState<25 | 50 | 75 | 100>(25);
+
   const handleVote = () => {
     if (onVote) {
+      const newVoteCount = problem.vote_count + 1;
+      
+      // Trigger milestone celebration
+      if (newVoteCount === 25 || newVoteCount === 50 || newVoteCount === 75 || newVoteCount === 100) {
+        setCelebrationMilestone(newVoteCount as 25 | 50 | 75 | 100);
+        setShowCelebration(true);
+      }
+      
       onVote(problem.id);
     }
   };
@@ -80,7 +94,12 @@ export const ArtisanalProblemCard: React.FC<ArtisanalProblemCardProps> = ({
   const workshopStatus = getWorkshopStatus(problem.vote_count, problem.status);
 
   return (
-    <Card className={`group overflow-hidden bg-gradient-to-br from-white to-orange-50/30 border-orange-100 hover:border-orange-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${className}`}>
+    <>
+      <Card 
+        className={`group overflow-hidden bg-gradient-to-br from-white to-orange-50/30 border-orange-100 hover:border-orange-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${className}`}
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
+      >
       {/* Realtime indicator */}
       {showRealtimeIndicator && (
         <div className="absolute top-3 right-3 w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-sm" />
@@ -110,10 +129,36 @@ export const ArtisanalProblemCard: React.FC<ArtisanalProblemCardProps> = ({
           </h3>
         </Link>
 
-        {/* Story preview */}
-        <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-          {problem.description}
-        </p>
+        {/* Story preview with progressive disclosure */}
+        <div className="mb-4">
+          <p className={`text-gray-600 leading-relaxed transition-all duration-300 ${
+            isExpanded ? 'line-clamp-none' : 'line-clamp-3'
+          }`}>
+            {problem.description}
+          </p>
+          
+          {/* Additional details revealed on hover */}
+          <div className={`overflow-hidden transition-all duration-300 ${
+            isExpanded ? 'max-h-32 opacity-100 mt-3' : 'max-h-0 opacity-0'
+          }`}>
+            <div className="space-y-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Raccontato {formatWorkshopTime(problem.created_at)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                <span>Da {problem.proposer.name} nel quartiere</span>
+              </div>
+              {problem.vote_count > 0 && (
+                <div className="flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-red-400" />
+                  <span>{problem.vote_count} vicini si riconoscono in questa storia</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* Community progress bar */}
         <div className="mb-4">
@@ -182,7 +227,15 @@ export const ArtisanalProblemCard: React.FC<ArtisanalProblemCardProps> = ({
           <div className="absolute top-3 left-3 text-2xl animate-bounce">🎉</div>
         </div>
       )}
-    </Card>
+      </Card>
+
+      {/* Milestone Celebration */}
+      <MilestoneCelebration
+        show={showCelebration}
+        milestone={celebrationMilestone}
+        onComplete={() => setShowCelebration(false)}
+      />
+    </>
   );
 };
 
