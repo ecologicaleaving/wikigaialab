@@ -29,17 +29,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loading = status === "loading";
   const [databaseUser, setDatabaseUser] = useState<any>(null);
   const [fetchingUser, setFetchingUser] = useState(false);
+  const [lastFetchedUserId, setLastFetchedUserId] = useState<string | null>(null);
 
   // Fetch user data from session API when session changes
   // UserIdentityService now handles synchronization in the session API
   useEffect(() => {
-    if (session?.user && !fetchingUser) {
+    // Only fetch if we have a new user or if the user ID changed
+    if (session?.user && !fetchingUser && session.user.id !== lastFetchedUserId) {
       setFetchingUser(true);
       fetch('/api/auth/session')
         .then(r => r.json())
         .then(data => {
           if (data.user) {
             setDatabaseUser(data.user);
+            setLastFetchedUserId(session.user.id); // Cache the user ID we just fetched
             
             if (process.env.NODE_ENV === 'development') {
               console.log('🔄 User data synchronized via UserIdentityService:', {
@@ -59,8 +62,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
     } else if (!session?.user) {
       setDatabaseUser(null);
+      setLastFetchedUserId(null); // Reset cache when user logs out
     }
-  }, [session?.user?.id, session?.user?.email, fetchingUser]);
+  }, [session?.user?.id, session?.user?.email]);
 
   // Convert NextAuth session to our AuthUser type with synchronized database data
   // UserIdentityService ensures deterministic IDs and consistent data
