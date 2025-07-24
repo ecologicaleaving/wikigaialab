@@ -8,6 +8,10 @@ import { randomUUID } from 'crypto';
 // Input validation import
 import { validateProblemInput, type CreateProblemInput } from '@/lib/validation/problem-schema';
 
+// Debug and monitoring imports
+import { createApiTracker } from '@/lib/debug/api-tracker';
+import { logger } from '@/lib/debug/logger';
+
 // Initialize Supabase client
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -127,27 +131,25 @@ export async function GET(request: NextRequest) {
  * Features: Authentication, input validation, database operations
  */
 export async function POST(request: NextRequest) {
-  const correlationId = randomUUID();
-  const startTime = Date.now();
+  // Initialize enhanced tracking
+  const tracker = createApiTracker(request, 'POST /api/problems');
   
   try {
-    console.log('🔍 POST endpoint called', { correlationId });
     
-    // STEP 1: Simple Authentication Check
-    console.log('🔍 Checking authentication...');
-    const session = await auth();
+    // STEP 1: Enhanced Authentication Check
+    const session = await logger.time('auth-check', async () => {
+      return await auth();
+    });
     
     if (!session?.user?.id) {
-      console.log('❌ No valid session found', { 
-        hasSession: !!session, 
-        hasUser: !!session?.user, 
-        hasUserId: !!session?.user?.id 
-      });
-      return NextResponse.json({
+      const authError = new Error('Authentication required');
+      tracker.trackError(authError, 401);
+      
+      return tracker.complete(NextResponse.json({
         success: false,
         error: 'Authentication required. Please sign in and try again.',
-        correlationId
-      }, { status: 401 });
+        correlationId: tracker.getCorrelationId()
+      }, { status: 401 }));
     }
     
     const user = {
@@ -156,55 +158,64 @@ export async function POST(request: NextRequest) {
       name: session.user.name || 'Unknown User'
     };
     
-    console.log('✅ User authenticated:', { 
-      userId: user.id, 
-      userEmail: user.email 
+    // Set user context for tracking
+    tracker.setUser(user.id, {
+      email: user.email,
+      name: user.name,
+      sessionId: session.id
     });
 
-    // STEP 2: Input Validation & Sanitization
-    console.log('🔍 Validating input...');
+    // STEP 2: Enhanced Input Validation & Sanitization
     let body;
     try {
-      body = await request.json();
-      console.log('🔍 Request body received:', { 
-        hasTitle: !!body.title, 
-        hasDescription: !!body.description, 
-        hasCategoryId: !!body.category_id 
+      body = await logger.time('request-parse', async () => {
+        return await request.json();
       });
+      
+      // Track request body for debugging
+      tracker.setRequestBody(body);
+      
     } catch (error) {
-      console.log('❌ Failed to parse JSON body:', error);
-      return NextResponse.json({
+      const parseError = new Error('Invalid JSON in request body');
+      tracker.trackError(parseError, 400);
+      
+      return tracker.complete(NextResponse.json({
         success: false,
         error: 'Invalid JSON in request body',
-        correlationId
-      }, { status: 400 });
+        correlationId: tracker.getCorrelationId()
+      }, { status: 400 }));
     }
 
     let validation;
     try {
-      validation = validateProblemInput(body);
+      validation = await logger.time('input-validation', () => {
+        return validateProblemInput(body);
+      });
     } catch (error) {
-      console.log('❌ Validation error:', error);
-      return NextResponse.json({
+      const validationError = new Error('Validation failed due to server error');
+      tracker.trackError(validationError, 500);
+      
+      return tracker.complete(NextResponse.json({
         success: false,
         error: 'Validation failed due to server error',
         details: error instanceof Error ? error.message : 'Unknown validation error',
-        correlationId
-      }, { status: 500 });
+        correlationId: tracker.getCorrelationId()
+      }, { status: 500 }));
     }
     
     if (!validation.success) {
-      console.log('❌ Validation failed:', validation.errorMessage);
-      return NextResponse.json({
+      // Track validation errors for debugging
+      tracker.addValidationError(validation.errorMessage);
+      
+      return tracker.complete(NextResponse.json({
         success: false,
         error: 'Invalid input data',
         details: validation.errorMessage,
-        correlationId
-      }, { status: 400 });
+        correlationId: tracker.getCorrelationId()
+      }, { status: 400 }));
     }
 
     const validatedInput = validation.data!;
-    console.log('✅ Input validated:', { title: validatedInput.title });
 
     // STEP 3: Database Operations
     console.log('🔍 Connecting to database...');
