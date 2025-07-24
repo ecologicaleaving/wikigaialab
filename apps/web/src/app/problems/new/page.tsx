@@ -26,53 +26,57 @@ export default function NewStoryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
-  // Mock categories for artisanal workshop
+  // Fetch real categories from the API
   useEffect(() => {
-    const mockCategories: Category[] = [
-      {
-        id: '1',
-        name: 'Vita di Famiglia',
-        icon: '👨‍👩‍👧‍👦',
-        description: 'Organizzare eventi, gestire i bambini, vita domestica'
-      },
-      {
-        id: '2',
-        name: 'Vita di Quartiere',
-        icon: '🏘️',
-        description: 'Aiutare i vicini, coordinare iniziative, vita comunitaria'
-      },
-      {
-        id: '3',
-        name: 'Passioni e Hobby',
-        icon: '📚',
-        description: 'Gestire gruppi, organizzare attività, condividere interessi'
-      },
-      {
-        id: '4',
-        name: 'Vita Lavorativa',
-        icon: '💼',
-        description: 'Organizzazione, produttività, collaborazione'
-      },
-      {
-        id: '5',
-        name: 'Casa e Giardino',
-        icon: '🏡',
-        description: 'Manutenzione, progetti fai-da-te, giardinaggio'
-      },
-      {
-        id: '6',
-        name: 'Salute e Benessere',
-        icon: '🌱',
-        description: 'Fitness, alimentazione, cura di sé'
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          // Map database categories to our format
+          const mappedCategories: Category[] = result.data.map((cat: any) => ({
+            id: cat.id,
+            name: cat.name,
+            icon: getCategoryIcon(cat.name), // Add appropriate icons
+            description: cat.description
+          }));
+          
+          setCategories(mappedCategories);
+        } else {
+          console.error('Failed to fetch categories:', result);
+          setCategoriesError('Impossibile caricare le categorie. Riprova tra un momento.');
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategoriesError('Errore di connessione. Controlla la connessione internet.');
+        setCategories([]);
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    setTimeout(() => {
-      setCategories(mockCategories);
-      setLoading(false);
-    }, 500);
+    fetchCategories();
   }, []);
+
+  // Helper function to get appropriate icons for categories
+  const getCategoryIcon = (categoryName: string): string => {
+    const iconMap: { [key: string]: string } = {
+      'Ambiente': '🌱',
+      'Mobilità': '🚗',
+      'Energia': '⚡',
+      'Sociale': '👥',
+      'Tecnologia': '💻',
+      'Salute': '🏥',
+      'Educazione': '📚',
+      'default': '📝'
+    };
+    
+    return iconMap[categoryName] || iconMap.default;
+  };
 
   const handleStorySubmit = async (data: StoryData) => {
     if (!user) {
@@ -83,21 +87,44 @@ export default function NewStoryPage() {
     setIsSubmitting(true);
 
     try {
-      // Mock API call - replace with actual implementation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Submitting story with data:', data);
       
-      // Simulate success
-      toast.success('🎉 La tua storia è stata condivisa con la bottega!', {
-        description: 'Ora i vicini possono donare il loro cuore per supportarla'
+      const response = await fetch('/api/problems', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.description,
+          category_id: data.category_id
+        }),
       });
 
-      // Redirect to the new story (mock ID)
-      router.push('/problems/mock-story-123');
+      const result = await response.json();
+      console.log('API Response:', result);
+
+      if (!response.ok) {
+        throw new Error(result.error || `HTTP error! status: ${response.status}`);
+      }
+
+      if (result.success) {
+        toast.success('🎉 La tua storia è stata condivisa con la bottega!', {
+          description: 'Ora i vicini possono donare il loro cuore per supportarla'
+        });
+
+        // Redirect to the problems list or new story
+        router.push(`/problems/${result.data.id}`);
+      } else {
+        throw new Error(result.error || 'Unknown error occurred');
+      }
       
     } catch (error) {
       console.error('Error submitting story:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
       toast.error('Ops! Qualcosa è andato storto', {
-        description: 'Non riesco a condividere la tua storia. Riprova tra un momento.'
+        description: `Non riesco a condividere la tua storia: ${errorMessage}`
       });
     } finally {
       setIsSubmitting(false);
@@ -121,11 +148,24 @@ export default function NewStoryPage() {
     <AuthenticatedLayout>
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ArtisanalStoryForm
-            onSubmit={handleStorySubmit}
-            categories={categories}
-            isSubmitting={isSubmitting}
-          />
+          {categoriesError ? (
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">⚠️</div>
+              <div className="text-lg text-red-600 mb-4">{categoriesError}</div>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+              >
+                Riprova
+              </button>
+            </div>
+          ) : (
+            <ArtisanalStoryForm
+              onSubmit={handleStorySubmit}
+              categories={categories}
+              isSubmitting={isSubmitting}
+            />
+          )}
           
           {/* Workshop tips */}
           <div className="mt-12 max-w-2xl mx-auto">
