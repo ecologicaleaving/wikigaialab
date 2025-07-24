@@ -1,261 +1,262 @@
-# WikiGaiaLab Interactivity Specification
+# WikiGaiaLab Bottega Digitale - Specifica delle Interazioni
 
-## Core Interactivity Principles
+## Principi Fondamentali dell'Officina Interattiva
 
-WikiGaiaLab's interactivity design follows five fundamental UX/UI principles to create an engaging, intuitive community-driven platform:
+WikiGaiaLab è progettato come una bottega artigianale digitale dove ogni interazione riflette la saggezza e il calore di un maestro artigiano che guida i suoi allievi nella comunità:
 
-1. **Immediate Affordance Recognition** - Interactive elements are instantly recognizable through visual design language
-2. **Responsive State Communication** - Interfaces provide immediate visual feedback for all user actions
-3. **Spatial Continuity & Polish** - Purposeful motion design creates professional, cohesive experiences
-4. **Natural Movement Patterns** - Digital interactions feel believable and intuitive
-5. **Clear System Status** - Users always understand what's happening and what they can do next
-
----
-
-## Screen-by-Screen Interactivity Analysis
-
-### 1. Problems Dashboard (Main Community View)
-
-#### Top 5 Interactivity Opportunities:
-1. **Real-time vote counter animations** - Numbers increment with satisfying bounce effects
-2. **Card hover transformations** - Subtle elevation and content preview on hover
-3. **Progress visualization** - Dynamic progress bars showing vote progress to 100-vote threshold
-4. **Filter animations** - Smooth category transitions with content morphing
-5. **Social sharing cascade** - Animated sharing options fan out from share button
-
-#### Selected High-Impact Implementations (Top 3):
-
-**A. Real-time Vote Animation System**
-- **Visual Language**: Heart icon fills with warm gradient (empty → filled) on vote
-- **Motion**: Counter numbers flip upward with 0.3s ease-out spring animation
-- **State Communication**: Immediate feedback shows vote registered before server confirmation
-- **Natural Movement**: Heart "beats" once on vote with gentle scale (1.0 → 1.2 → 1.0)
-- **Polish**: Particle effect (small sparkles) emanate from heart on milestone votes (50, 75, 100)
-
-**B. Progressive Disclosure Card System**
-- **Visual Language**: Cards expand vertically revealing additional content on hover/tap
-- **Motion**: 0.4s cubic-bezier ease with content fade-in staggered by 100ms
-- **State Communication**: Expansion indicator arrow rotates 180° (↓ → ↑)
-- **Natural Movement**: Card lifts 8px with soft shadow expansion
-- **Polish**: Background blur slightly during expansion to maintain focus
-
-**C. Vote Progress Visualization**
-- **Visual Language**: Horizontal progress bar beneath vote count with milestone markers
-- **Motion**: Progress fills smoothly with momentum-based easing (fast start, slow finish)
-- **State Communication**: Color shifts: Gray → Blue → Green as approaching 100 votes
-- **Natural Movement**: Pulse animation at milestone achievements (50, 75, 100)
-- **Polish**: Confetti burst animation when 100 votes reached
-
-### 2. Problem Submission Form
-
-#### Top 5 Interactivity Opportunities:
-1. **Smart form validation with inline feedback** - Real-time validation as user types
-2. **Character count with emotional states** - Counter shows encouragement vs warning
-3. **Category selection with visual preview** - Selected category shows icon and color theme
-4. **Auto-save indication** - Subtle notification that content is being preserved
-5. **Submit button state progression** - Button transforms through stages of submission
-
-#### Selected High-Impact Implementations (Top 3):
-
-**A. Intelligent Form Validation Flow**
-- **Visual Language**: Input borders shift color: Gray → Blue (focused) → Green (valid) → Red (error)
-- **Motion**: Error messages slide down with gentle bounce, success checkmarks fade in
-- **State Communication**: Icon states in input fields (loading → check → warning)
-- **Natural Movement**: Fields that need attention get subtle attention-drawing pulse
-- **Polish**: Smooth transitions between validation states prevent jarring changes
-
-**B. Encouraging Character Counter**
-- **Visual Language**: Counter changes color and adds motivational text based on length
-- **Motion**: Counter smoothly scales up when nearing limits, gentle bounce at milestones
-- **State Communication**: "Ottimo!" (0-50 chars) → "Perfetto!" (50-80) → "Quasi fatto!" (80-100)
-- **Natural Movement**: Green checkmark appears when optimal length reached
-- **Polish**: Counter position adjusts fluidly as content changes
-
-**C. Category Selection Enhancement**
-- **Visual Language**: Selected category card gains colored border and background tint
-- **Motion**: Categories scale slightly on hover, selected one stays elevated
-- **State Communication**: Category icon appears in form header when selected
-- **Natural Movement**: Smooth color wash across form matching selected category
-- **Polish**: Other categories fade slightly to emphasize selection
-
-### 3. Voting Interface & Results
-
-#### Top 5 Interactivity Opportunities:
-1. **Community voting visualization** - Show voting activity as it happens
-2. **Vote impact feedback** - Show how user's vote affects ranking/progress
-3. **Social sharing animations** - Engaging share button interactions
-4. **Milestone celebration effects** - Special animations at vote thresholds
-5. **User contribution tracking** - Visual representation of user's voting history
-
-#### Selected High-Impact Implementations (Top 3):
-
-**A. Live Community Voting Activity**
-- **Visual Language**: Small avatar indicators appear near vote count when others vote
-- **Motion**: New votes trigger ripple effect from vote button across card
-- **State Communication**: Recent voting activity counter: "3 persone hanno votato nell'ultima ora"
-- **Natural Movement**: Vote count increments with typewriter effect for large changes
-- **Polish**: Subtle glow effect around problem cards with recent activity
-
-**B. Milestone Achievement Celebrations**
-- **Visual Language**: Special badges and visual effects for 25, 50, 75, 100 vote milestones
-- **Motion**: Screen-wide confetti animation for 100-vote achievement
-- **State Communication**: Progress notification: "Solo 15 voti per iniziare lo sviluppo!"
-- **Natural Movement**: Achievement badge scales in with bounce effect
-- **Polish**: Haptic feedback on mobile devices for milestone moments
-
-**C. Personal Voting Impact Visualization**
-- **Visual Language**: User's voted problems highlighted with personal color accent
-- **Motion**: Timeline animation showing user's voting journey and impact
-- **State Communication**: "I tuoi voti hanno contribuito a 3 progetti in sviluppo"
-- **Natural Movement**: Smooth line animation connecting user's voted problems
-- **Polish**: Personal stats animate in sequence for satisfying discovery
-
-### 4. App Showcase & Premium Access
-
-#### Top 5 Interactivity Opportunities:
-1. **Premium unlock animations** - Satisfying transitions from locked to unlocked state
-2. **Feature comparison overlays** - Interactive before/after for premium features
-3. **App preview interactions** - Mini-demos within the catalog view
-4. **Access level indicators** - Clear visual distinction between access levels
-5. **Upgrade flow animations** - Smooth progression through premium signup
-
-#### Selected High-Impact Implementations (Top 3):
-
-**A. Premium Access Unlock Flow**
-- **Visual Language**: Lock icon transforms to key, then dissolves revealing premium content
-- **Motion**: Blur-to-clear transition on previously locked features (0.8s ease-out)
-- **State Communication**: "Accesso Premium Sbloccato!" notification with check animation
-- **Natural Movement**: Premium features slide in from right with staggered timing
-- **Polish**: Golden particle effects emphasize the premium unlock moment
-
-**B. Interactive Feature Comparison**
-- **Visual Language**: Split-screen overlay showing base vs premium capabilities
-- **Motion**: Smooth wipe transition between feature states on toggle
-- **State Communication**: Toggle switch with clear labels: "Base" ↔ "Premium"
-- **Natural Movement**: Feature cards flip horizontally to reveal premium versions
-- **Polish**: Subtle gradient background shift during comparison mode
-
-**C. App Demo Integration**
-- **Visual Language**: Miniature interactive previews within app cards
-- **Motion**: Apps zoom into full-screen demo mode with fluid scaling
-- **State Communication**: "Prova Interattiva" badge with play button styling
-- **Natural Movement**: Smooth transition from card to demo with breadcrumb return
-- **Polish**: Demo controls appear with slide-up animation and auto-hide
-
-### 5. User Profile & Activity Dashboard
-
-#### Top 5 Interactivity Opportunities:
-1. **Activity timeline with story progression** - User's journey visualized chronologically
-2. **Achievement system with gamification** - Badges and progress indicators
-3. **Statistics data visualization** - Interactive charts showing user impact
-4. **Contribution heatmap** - Calendar-style activity visualization
-5. **Profile customization tools** - Interactive editing with live preview
-
-#### Selected High-Impact Implementations (Top 3):
-
-**A. Personal Impact Visualization**
-- **Visual Language**: Interactive charts showing votes, proposals, and unlocked apps
-- **Motion**: Charts animate on load with staggered bar/line growth (1.2s total)
-- **State Communication**: Hover reveals detailed tooltips with contextual information
-- **Natural Movement**: Data points connect with smooth line animations
-- **Polish**: Color coordination with brand identity, subtle grid animations
-
-**B. Achievement Badge System**
-- **Visual Language**: Hexagonal badges with tier progression (Bronze → Silver → Gold)
-- **Motion**: New badges scale in with celebratory bounce and shine effect
-- **State Communication**: Progress rings show advancement toward next achievement
-- **Natural Movement**: Badge collection grid with smooth masonry layout adjustments
-- **Polish**: Hover effects reveal achievement criteria and unlock dates
-
-**C. Activity Timeline Storytelling**
-- **Visual Language**: Chronological feed with problem cards, vote indicators, and milestones
-- **Motion**: Timeline reveals progressively as user scrolls, with fade-in animations
-- **State Communication**: Clear timestamps and action descriptions for each activity
-- **Natural Movement**: Connected timeline with flowing line animation between events
-- **Polish**: Automatic grouping of related activities with expandable detail views
+1. **Strumenti Familiari e Accoglienti** - Ogni elemento interattivo si presenta come uno strumento di bottega riconoscibile, invitando al tocco con la naturalezza di un utensile ben levigato
+2. **Risposte Immediate del Maestro** - Come un artigiano esperto che annuisce approvando il vostro lavoro, l'interfaccia risponde immediatamente ad ogni gesto con feedback caloroso e rassicurante
+3. **Movimenti Fluidi da Bottega** - Ogni animazione richiama i gesti armoniosi dell'artigiano al lavoro: precisi, eleganti, mai affrettati
+4. **Gesti Naturali dell'Artigiano** - Le interazioni scorrono come i movimenti di chi conosce perfettamente i propri strumenti, rendendo tutto intuitivo e piacevole
+5. **Guida Costante del Maestro** - Come un artigiano esperto che vi sta sempre accanto, il sistema comunica chiaramente ogni stato e possibilità
 
 ---
 
-## Global Interaction Patterns
+## Analisi delle Interazioni per Ambiente di Bottega
 
-### Navigation & System-Wide Interactions
+### 1. Bacheca dei Problemi Comunitari (Il Tavolo Principale della Bottega)
 
-**Header Navigation**
-- **Hover States**: Menu items gain subtle background color with 0.2s transition
-- **Active States**: Current page indicator with sliding underline animation
-- **Mobile Menu**: Hamburger transforms to X with smooth line rotation (0.3s)
-- **Dropdown Menus**: Appear with scale-up from anchor point + fade-in
+#### Le 5 Opportunità di Interazione più Preziose:
+1. **Animazioni del contatore di consensi** - I numeri crescono come le mani che si alzano in una riunione di paese, con un rimbalzo gioioso
+2. **Trasformazioni delle schede al passaggio** - Come fogli di carta che si sollevano delicatamente per rivelare i dettagli, con l'eleganza di chi sfoglia un libro prezioso
+3. **Visualizzazione del progresso comunitario** - Barre dinamiche che mostrano quanto la comunità sia vicina ai 100 consensi necessari, come un termometro della solidarietà
+4. **Animazioni dei filtri categorici** - Transizioni fluide tra le categorie come un artigiano che riordina i suoi strumenti per tipologia
+5. **Cascata di condivisione sociale** - Le opzioni di condivisione si aprono a ventaglio come i petali di un fiore, invitando alla diffusione
 
-**Loading States**
-- **Global Loading**: Skeleton screens matching final content layout
-- **Button Loading**: Spinner replaces text with smooth transition
-- **Content Loading**: Progressive disclosure with shimmer effects
-- **Image Loading**: Blur-to-sharp transition as images load
+#### Implementazioni ad Alto Impatto Selezionate (Top 3):
 
-**Error & Success Feedback**
-- **Toast Notifications**: Slide in from top-right with gentle bounce
-- **Inline Messages**: Expand vertically with color-coded backgrounds
-- **Form Validation**: Real-time feedback with smooth color transitions
-- **System Status**: Persistent status bar for global system messages
+**A. Sistema di Animazione dei Consensi Comunitari**
+- **Linguaggio dell'Artigiano**: Il cuore si riempie di un calore dorato (vuoto → pieno) come il sorriso di approvazione del maestro
+- **Movimento della Bottega**: I numeri si girano verso l'alto con la grazia di chi volta una pagina (0.3s con elasticità naturale)
+- **Comunicazione del Maestro**: Feedback immediato che il vostro consenso è stato accolto, ancora prima della conferma dal "registro della comunità"
+- **Gesto Naturale**: Il cuore "batte" una volta al consenso con una delicata espansione (1.0 → 1.2 → 1.0) come un saluto affettuoso
+- **Tocco Finale**: Piccole scintille dorate emanano dal cuore alle tappe importanti (50, 75, 100 consensi) come la gioia condivisa del traguardo
 
-### Mobile-Specific Interactions
+**B. Sistema di Rivelazione Progressiva delle Schede**
+- **Linguaggio dell'Artigiano**: Le schede si espandono verticalmente rivelando contenuti aggiuntivi, come un artigiano che apre il suo cassetto segreto degli strumenti
+- **Movimento della Bottega**: 0.4s di transizione fluida con contenuti che appaiono in sequenza (100ms di scaglionamento) come una danza coordinata
+- **Comunicazione del Maestro**: La freccia indicatrice ruota di 180° (↓ → ↑) con la precisione di una bussola che trova il nord
+- **Gesto Naturale**: La scheda si solleva di 8px con un'ombra che si espande dolcemente, come un libro che si apre sul tavolo
+- **Tocco Finale**: Lo sfondo si sfoca leggermente durante l'espansione per mantenere l'attenzione, come quando il maestro indica un dettaglio importante
 
-**Touch Gestures**
-- **Swipe Actions**: Left swipe on problems reveals quick-vote option
-- **Pull-to-Refresh**: Custom animation with WikiGaiaLab logo as refresh indicator
-- **Long Press**: Context menus appear with haptic feedback and scale animation
-- **Pinch-to-Zoom**: Smooth scaling for problem detail images/content
+**C. Visualizzazione del Progresso dei Consensi**
+- **Linguaggio dell'Artigiano**: Barra di progresso orizzontale sotto il contatore con marcatori delle tappe, come un metro da sarto che misura il progresso
+- **Movimento della Bottega**: Il progresso si riempie fluidamente con accelerazione naturale (avvio veloce, rallentamento finale) come il versare di un liquido prezioso
+- **Comunicazione del Maestro**: Cambio di colore: Grigio → Azzurro → Verde mentre ci si avvicina ai 100 consensi, come un tramonto che si trasforma in alba
+- **Gesto Naturale**: Animazione pulsante alle tappe importanti (50, 75, 100) come il battito del cuore dell'intera comunità
+- **Tocco Finale**: Esplosione di coriandoli virtuali quando si raggiungono i 100 consensi, come una festa di paese per il traguardo raggiunto
 
-**Responsive Adaptations**
-- **Card Layouts**: Smooth transitions between grid configurations on orientation change
-- **Navigation**: Bottom tab bar on mobile with smooth icon transitions
-- **Form Fields**: Optimized spacing and sizing for thumb-friendly interaction
-- **Modal Dialogs**: Full-screen on mobile with slide-up presentation
+### 2. Modulo di Condivisione dei Problemi (Il Banco del Narratore)
+
+#### Le 5 Opportunità di Interazione più Preziose:
+1. **Validazione intelligente del racconto** - Feedback in tempo reale mentre la persona racconta il suo problema, come un maestro che annuisce durante l'ascolto
+2. **Contatore delle parole con stati emotivi** - Il contatore incoraggia e celebra, mostrando quanto sia utile quello che state condividendo
+3. **Selezione categoria con anteprima visiva** - Ogni categoria si illumina mostrando icona e tema colorato, come gli scaffali organizzati della bottega
+4. **Indicazione di salvataggio automatico** - Notifica discreta che il vostro racconto è al sicuro, come un artigiano che mette via il lavoro prezioso
+5. **Trasformazione progressiva del pulsante "Racconta"** - Il pulsante si evolve attraverso le fasi della condivisione come un seme che cresce
+
+#### Implementazioni ad Alto Impatto Selezionate (Top 3):
+
+**A. Flusso di Validazione Intelligente del Racconto**
+- **Linguaggio dell'Artigiano**: I bordi dei campi cambiano colore: Grigio → Azzurro (attivo) → Verde (valido) → Rosso (da sistemare), come le diverse sfumature di un materiale che prende forma
+- **Movimento della Bottega**: I messaggi di guida scendono con un leggero rimbalzo amichevole, i segni di spunta appaiono con dissolenza
+- **Comunicazione del Maestro**: Icone di stato nei campi (caricamento → spunta → attenzione) che comunicano come gesti del maestro
+- **Gesto Naturale**: I campi che necessitano attenzione ottengono una delicata pulsazione, come un richiamo gentile
+- **Tocco Finale**: Transizioni fluide tra stati di validazione evitano cambiamenti bruschi, mantenendo sempre la serenità
+
+**B. Contatore Incoraggiante delle Parole**
+- **Linguaggio dell'Artigiano**: Il contatore cambia colore e aggiunge testi motivazionali a seconda della lunghezza del racconto
+- **Movimento della Bottega**: Il contatore cresce dolcemente quando si avvicina ai limiti, rimbalza leggermente alle tappe importanti
+- **Comunicazione del Maestro**: "Perfetto!" (0-50 caratteri) → "Continua così!" (50-80) → "Quasi fatto!" (80-100) come incoraggiamenti del maestro
+- **Gesto Naturale**: Spunta verde quando si raggiunge la lunghezza ottimale, come un sorriso di approvazione
+- **Tocco Finale**: La posizione del contatore si adatta fluidamente mentre il contenuto cambia
+
+**C. Miglioramento della Selezione Categoria**
+- **Linguaggio dell'Artigiano**: La categoria selezionata ottiene un bordo colorato e sfondo sfumato, come quando si illumina lo strumento giusto nella bottega
+- **Movimento della Bottega**: Le categorie si ingrandiscono leggermente al passaggio, quella selezionata rimane sollevata
+- **Comunicazione del Maestro**: L'icona della categoria appare nell'intestazione del modulo quando selezionata
+- **Gesto Naturale**: Un'onda di colore attraversa il modulo abbinandosi alla categoria selezionata
+- **Tocco Finale**: Le altre categorie si attenuano leggermente per evidenziare la scelta
+
+
+### 3. Interfaccia dei Consensi e Risultati (La Piazza della Comunità)
+
+#### Le 5 Opportunità di Interazione più Preziose:
+1. **Visualizzazione dell'attività comunitaria dal vivo** - Mostrare l'attività dei consensi mentre accade, come vedere i vicini che si riuniscono in piazza
+2. **Feedback dell'impatto del vostro consenso** - Mostrare come il vostro voto influisce sulla classifica e sul progresso, come vedere l'effetto della vostra voce nella comunità
+3. **Animazioni di condivisione sociale** - Interazioni coinvolgenti per i pulsanti di condivisione, come passare la voce di casa in casa
+4. **Effetti di celebrazione delle tappe** - Animazioni speciali alle soglie di consenso, come feste di paese per ogni traguardo
+5. **Tracciamento dei contributi personali** - Rappresentazione visiva della storia dei vostri consensi, come un diario della partecipazione
+
+#### Implementazioni ad Alto Impatto Selezionate (Top 3):
+
+**A. Attività Comunitaria dal Vivo**
+- **Linguaggio dell'Artigiano**: Piccoli indicatori di avatar appaiono vicino al contatore dei consensi quando altri votano, come volti che si affacciano alle finestre
+- **Movimento della Bottega**: I nuovi consensi innescano un effetto ondulatorio dal pulsante di voto attraverso la scheda, come le increspature di un sasso nell'acqua
+- **Comunicazione del Maestro**: Contatore di attività recente: "3 vicini hanno espresso il loro consenso nell'ultima ora"
+- **Gesto Naturale**: Il contatore dei consensi aumenta con effetto macchina da scrivere per grandi cambiamenti, come notizie che si diffondono
+- **Tocco Finale**: Effetto bagliore sottile attorno alle schede problemi con attività recente, come la luce che filtra dalle case abitate
+
+**B. Celebrazioni delle Tappe Raggiunte**
+- **Linguaggio dell'Artigiano**: Distintivi speciali ed effetti visivi per le tappe di 25, 50, 75, 100 consensi, come medaglie per i traguardi comunitari
+- **Movimento della Bottega**: Animazione di coriandoli a schermo intero per il raggiungimento dei 100 consensi, come una festa di paese
+- **Comunicazione del Maestro**: Notifica di progresso: "Solo 15 consensi per iniziare lo sviluppo! La comunità è quasi pronta!"
+- **Gesto Naturale**: Il distintivo di achievement si ingrandisce con effetto rimbalzo, come un applauso che si alza dalla folla
+- **Tocco Finale**: Feedback tattile sui dispositivi mobili per i momenti delle tappe, come una pacca sulla spalla di congratulazioni
+
+**C. Visualizzazione dell'Impatto Personale**
+- **Linguaggio dell'Artigiano**: I problemi per cui avete votato sono evidenziati con un accento di colore personale, come firmare con la propria penna
+- **Movimento della Bottega**: Animazione della timeline che mostra il vostro percorso di voto e l'impatto, come ripercorrere i passi fatti nella comunità
+- **Comunicazione del Maestro**: "I vostri consensi hanno contribuito a 3 progetti in sviluppo - che belle radici avete piantato!"
+- **Gesto Naturale**: Animazione di linea fluida che collega i problemi per cui avete votato, come un filo che unisce le vostre scelte
+- **Tocco Finale**: Le statistiche personali si animano in sequenza per una scoperta soddisfacente, come aprire i capitoli del proprio diario
+
+### 4. Vetrina delle Applicazioni e Accesso Artigianale (La Bottega degli Strumenti Speciali)
+
+#### Le 5 Opportunità di Interazione più Preziose:
+1. **Animazioni di sblocco degli strumenti premium** - Transizioni soddisfacenti da strumento bloccato a disponibile, come aprire un baule di attrezzi preziosi
+2. **Sovrapposizioni di confronto delle caratteristiche** - Prima/dopo interattivo per le funzionalità premium, come mostrare la differenza tra un attrezzo base e uno da maestro
+3. **Interazioni di anteprima delle app** - Mini-dimostrazioni dentro la vista del catalogo, come provare uno strumento prima di adottarlo
+4. **Indicatori dei livelli di accesso** - Distinzione visiva chiara tra livelli di accesso, come etichette sui cassetti degli attrezzi
+5. **Animazioni del flusso di upgrade** - Progressione fluida attraverso l'iscrizione premium, come il percorso per diventare apprendisti avanzati
+
+#### Implementazioni ad Alto Impatto Selezionate (Top 3):
+
+**A. Flusso di Sblocco dell'Accesso Artigianale**
+- **Linguaggio dell'Artigiano**: L'icona del lucchetto si trasforma in chiave, poi si dissolve rivelando il contenuto premium, come aprire uno scrigno di segreti artigianali
+- **Movimento della Bottega**: Transizione da sfocato a nitido sulle funzionalità precedentemente bloccate (0.8s con facilità naturale)
+- **Comunicazione del Maestro**: Notifica "Benvenuti nella Bottega Artigianale!" con animazione di spunta dorata
+- **Gesto Naturale**: Le funzionalità premium scivolano da destra con tempistiche scaglionate, come strumenti che prendono il loro posto nel banco di lavoro
+- **Tocco Finale**: Effetti di particelle dorate enfatizzano il momento dello sblocco artigianale, come polvere magica che rivela tesori nascosti
+
+**B. Confronto Interattivo delle Caratteristiche**
+- **Linguaggio dell'Artigiano**: Sovrapposizione a schermo diviso che mostra le capacità base vs artigianali, come confrontare un martello semplice con uno da maestro
+- **Movimento della Bottega**: Transizione scorrevole tra gli stati delle funzionalità sul toggle, come girare un pezzo per mostrare entrambi i lati
+- **Comunicazione del Maestro**: Interruttore toggle con etichette chiare: "Apprendista" ↔ "Maestro Artigiano"
+- **Gesto Naturale**: Le schede delle funzionalità si girano orizzontalmente per rivelare le versioni artigianali, come voltare una pagina del manuale del maestro
+- **Tocco Finale**: Sottile spostamento di gradiente dello sfondo durante la modalità confronto, come la luce che cambia nel laboratorio
+
+**C. Integrazione delle Dimostrazioni delle App**
+- **Linguaggio dell'Artigiano**: Anteprime interattive in miniatura dentro le schede delle app, come modellini funzionanti degli strumenti
+- **Movimento della Bottega**: Le app si ingrandiscono in modalità demo a schermo intero con scalatura fluida, come prendere uno strumento dal ripiano per esaminarlo
+- **Comunicazione del Maestro**: Distintivo "Prova con le Tue Mani" con stile pulsante play, invitando all'esperienza diretta
+- **Gesto Naturale**: Transizione fluida dalla scheda alla demo con ritorno a breadcrumb, come seguire il maestro al banco di prova
+- **Tocco Finale**: I controlli demo appaiono con animazione slide-up e si nascondono automaticamente, come strumenti che appaiono quando servono
+
+### 5. Profilo Personale e Diario dell'Apprendista (Il Vostro Quaderno di Bottega)
+
+#### Le 5 Opportunità di Interazione più Preziose:
+1. **Timeline delle attività con progressione narrativa** - Il vostro percorso visualizzato cronologicamente, come le pagine del diario di un artigiano
+2. **Sistema di riconoscimenti con elementi di crescita** - Distintivi e indicatori di progresso, come le medaglie guadagnate nell'apprendistato
+3. **Visualizzazione dei dati statistici** - Grafici interattivi che mostrano il vostro impatto, come misurare i frutti del vostro lavoro
+4. **Mappa termica dei contributi** - Visualizzazione dell'attività in stile calendario, come un registro delle giornate produttive
+5. **Strumenti di personalizzazione del profilo** - Editing interattivo con anteprima dal vivo, come decorare il proprio banco di lavoro
+
+#### Implementazioni ad Alto Impatto Selezionate (Top 3):
+
+**A. Visualizzazione dell'Impatto Personale**
+- **Linguaggio dell'Artigiano**: Grafici interattivi che mostrano consensi, proposte e app sbloccate, come misurare i progressi dell'apprendistato
+- **Movimento della Bottega**: I grafici si animano al caricamento con crescita scaglionata di barre/linee (1.2s totali), come guardare crescere una pianta
+- **Comunicazione del Maestro**: Il passaggio del mouse rivela tooltip dettagliati con informazioni contestuali, come note al margine del maestro
+- **Gesto Naturale**: I punti dati si collegano con animazioni di linea fluide, come tracciare il percorso del vostro apprendistato
+- **Tocco Finale**: Coordinazione dei colori con l'identità della bottega, animazioni sottili della griglia come pagine che si voltano
+
+**B. Sistema dei Distintivi di Riconoscimento**
+- **Linguaggio dell'Artigiano**: Distintivi esagonali con progressione di livello (Bronzo → Argento → Oro), come le medaglie dell'artigianato tradizionale
+- **Movimento della Bottega**: I nuovi distintivi si ingrandiscono con rimbalzo celebrativo e effetto brillantezza, come il luccicare di una medaglia appena forgiata
+- **Comunicazione del Maestro**: Anelli di progresso mostrano l'avanzamento verso il prossimo riconoscimento, come segni su un righello della crescita
+- **Gesto Naturale**: Griglia di raccolta distintivi con aggiustamenti fluidi del layout masonry, come organizzare i trofei nella propria bacheca
+- **Tocco Finale**: Effetti hover rivelano criteri di achievement e date di sblocco, come leggere la storia dietro ogni medaglia
+
+**C. Narrazione della Timeline delle Attività**
+- **Linguaggio dell'Artigiano**: Feed cronologico con schede problemi, indicatori di voto e tappe, come sfogliare il diario del proprio apprendistato
+- **Movimento della Bottega**: La timeline si rivela progressivamente mentre si scorre, con animazioni di fade-in come pagine che emergono dalla memoria
+- **Comunicazione del Maestro**: Timestamp chiari e descrizioni delle azioni per ogni attività, come annotazioni precise di un maestro meticoloso
+- **Gesto Naturale**: Timeline connessa con animazione di linea fluida tra eventi, come seguire il filo della propria storia
+- **Tocco Finale**: Raggruppamento automatico delle attività correlate con viste dettagliate espandibili, come capitoli che si aprono nel libro della memoria
 
 ---
 
-## Technical Implementation Notes
+## Modelli di Interazione Globali della Bottega
 
-### Animation Performance
-- Use `transform` and `opacity` properties for optimal performance
-- Implement `will-change` property on elements before animation starts
-- Leverage CSS `transform3d()` for hardware acceleration
-- Consider `prefers-reduced-motion` for accessibility compliance
+### Navigazione e Interazioni Generali del Sistema
 
-### State Management
-- Optimistic UI updates for immediate feedback before server confirmation
-- Graceful rollback animations for failed operations
-- Persistent state across navigation to maintain user context
-- Real-time synchronization with visual indicators for connected state
+**Navigazione dell'Intestazione (La Bussola della Bottega)**
+- **Stati di Passaggio**: Le voci del menu acquisiscono un colore di sfondo sottile con transizione di 0.2s, come candele che si accendono al vostro passaggio
+- **Stati Attivi**: Indicatore della pagina corrente con animazione di sottolineatura scorrevole, come un segnalibro che si muove nel vostro quaderno
+- **Menu Mobile**: L'hamburger si trasforma in X con rotazione fluida delle linee (0.3s), come aprire e chiudere un portone con eleganza
+- **Menu a Discesa**: Appaiono con ingrandimento dal punto di ancoraggio + dissolvenza, come fiori che sbocciano da un ramo
 
-### Accessibility Considerations
-- Respect `prefers-reduced-motion` system setting
-- Ensure all interactive elements have focus states with 3:1 contrast ratio
-- Provide alternative navigation methods for gesture-based interactions
-- Include ARIA labels for screen readers on animated state changes
+**Stati di Caricamento (I Momenti di Attesa Paziente)**
+- **Caricamento Globale**: Schermi scheletro che corrispondono al layout del contenuto finale, come il disegno preparatorio di un'opera
+- **Caricamento Pulsante**: Lo spinner sostituisce il testo con transizione fluida, come una ruota del vasaio che gira mentre lavora
+- **Caricamento Contenuto**: Rivelazione progressiva con effetti shimmer, come la luce dell'alba che svela gradualmente il paesaggio
+- **Caricamento Immagini**: Transizione da sfocato a nitido mentre le immagini si caricano, come guardare attraverso un vetro che si schiarisce
 
----
+**Feedback di Errore e Successo (I Consigli del Maestro)**
+- **Notifiche Toast**: Scivolano dall'alto-destra con leggero rimbalzo, come un messaggero gentile che porta notizie
+- **Messaggi Inline**: Si espandono verticalmente con sfondi codificati per colore, come pergamene che si srotolano per rivelare il messaggio
+- **Validazione Moduli**: Feedback in tempo reale con transizioni fluide di colore, come l'inchiostro che cambia tonalità mentre scrivete
+- **Stato del Sistema**: Barra di stato persistente per messaggi di sistema globali, come un cartello sempre visibile nella bottega
 
-## Success Metrics & Validation
+### Interazioni Specifiche per Dispositivi Tascabili
 
-### User Engagement Indicators
-- **Voting Completion Rate**: Percentage of users who complete voting after starting
-- **Form Submission Success**: Completion rate for problem submission forms
-- **Feature Discovery**: Usage rates of interactive features vs. static alternatives
-- **Session Duration**: Time spent on pages with enhanced interactivity
+**Gesti Tattili (Il Tocco dell'Artigiano)**
+- **Azioni di Scorrimento**: Scorrimento a sinistra sui problemi rivela l'opzione di consenso rapido, come sfogliare le pagine di un quaderno per trovare quella giusta
+- **Tira-per-Aggiornare**: Animazione personalizzata con il logo WikiGaiaLab come indicatore di aggiornamento, come attingere acqua fresca dal pozzo
+- **Pressione Lunga**: I menu contestuali appaiono con feedback tattile e animazione di scala, come premere delicatamente su un sigillo di cera per imprimerlo
+- **Pizzica-per-Ingrandire**: Scaling fluido per immagini/contenuto dei dettagli dei problemi, come usare una lente d'ingrandimento per esaminare i dettagli
 
-### Technical Performance Metrics
-- **Animation Frame Rate**: Maintain 60fps during all transitions
-- **First Contentful Paint**: Interactive elements don't delay initial page load
-- **Time to Interactive**: All micro-interactions responsive within 100ms
-- **Accessibility Compliance**: 100% WCAG AA compliance for interactive elements
-
-### A/B Testing Opportunities
-- Compare engagement with and without real-time vote animations
-- Test different milestone celebration intensities
-- Evaluate form completion rates with enhanced vs. basic validation
-- Measure app demo interaction rates and conversion to usage
+**Adattamenti Responsivi (La Bottega che si Adatta)**
+- **Layout delle Schede**: Transizioni fluide tra configurazioni della griglia al cambio di orientamento, come riorganizzare gli strumenti sul banco di lavoro
+- **Navigazione**: Barra delle schede in basso su mobile con transizioni fluide delle icone, come una cassetta degli attrezzi portatile sempre a portata di mano
+- **Campi Modulo**: Spaziatura e dimensionamento ottimizzati per interazione amica del pollice, come strumenti ergonomici pensati per le vostre mani
+- **Finestre Modali**: Schermo intero su mobile con presentazione slide-up, come aprire un grande libro di consultazione sul tavolo
 
 ---
 
-*This interactivity specification ensures WikiGaiaLab provides a delightful, responsive user experience that encourages community participation through thoughtful motion design and immediate feedback systems.*
+## Note Tecniche per l'Implementazione della Bottega
+
+### Prestazioni delle Animazioni (L'Arte del Movimento Fluido)
+- Utilizzare le proprietà `transform` e `opacity` per prestazioni ottimali, come scegliere gli strumenti giusti per ogni lavoro
+- Implementare la proprietà `will-change` sugli elementi prima dell'inizio dell'animazione, come preparare il banco di lavoro prima di iniziare
+- Sfruttare CSS `transform3d()` per l'accelerazione hardware, come usare strumenti elettrici per lavori pesanti
+- Considerare `prefers-reduced-motion` per la compliance di accessibilità, come rispettare le preferenze di ogni artigiano nella bottega
+
+### Gestione dello Stato (Il Registro della Bottega)
+- Aggiornamenti UI ottimistici per feedback immediato prima della conferma del server, come mostrare fiducia nel lavoro prima della verifica finale
+- Animazioni di rollback eleganti per operazioni fallite, come correggere un errore con grazia e senza perdere il ritmo
+- Stato persistente attraverso la navigazione per mantenere il contesto dell'utente, come tenere il segno sul libro mentre si lavora
+- Sincronizzazione in tempo reale con indicatori visivi per lo stato connesso, come un orologio che batte il tempo della bottega
+
+### Considerazioni sull'Accessibilità (Una Bottega Accogliente per Tutti)
+- Rispettare l'impostazione di sistema `prefers-reduced-motion`, come adattarsi al ritmo di lavoro di ogni artigiano
+- Assicurarsi che tutti gli elementi interattivi abbiano stati di focus con rapporto di contrasto 3:1, come etichette chiare su ogni strumento
+- Fornire metodi di navigazione alternativi per interazioni basate su gesti, come avere sempre più di un modo per raggiungere ogni strumento
+- Includere etichette ARIA per screen reader sui cambiamenti di stato animati, come descrivere ad alta voce ogni movimento della bottega
+
+---
+
+## Metriche di Successo e Validazione della Bottega
+
+### Indicatori di Coinvolgimento della Comunità (Il Termometro della Partecipazione)
+- **Tasso di Completamento dei Consensi**: Percentuale di persone che completano il voto dopo averlo iniziato, come misurare quanti artigiani finiscono il lavoro che iniziano
+- **Successo nell'Invio dei Moduli**: Tasso di completamento per i moduli di condivisione dei problemi, come contare quante storie vengono raccontate fino alla fine
+- **Scoperta delle Funzionalità**: Tassi di utilizzo delle funzionalità interattive vs. alternative statiche, come vedere se gli artigiani preferiscono gli strumenti nuovi o quelli tradizionali
+- **Durata delle Sessioni**: Tempo trascorso sulle pagine con interattività migliorata, come misurare quanto tempo la gente rimane volentieri nella bottega
+
+### Metriche delle Prestazioni Tecniche (La Qualità del Lavoro Artigianale)
+- **Frame Rate delle Animazioni**: Mantenere 60fps durante tutte le transizioni, come garantire che ogni movimento sia fluido come quello di un maestro esperto
+- **First Contentful Paint**: Gli elementi interattivi non ritardano il caricamento iniziale della pagina, come avere gli strumenti pronti prima che l'artigiano arrivi
+- **Time to Interactive**: Tutte le micro-interazioni rispondono entro 100ms, come la reattività immediata di uno strumento ben calibrato
+- **Compliance Accessibilità**: 100% conformità WCAG AA per elementi interattivi, come assicurarsi che la bottega sia accogliente per ogni tipo di artigiano
+
+### Opportunità di Test A/B (Esperimenti nella Bottega)
+- Confrontare il coinvolgimento con e senza animazioni di voto in tempo reale, come provare due modi diversi di mostrare l'approvazione
+- Testare diverse intensità delle celebrazioni delle tappe, come sperimentare con feste più o meno vivaci per i traguardi
+- Valutare i tassi di completamento dei moduli con validazione migliorata vs. base, come confrontare due stili di guida del maestro
+- Misurare i tassi di interazione delle demo delle app e la conversione all'uso, come vedere se le dimostrazioni portano all'adozione degli strumenti
+
+---
+
+*Questa specifica delle interazioni assicura che WikiGaiaLab fornisca un'esperienza utente deliziosa e reattiva che incoraggia la partecipazione comunitaria attraverso un design del movimento pensato con cura e sistemi di feedback immediati, proprio come una bottega artigianale dove ogni gesto è un invito a partecipare e ogni interazione è un momento di crescita condivisa.*

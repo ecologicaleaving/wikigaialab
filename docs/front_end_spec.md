@@ -1,36 +1,39 @@
-# WikiGaiaLab UI/UX Specification
+# WikiGaiaLab - Specifica della Bottega Digitale
+*L'officina di quartiere dove l'AI aiuta la comunità*
 
-## Introduction
+## Benvenuti nella Nostra Bottega
 
-This document defines the user experience goals, information architecture, user flows, and visual design specifications for WikiGaiaLab's user interface. It serves as the foundation for visual design and frontend development, ensuring a cohesive and user-centered experience.
+Questo documento descrive come trasformare WikiGaiaLab in una bottega digitale accogliente dove ogni vicino di casa può portare i propri problemi quotidiani e trovare aiuto dalla comunità. Come in una vera bottega artigiana, qui il maestro (l'AI) mette i suoi strumenti al servizio delle persone semplici, creando un ambiente dove tutti si sentono a casa.
 
-### Overall UX Goals & Principles
+### La Filosofia della Nostra Bottega
 
-#### Target User Personas
+#### Chi Frequenta la Nostra Bottega
 
-**Community Members:** Non-technical users who want to propose problems and vote on solutions they care about. They value simplicity, clear communication, and feeling heard by the community.
+**La Mamma del Quartiere (Maria, 42 anni):** Organizza eventi per la scuola, coordina i gruppi WhatsApp del condominio, ha sempre mille cose da fare ma poca confidenza con la tecnologia. Viene in bottega quando ha bisogno di aiuto per organizzare la festa di compleanno di suo figlio o creare un volantino per il mercatino.
 
-**Active Contributors:** Engaged users who regularly propose problems and vote. They need efficient workflows, progress tracking, and recognition for their participation.
+**Il Pensionato Curioso (Giuseppe, 67 anni):** Ex operaio, ora dedica tempo al volontariato e ai suoi hobby. Sa usare il telefono ma non si fida dei "computer complicati". In bottega trova un ambiente familiare dove può chiedere aiuto per digitalizzare le foto del circolo o organizzare le attività dell'orto condiviso.
 
-**Solution Consumers:** Users who primarily use the developed apps. They want easy access to premium features and clear value from their community participation.
+**La Studentessa Impegnata (Sofia, 23 anni):** Studia e lavora part-time, organizza eventi per l'associazione studentesca. È tecnologica ma non ha tempo per imparare strumenti complessi. Viene in bottega per soluzioni rapide: creare sondaggi, gestire liste partecipanti, automatizzare cose noiose.
 
-**Administrators:** Team members who moderate content, manage problems, and monitor platform health. They need comprehensive tools and clear oversight capabilities.
+**Il Vicino di Casa Generoso (Marco, 35 anni):** Papà che lavora da casa, sempre disponibile ad aiutare i vicini. Non è un tecnico ma sa arrangiarsi. In bottega condivide i suoi piccoli problemi risolti e aiuta altri genitori con questioni simili.
 
-#### Usability Goals
+**Il Maestro Artigiano (Sistema AI):** L'intelligenza artificiale della bottega, presentata come un vecchio artigiano saggio che conosce tutti i trucchi del mestiere. Non è un robot freddo, ma un mentore paziente che guida ogni persona verso la soluzione giusta per lei.
 
-- **Immediate comprehension:** New users understand the concept within 30 seconds of landing
-- **Effortless participation:** Voting takes one click with immediate visual feedback
-- **Intuitive problem submission:** Proposing problems feels natural and guided
-- **Clear value proposition:** Users understand how voting unlocks premium features
-- **Accessible to all:** Italian interface with WCAG AA compliance for inclusive participation
+#### Come Vogliamo che si Sentano i Nostri Ospiti
 
-#### Design Principles
+- **"Mi sento a casa":** Chi entra per la prima volta capisce subito che questo è un posto sicuro dove può chiedere aiuto senza giudizi
+- **"Posso farcela anch'io":** Anche chi non è pratico di tecnologia riesce a esprimere il suo sostegno con un semplice gesto
+- **"Finalmente qualcuno mi capisce":** Raccontare il proprio problema quotidiano è semplice come parlare con un vicino di casa
+- **"Ecco cosa ci guadagno":** È chiaro che aiutando gli altri, ricevo aiuto anch'io - come in una vera comunità di quartiere
+- **"Tutti sono benvenuti":** L'ambiente è inclusivo e parla la lingua del cuore, accessibile a ogni tipo di persona
 
-1. **Semplicit� Elegante** - Clean, uncluttered interfaces that make complex community dynamics feel simple
-2. **Immediatezza Visiva** - Real-time feedback and visual changes that make every interaction satisfying
-3. **Coinvolgimento Emotivo** - Design that creates emotional connection to community problems and solutions
-4. **Accessibilit� Universale** - Inclusive design that welcomes all members of the community
-5. **Crescita Guidata** - Progressive disclosure that helps users discover more advanced features naturally
+#### I Principi della Nostra Bottega
+
+1. **Calore Artigianale** - Ogni schermata accoglie come l'ingresso di una bottega familiare, dove ogni dettaglio è pensato per far sentire a proprio agio
+2. **Gesti che Parlano** - Ogni click, ogni tocco risponde immediatamente come quando il maestro artigiano annuisce alle tue parole
+3. **Cuore di Quartiere** - I problemi quotidiani delle persone diventano il centro dell'esperienza, come le chiacchiere al banco della bottega
+4. **Porte Sempre Aperte** - Nonna, studente, mamma, pensionato: tutti trovano il loro posto e il loro modo di partecipare
+5. **Maestria Paziente** - Come un vero artigiano insegna gradualmente, così l'interfaccia svela le sue possibilità passo dopo passo
 
 ### Change Log
 
@@ -38,344 +41,366 @@ This document defines the user experience goals, information architecture, user 
 |------|---------|-------------|--------|
 | 17/07/2025 | 1.0 | Initial UI/UX specification | Sally (UX Expert) |
 
-## Information Architecture (IA)
+## La Mappa della Nostra Bottega
+*Come è organizzato il nostro spazio di lavoro comunitario*
 
-### Site Map / Screen Inventory
+### Gli Spazi della Bottega
 
 ```mermaid
 graph TD
-    A[Homepage] --> B[Dashboard Utente]
-    A --> C[Dashboard Problemi]
-    A --> D[Catalogo App]
-    A --> E[Profilo Utente]
-    A --> F[Login/Registrazione]
+    A["🏠 L'Ingresso<br/>(Homepage)"] --> B["👤 Il Mio Angolo<br/>(Dashboard Personale)"]
+    A --> C["💬 La Bacheca dei Problemi<br/>(Stanza delle Richieste)"]
+    A --> D["🔧 Gli Strumenti del Maestro<br/>(Catalogo Soluzioni)"]
+    A --> E["📋 Il Mio Quaderno<br/>(Profilo Personale)"]
+    A --> F["🚪 Porta d'Ingresso<br/>(Registrazione)"]
     
-    B --> B1[Statistiche Personali]
-    B --> B2[Attivit� Recente]
-    B --> B3[Azioni Rapide]
+    B --> B1["📊 I Miei Contributi"]
+    B --> B2["📰 Ultime Novità"]
+    B --> B3["⚡ Aiuto Veloce"]
     
-    C --> C1[Proponi Problema]
-    C --> C2[Dettaglio Problema]
-    C --> C3[Filtri e Ricerca]
+    C --> C1["✍️ Racconta il Tuo Problema"]
+    C --> C2["📖 Storia Completa"]
+    C --> C3["🔍 Trova quello che Cerchi"]
     
-    D --> D1[Pagina App Specifica]
-    D --> D2[Accesso Premium]
-    D --> D3[Volantino Generator]
+    D --> D1["🛠️ Strumento Specifico"]
+    D --> D2["⭐ Accesso Speciale"]
+    D --> D3["📄 Crea Volantini"]
     
-    E --> E1[I Miei Problemi]
-    E --> E2[I Miei Voti]
-    E --> E3[Le Mie App]
-    E --> E4[Impostazioni]
+    E --> E1["❓ I Miei Problemi"]
+    E --> E2["❤️ I Miei Sostegni"]
+    E --> E3["🔧 I Miei Strumenti"]
+    E --> E4["⚙️ Preferenze"]
     
-    G[Admin Dashboard] --> G1[Gestione Problemi]
-    G[Admin Dashboard] --> G2[Gestione Utenti]
-    G[Admin Dashboard] --> G3[Statistiche Piattaforma]
-    G[Admin Dashboard] --> G4[Configurazione]
+    G["👨‍🔧 Banco del Maestro<br/>(Area Amministrativa)"] --> G1["📝 Cura dei Problemi"]
+    G["👨‍🔧 Banco del Maestro<br/>(Area Amministrativa)"] --> G2["👥 Cura della Comunità"]
+    G["👨‍🔧 Banco del Maestro<br/>(Area Amministrativa)"] --> G3["📈 Salute della Bottega"]
+    G["👨‍🔧 Banco del Maestro<br/>(Area Amministrativa)"] --> G4["🔧 Strumenti del Mestiere"]
 ```
 
-### Navigation Structure
+### Come ci si Muove nella Bottega
 
-**Primary Navigation:** Fixed header with WikiGaiaLab logo, main sections (Problemi, Le Mie App, Profilo), and user menu
+**Il Banco Principale:** Una mensola sempre visibile con il nome della bottega, gli spazi principali (La Bacheca, I Miei Strumenti, Il Mio Quaderno) e il saluto personale
 
-**Secondary Navigation:** Contextual sidebar filters in problem dashboard, breadcrumbs in problem detail pages, category tabs in app catalog
+**Le Indicazioni del Maestro:** Suggerimenti contestuali che appaiono quando ne hai bisogno, come cartellini che spiegano dove trovare cosa, etichette sui cassetti degli strumenti
 
-**Breadcrumb Strategy:** Clear path indication for nested content, especially problem categories and app sections
+**Il Filo d'Arianna:** Tracce chiare di dove sei stato, soprattutto quando esplori i problemi per categoria o scopri nuovi strumenti, come le briciole di pane nelle fiabe
 
-## User Flows
+## I Percorsi nella Bottega
+*Come accompagniamo ogni persona nel suo viaggio*
 
-### Flow 1: New User Onboarding
+### Percorso 1: Il Primo Giorno di Bottega
 
-**User Goal:** Understand WikiGaiaLab concept and make first vote
+**Il Desiderio:** Capire se questo posto può davvero aiutarmi con i miei problemi quotidiani
 
-**Entry Points:** Homepage, social media links, word-of-mouth referrals
+**Come Arrivano:** Un vicino ne ha parlato, hanno visto un post sui social, o hanno sentito parlare al bar del quartiere
 
-**Success Criteria:** User completes registration and casts first vote within 5 minutes
+**Il Successo:** La persona si sente accolta, capisce come funziona e dà il suo primo sostegno a un problema che le sta a cuore
 
-#### Flow Diagram
+#### Il Viaggio Passo per Passo
 
 ```mermaid
 graph TD
-    A[Land on Homepage] --> B[Click "Entra"]
-    B --> C[Google OAuth Login]
-    C --> D[Dashboard Problemi]
-    D --> E[Browse Problems]
-    E --> F[Click Heart to Vote]
-    F --> G[Success Animation]
-    G --> H[Real-time Counter Update]
-    H --> I[Discover More Problems]
+    A["🏠 Busso alla Porta<br/>(Arrivo sulla Homepage)"] --> B["🙋 'Ciao, posso entrare?'<br/>(Click Entra)"]
+    B --> C["🔑 Mi Presento<br/>(Login con Google)"]
+    C --> D["👀 Guardo in Giro<br/>(Vedo la Bacheca)"]
+    D --> E["📚 Leggo le Storie<br/>(Scopro i Problemi)"]
+    E --> F["❤️ 'Anch'io la penso così!'<br/>(Do il Mio Cuore)"]
+    F --> G["✨ Il Maestro Sorride<br/>(Animazione di Ringraziamento)"]
+    G --> H["📊 Vedo Crescere l'Interesse<br/>(Contatore che Sale)"]
+    H --> I["🔍 'Cosa altro posso aiutare?'<br/>(Scopro Altri Problemi)"]
+```
+
+#### Quando le Cose Non Vanno Come Previsto:
+- **Il Maestro non mi riconosce** (Login fallito) – "Ops, proviamo di nuovo insieme. Magari è solo la connessione che fa i capricci."
+- **La bacheca è vuota** – "Benvenuto! Sei tra i primi ad arrivare. Che bello avere pionieri come te!"
+- **Clicco due volte per l'emozione** – Il sistema capisce e non conta doppio: "Ho già sentito il tuo cuore!"
+- **Internet va e viene** – "Sembra che ci siano problemi di connessione. Il maestro aspetta pazientemente."
+
+**L'Anima del Momento:** Il primo sostegno deve essere magico, come quando da bambini ricevevi il primo "bravo" dal nonno
+
+### Percorso 2: Racconto il Mio Problema
+
+**Il Desiderio:** Ho un problema quotidiano e voglio vedere se anche altri lo sentono come me
+
+**Come Inizia:** Vedo il pulsante "Racconta", dalla mia pagina personale, o perché un amico mi ha detto "dovresti proprio proporlo lì"
+
+**Il Successo:** Il mio problema è pubblicato, altri possono vederlo, e io posso seguire chi lo sostiene
+
+#### Il Mio Viaggio per Raccontare
+
+```mermaid
+graph TD
+    A["💬 'Ho un problema!'<br/>(Click Racconta)"] --> B["📋 Il Quaderno del Maestro<br/>(Pagina del Racconto)"]
+    B --> C["✍️ Scrivo la Mia Storia<br/>(Compilo i Campi)"]
+    C --> D["🟷️ 'Di che tipo è?'<br/>(Scelgo la Categoria)"]
+    D --> E["👀 'Ecco come si vedrà'<br/>(Anteprima)"]
+    E --> F["🚀 'Condividi con Tutti!'<br/>(Invio)"]
+    F --> G["🔍 Il Maestro Controlla<br/>(Validazione)"]
+    G --> H["🎉 'Benvenuto nella Bacheca!'<br/>(Pagina di Successo)"]
+    H --> I["❤️ Il Primo Cuore<br/>(Voto Automatico)"]
+    I --> J["📢 'Dillo agli Amici!'<br/>(Opzioni Condivisione)"]
 ```
 
 #### Edge Cases & Error Handling:
-- OAuth failure � Clear error message with retry option
-- No problems visible � Welcome message with explanation
-- Double-click on vote � Prevent with disabled state
-- Network error � Offline indicator with retry
-
-**Notes:** Critical that first vote experience is delightful and creates immediate engagement
-
-### Flow 2: Problem Proposal
-
-**User Goal:** Submit new problem for community voting
-
-**Entry Points:** Dashboard CTA, user profile, direct navigation
-
-**Success Criteria:** Problem published with clear confirmation and tracking info
-
-#### Flow Diagram
-
-```mermaid
-graph TD
-    A[Click "Proponi Problema"] --> B[Form Page]
-    B --> C[Fill Required Fields]
-    C --> D[Select Category]
-    D --> E[Preview Problem]
-    E --> F[Submit]
-    F --> G[Validation]
-    G --> H[Success Page]
-    H --> I[Auto-vote for Own Problem]
-    I --> J[Share Options]
-```
-
-#### Edge Cases & Error Handling:
-- Validation errors � Inline messages with clear guidance
-- Duplicate detection � Suggest similar problems
-- Save draft � Auto-save with recovery option
-- Category unclear � Help text with examples
+- Validation errors � Inline messages with clear guidance
+- Duplicate detection � Suggest similar problems
+- Save draft � Auto-save with recovery option
+- Category unclear � Help text with examples
 
 **Notes:** Form should feel conversational, not bureaucratic
 
-### Flow 3: App Access and Premium Features
+### Percorso 3: Uso gli Strumenti del Maestro
 
-**User Goal:** Access premium features in developed apps
+**Il Desiderio:** Voglio usare gli strumenti che la bottega ha creato per risolvere i problemi come il mio
 
-**Entry Points:** App catalog, problem success notification, profile dashboard
+**Come Inizia:** Vedo gli strumenti disponibili, ricevo una notifica che qualcosa è pronto, o li scopro nella mia pagina personale
 
-**Success Criteria:** User accesses premium features or understands upgrade path
+**Il Successo:** Riesco ad usare lo strumento che mi serve, oppure capisco cosa devo fare per ottenerlo
 
-#### Flow Diagram
+#### Il Percorso verso gli Strumenti
 
 ```mermaid
 graph TD
-    A[Click App Card] --> B[Check Voting History]
-    B --> C{Voted for Problem?}
-    C -->|Yes| D[Full Premium Access]
-    C -->|No| E[Base Access + Premium Preview]
-    E --> F[Premium Feature Blur]
-    F --> G[Upgrade CTA]
-    G --> H[Payment Options]
-    H --> I[Stripe Checkout]
-    I --> J[Access Unlocked]
+    A["🔧 'Questo mi serve!'<br/>(Click sullo Strumento)"] --> B["📋 Il Maestro Controlla<br/>(Verifica Partecipazione)"]
+    B --> C{"❤️ Hai Sostenuto<br/>questo Problema?"}
+    C -->|"Sì!"| D["🎉 Strumento Completo<br/>(Accesso Pieno)"]
+    C -->|"Non Ancora"| E["👀 Assaggio Gratuito<br/>(Anteprima)"]
+    E --> F["🌫️ Velo Misterioso<br/>(Funzioni Nascoste)"]
+    F --> G["💫 'Vuoi Tutto?'<br/>(Proposta di Accesso)"]
+    G --> H["💳 'Come Preferisci Pagare?'<br/>(Opzioni di Pagamento)"]
+    H --> I["🛍️ Cassa Sicura<br/>(Pagamento Stripe)"]
+    I --> J["🗝 Strumento Sbloccato<br/>(Accesso Garantito)"]
 ```
 
 #### Edge Cases & Error Handling:
-- Payment failure � Clear error with retry options
-- Voting history unclear � Detailed explanation
-- Premium preview � Engaging teasers without frustration
-- Subscription management � Clear control panel
+- Payment failure � Clear error with retry options
+- Voting history unclear � Detailed explanation
+- Premium preview � Engaging teasers without frustration
+- Subscription management � Clear control panel
 
 **Notes:** Premium gates should motivate, not frustrate
 
-## Wireframes & Mockups
+## Gli Schizzi della Bottega
+*Come immaginamo ogni angolo del nostro spazio*
 
-**Primary Design Files:** To be created in Figma after specification approval
+**I Disegni del Progetto:** Saranno creati con amore in Figma dopo che avremo tutti approvato questa visione
 
-### Key Screen Layouts
+### Gli Spazi Principali della Bottega
 
-#### Homepage/Landing
-**Purpose:** Explain WikiGaiaLab concept and drive registration
+#### 🏠 L'Ingresso della Bottega
+**Cosa Vogliamo:** Che chi entra si senta subito a casa e capisca che qui può essere aiutato
 
-**Key Elements:**
-- Hero section with clear value proposition
-- Problem preview cards showing voting in action
-- Social proof (community size, problems solved)
-- Clear CTA for registration
+**Gli Elementi del Benvenuto:**
+- Un caloroso "Benvenuto nella bottega del quartiere" che spiega subito chi siamo
+- Esempi di problemi reali con i cuoricini che si muovono, per mostrare la vita della comunità
+- "Siamo già in 1.247 vicini che si aiutano" - numeri che danno fiducia
+- Un invito chiaro: "Entra anche tu nella nostra famiglia"
 
-**Interaction Notes:** Animated voting counters to show real-time engagement
+**La Magia dell'Accoglienza:** I contatori dei sostegni si muovono dolcemente, come il respiro della comunità viva
 
-#### Dashboard Problemi
-**Purpose:** Primary interface for discovering and voting on problems
+#### 💬 La Bacheca dei Problemi
+**Cosa Vogliamo:** Che tutti si sentano come quando guardano la bacheca del circolo o del condominio
 
-**Key Elements:**
-- Filter/search bar with category dropdown
-- Problem cards with voting buttons
-- Sort options (popularity, recent, category)
-- "Proponi Problema" floating action button
+**Gli Elementi della Condivisione:**
+- Una barra di ricerca amichevole: "Cosa stai cercando?" con suggerimenti dolci
+- Cartoncini dei problemi che sembrano post-it colorati, ognuno con il suo cuoricino
+- Modi per ordinare: "I più sentiti", "Gli ultimi arrivati", "Per tipo di problema"
+- Un bel pulsante rotondo che fluttua: "Racconta il tuo problema" 
 
-**Interaction Notes:** Smooth card animations, immediate vote feedback, infinite scroll
+**La Vita della Bacheca:** Le carte si muovono come foglie al vento, i cuori battono quando li tocchi, la lista cresce dolcemente mentre scorri
 
-#### Dettaglio Problema
-**Purpose:** Full problem information and social sharing
+#### 📖 La Storia Completa del Problema
+**Cosa Vogliamo:** Che leggere un problema sia come ascoltare un vicino che ti racconta le sue difficoltà
 
-**Key Elements:**
-- Complete problem description with formatting
-- Vote button with current count
-- Social sharing buttons
-- Related problems suggestions
+**Gli Elementi del Racconto:**
+- La storia completa scritta come una lettera sincera, con spazi per respirare
+- Un grosso cuore con "Anch'io la penso così" e quanti altri l'hanno già detto
+- Bottoni per condividere: "Dillo agli amici", "Metti sul gruppo WhatsApp"
+- "Altri problemi che potrebbero interessarti" come suggerimenti di un amico
 
-**Interaction Notes:** Share animations, vote confirmation, responsive layout
+**I Piccoli Gesti:** Quando condividi, appare un messaggio carino, il cuore si illumina con dolcezza, tutto si adatta al tuo telefono o computer
 
-## Component Library / Design System
+## Gli Strumenti della Bottega
+*I piccoli oggetti che rendono magica ogni interazione*
 
-**Design System Approach:** Custom design system built on Tailwind CSS with Italian-focused components
+**La Nostra Filosofia:** Ogni bottone, ogni carta, ogni elemento ha l'anima calda dell'artigianato italiano, costruiti con Tailwind CSS ma con il cuore del quartiere
 
-### Core Components
+### Gli Strumenti Fondamentali
 
-#### Vote Button
-**Purpose:** Primary interaction for community engagement
+#### ❤️ Il Cuore del Sostegno
+**L'Anima:** Il gesto più importante della bottega - dire "anch'io la penso così" a un vicino
 
-**Variants:** Default, Voted, Disabled, Loading
+**Le Sue Forme:** Neutro (pronto ad amare), Pieno ("già dato!"), Riposante (non disponibile), Pensieroso (sta elaborando)
 
-**States:** Idle, Hover, Active, Disabled
+**I Suoi Momenti:** Tranquillo, Curioso (quando ci passi sopra), Attivo (quando lo tocchi), Stanco (quando non può rispondere)
 
-**Usage Guidelines:** Always visible, consistent positioning, immediate feedback
+**Come Usarlo:** Sempre dove lo cerchi, sempre nello stesso posto, sempre pronto a rispondere con un sorriso
 
-#### Problem Card
-**Purpose:** Display problem information in card format
+#### 📜 La Cartolina del Problema
+**L'Anima:** Come i bigliettini che si lasciano in bacheca, ognuno racconta una piccola storia
 
-**Variants:** Compact, Expanded, Featured
+**Le Sue Forme:** Compatta (riassunto veloce), Espansa (storia completa), In Evidenza (problema del momento)
 
-**States:** Default, Hover, Loading, Error
+**I Suoi Momenti:** Normale (tranquilla), Curiosa (quando ci passi sopra), Che Pensa (sta caricando), Confusa (qualcosa non va)
 
-**Usage Guidelines:** Consistent spacing, clear hierarchy, responsive behavior
+**Come Usarla:** Spazi regolari come le righe del quaderno, gerarchia chiara come una lettera ben scritta, si adatta al tuo schermo come un abito su misura
 
-#### Premium Gate
-**Purpose:** Control access to premium features
+#### 🚪 Il Cancelletto del Maestro
+**L'Anima:** Come quando il maestro ti dice "questo strumento è per chi ha già imparato le basi" - con gentilezza, mai con cattiveria
 
-**Variants:** Soft gate (preview), Hard gate (blocked), Upgrade prompt
+**Le Sue Forme:** Dolce ("guarda cosa puoi fare"), Fermo ("prima impara questo"), Incoraggiante ("sei quasi pronto!")
 
-**States:** Locked, Unlocked, Loading, Error
+**I Suoi Momenti:** Chiuso (ma con amore), Aperto (benvenuto!), Che pensa (sta controllando), Confuso (problema tecnico)
 
-**Usage Guidelines:** Clear value communication, non-frustrating experience
+**Come Usarlo:** Spiega sempre il perchè, mai frustrante come un cartello "vietato", sempre con la promessa di un futuro insieme
 
-## Branding & Style Guide
+## L'Identità della Nostra Bottega
+*I colori, le forme e lo spirito del nostro angolo di quartiere*
 
-### Visual Identity
-**Brand Guidelines:** Combining Ass.Gaia sustainability with Ecologicaleaving innovation
+### Chi Siamo Visivamente
+**La Nostra Anima:** Uniamo la saggezza verde di Ass.Gaia con l'innovazione gentile di Ecologicaleaving, come un albero antico con rami che guardano al futuro
 
-### Color Palette
+### I Colori della Bottega
 
-| Color Type | Hex Code | Usage |
-|------------|----------|-------|
-| Primary | #2D5A27 | Main actions, voted states, primary buttons |
-| Secondary | #6B8E23 | Secondary actions, category badges |
-| Accent | #32CD32 | Success states, growth indicators |
-| Success | #28A745 | Confirmations, positive feedback |
-| Warning | #FFC107 | Important notices, threshold warnings |
-| Error | #DC3545 | Errors, destructive actions |
-| Neutral | #6C757D, #F8F9FA | Text, borders, backgrounds |
+| Il Colore del Cuore | Codice | Quando lo Usiamo |
+|---------------------|--------|------------------|
+| Verde Bottega | #2D5A27 | Per i gesti importanti, i cuori pieni, i bottoni "sì" |
+| Verde Oliva | #6B8E23 | Per le azioni secondarie, le etichette delle categorie |
+| Verde Primavera | #32CD32 | Per i successi, quando qualcosa cresce e fiorisce |
+| Verde Speranza | #28A745 | Per le conferme, i "bravo!", i momenti felici |
+| Giallo Attenzione | #FFC107 | Per dire "guarda qui", "importante", con gentilezza |
+| Rosso Dispiacere | #DC3545 | Per gli errori, ma sempre con l'idea di riparare |
+| Grigio Casa | #6C757D, #F8F9FA | Per il testo di tutti i giorni, i bordi, gli sfondi familiari |
 
-### Typography
+### Le Scritture della Bottega
 
-#### Font Families
-- **Primary:** Inter (clean, modern, excellent Italian character support)
-- **Secondary:** Roboto (backup, Google Fonts reliability)
-- **Monospace:** JetBrains Mono (code blocks, technical content)
+#### Le Nostre Calligrafie
+- **Per Tutti i Giorni:** Inter (pulita, moderna, ama le lettere italiane con gli accenti)
+- **Di Riserva:** Roboto (affidabile, sempre disponibile su Google)
+- **Per i Codici:** JetBrains Mono (quando dobbiamo scrivere cose tecniche, ma con stile)
 
-#### Type Scale
+#### Le Grandezze delle Parole
 
-| Element | Size | Weight | Line Height |
-|---------|------|--------|-------------|
-| H1 | 2.5rem | 700 | 1.2 |
-| H2 | 2rem | 600 | 1.3 |
-| H3 | 1.5rem | 600 | 1.4 |
-| Body | 1rem | 400 | 1.6 |
-| Small | 0.875rem | 400 | 1.5 |
+| Tipo di Scrittura | Grandezza | Forza | Respiro tra le Righe |
+|-------------------|-----------|-------|----------------------|
+| Titolone | 2.5rem | 700 (molto forte) | 1.2 (compatto) |
+| Sottotitolo | 2rem | 600 (forte) | 1.3 (respirato) |
+| Titoletto | 1.5rem | 600 (forte) | 1.4 (comodo) |
+| Testo Normale | 1rem | 400 (normale) | 1.6 (arioso) |
+| Piccolo | 0.875rem | 400 (normale) | 1.5 (leggibile) |
 
-### Iconography
-**Icon Library:** Lucide React (consistent style, excellent coverage)
+### I Piccoli Disegni
+**La Nostra Collezione:** Lucide React (stile coerente, ha tutto quello che ci serve)
 
-**Usage Guidelines:** 24px standard size, consistent stroke width, semantic color usage
+**Come li Usiamo:** Dimensione standard di 24px (come il pollice di un adulto), sempre lo stesso spessore di tratto, colori che hanno senso con quello che rappresentano
 
-### Spacing & Layout
-**Grid System:** 12-column CSS Grid with 24px gutters
+### Gli Spazi e l'Ordine
+**Come Organizziamo:** 12 colonne come le case di una strada, con 24px di spazio tra una e l'altra
 
-**Spacing Scale:** 4px base unit (4, 8, 12, 16, 24, 32, 48, 64, 96px)
+**Le Distanze:** Tutto è multiplo di 4px (4, 8, 12, 16, 24, 32, 48, 64, 96px) - come i mattoni di una casa ben costruita
 
-## Accessibility Requirements
+## Una Bottega per Tutti
+*Perché ogni persona deve sentirsi benvenuta*
 
-### Compliance Target
-**Standard:** WCAG AA (Web Content Accessibility Guidelines 2.1 AA)
+### Il Nostro Impegno
+**Lo Standard che Seguiamo:** WCAG AA - le linee guida internazionali per rendere il web accessibile a tutti
 
-### Key Requirements
+### Come Rendiamo la Bottega Accogliente per Tutti
 
-**Visual:**
-- Color contrast ratios: 4.5:1 for normal text, 3:1 for large text
-- Focus indicators: 2px solid outline with high contrast
-- Text sizing: Minimum 16px, scalable to 200% without horizontal scrolling
+**Per Chi Ha Difficoltà a Vedere:**
+- I colori hanno sempre abbastanza contrasto per essere letti bene
+- Quando focalizzi qualcosa, si vede chiaramente un bordo di 2px
+- Il testo è sempre almeno di 16px e si può ingrandire fino al doppio
 
-**Interaction:**
-- Keyboard navigation: All interactive elements accessible via keyboard
-- Screen reader support: Proper ARIA labels and semantic HTML
-- Touch targets: Minimum 44px x 44px for mobile interactions
+**Per Chi Usa la Tastiera o Assistenti Vocali:**
+- Tutto si può raggiungere con la sola tastiera, come navigare con il telecomando
+- Gli assistenti vocali capiscono tutto grazie alle etichette giuste
+- I bottoni sul telefono sono sempre abbastanza grandi per un dito (44px)
 
-**Content:**
-- Alternative text: Descriptive alt text for all images and icons
-- Heading structure: Logical heading hierarchy (H1-H6)
-- Form labels: Clear labels and error messages for all form fields
+**Per Chi Ha Bisogno di Chiarezza:**
+- Ogni immagine ha una descrizione per chi non la può vedere
+- I titoli sono ordinati logicamente, come i capitoli di un libro
+- Ogni campo da compilare ha istruzioni chiare e messaggi di aiuto comprensibili
 
-### Testing Strategy
-Manual keyboard navigation testing, screen reader testing with NVDA/JAWS, color contrast verification, mobile accessibility testing
+### Come Controlliamo che Funzioni Davvero
+Proviamo tutto con la tastiera, ascoltiamo come suona con gli assistenti vocali, verifichiamo che i colori si leggano bene, testiamo sui telefoni - perché una bottega accogliente deve funzionare per tutti
 
-## Responsiveness Strategy
+## La Bottega si Adatta a Ogni Strumento
+*Dal telefono al computer, sempre a casa*
 
-### Breakpoints
+### I Nostri Formati
 
-| Breakpoint | Min Width | Max Width | Target Devices |
-|------------|-----------|-----------|----------------|
-| Mobile | 320px | 767px | Smartphones |
-| Tablet | 768px | 1023px | Tablets, small laptops |
-| Desktop | 1024px | 1439px | Desktop computers |
-| Wide | 1440px | - | Large monitors |
+| Nome Affettuoso | Larghezza Minima | Larghezza Massima | Per Cosa lo Usiamo |
+|-----------------|------------------|-------------------|---------------------|
+| Telefonino | 320px | 767px | Smartphone di tutti i tipi |
+| Tavoletta | 768px | 1023px | Tablet e computer piccoli |
+| Scrivania | 1024px | 1439px | Computer di casa e ufficio |
+| Schermone | 1440px | - | Monitor grandi e TV |
 
-### Adaptation Patterns
+### Come la Bottega Cambia Forma
 
-**Layout Changes:** Single column mobile � multi-column desktop, collapsible sidebar navigation
+**L'Organizzazione degli Spazi:** Sul telefono tutto in fila indiana, sul computer più colonne affiancate, menu che si nascondono quando serve
 
-**Navigation Changes:** Hamburger menu mobile � horizontal nav desktop, tab bar mobile � dropdown desktop
+**Come ci si Muove:** Sul telefono il menu a panino, sul computer una bella barra orizzontale, linguette sul telefono che diventano tendine sul computer
 
-**Content Priority:** Hide secondary information on mobile, progressive disclosure patterns
+**Cosa Mostrare:** Sul telefono solo l'essenziale, sul computer anche i dettagli, come mettere in ordine una stanza piccola o grande
 
-**Interaction Changes:** Touch-optimized buttons mobile � hover states desktop, swipe gestures mobile � click desktop
+**Come si Tocca:** Sul telefono bottoni grandi per le dita, sul computer effetti quando ci passi sopra, gesti di scorrimento sul telefono, click del mouse sul computer
 
-## Animation & Micro-interactions
+## La Vita e i Piccoli Gesti della Bottega
+*Come ogni movimento racconta una storia*
 
-### Motion Principles
-Animations should feel natural and purposeful, enhancing usability rather than adding decoration. Use ease-out timing for UI elements, keep duration under 300ms for micro-interactions.
+### La Filosofia del Movimento
+Ogni animazione deve sembrare naturale come un respiro, utile come un cenno della mano. I movimenti escono dolcemente, mai bruschi, sempre sotto i 300ms per i piccoli gesti.
 
-### Key Animations
-- **Vote Button:** Scale + color change on click (200ms, ease-out)
-- **Problem Card:** Gentle hover lift (150ms, ease-out)
-- **Vote Counter:** Number increment with bounce (300ms, ease-out)
-- **Page Transitions:** Subtle fade (200ms, ease-in-out)
-- **Loading States:** Gentle pulse for skeleton screens (1000ms, ease-in-out)
+### I Movimenti che Amiamo
+- **Il Cuore che Batte:** Si ingrandisce e cambia colore quando lo tocchi (200ms, dolce)
+- **La Cartolina Curiosa:** Si alza leggermente quando ci passi sopra (150ms, gentile)
+- **I Numeri che Crescono:** Salgono con un piccolo rimbalzo di gioia (300ms, allegro)
+- **Il Cambio di Pagina:** Una dissolvenza delicata come voltare pagina (200ms, morbido)
+- **L'Attesa Paziente:** Un respiro tranquillo mentre carica (1000ms, rilassante)
 
-## Performance Considerations
+## La Bottega che Funziona Bene
+*Perché nessuno deve aspettare troppo*
 
-### Performance Goals
-- **Page Load:** Under 3 seconds on 3G connection
-- **Interaction Response:** Under 100ms for button feedback
-- **Animation FPS:** Consistent 60fps for all animations
+### I Nostri Obiettivi
+- **Aprire la Porta:** Meno di 3 secondi anche con internet lento (3G)
+- **Rispondere al Tocco:** Meno di 100ms per dire "ho sentito"
+- **Muoversi Fluidamente:** 60 fotogrammi al secondo, sempre, come il cinema
 
-### Design Strategies
-Optimize images with WebP format, use CSS animations over JavaScript, implement lazy loading for problem cards, progressive loading for app catalog, minimal JavaScript for core voting functionality.
+### Come Facciamo
+Immagini leggere in formato WebP, animazioni in CSS (più fluide), caricamento graduale delle cartoline, catalogo che appare man mano, JavaScript ridotto all'essenziale per votare.
 
-## Next Steps
+## I Prossimi Passi del Nostro Viaggio
 
-### Immediate Actions
-1. Review specification with team for feedback and approval
-2. Create detailed visual designs in Figma
-3. Prepare component specifications for developer handoff
-4. Conduct user testing on key flows
-5. Finalize accessibility requirements with development team
+### Cosa Facciamo Ora
+1. Condividiamo questa visione con tutta la famiglia per raccogliere idee e approvazione
+2. Disegniamo tutto nei dettagli su Figma, come gli schizzi diventano progetti
+3. Prepariamo le istruzioni precise per chi costruirà materialmente la bottega
+4. Facciamo provare i percorsi alle persone vere per vedere se funzionano
+5. Mettiamo a punto tutti i dettagli per l'accessibilità con chi programma
 
-### Design Handoff Checklist
-- [x] All user flows documented
-- [x] Component inventory complete
-- [x] Accessibility requirements defined
-- [x] Responsive strategy clear
-- [x] Brand guidelines incorporated
-- [x] Performance goals established
+### La Lista della Spesa Completata
+- [x] Tutti i percorsi della bottega descritti
+- [x] Inventario completo degli strumenti
+- [x] Requisiti per accogliere tutti definiti
+- [x] Strategia per ogni tipo di schermo chiara
+- [x] Identità della bottega incorporata
+- [x] Obiettivi di prestazione stabiliti
 
-## Checklist Results
+## Il Registro della Bottega
 
-_This section will be populated after running the UI/UX specification checklist_
+_Qui terremo traccia di tutti i controlli e miglioramenti che faremo alla nostra bottega digitale_
+
+---
+
+*Questa specifica trasforma WikiGaiaLab da piattaforma tecnologica a bottega di quartiere, dove l'AI diventa il maestro artigiano che aiuta la gente comune a risolvere i problemi di tutti i giorni. Ogni persona, dal nonno alla mamma, dal pensionato allo studente, trova qui il suo posto in una comunità che si aiuta reciprocamente.*
+
+**Cuore della Trasformazione:**
+- Da "utenti" a "vicini di casa"
+- Da "funzionalità" a "strumenti del maestro"
+- Da "interfaccia" a "bottega accogliente"
+- Da "processo" a "viaggio guidato"
+- Da "sistema" a "comunità che si aiuta"
+
+*Benvenuti nella bottega digitale di WikiGaiaLab - dove la tecnologia ha l'anima del quartiere italiano.*
