@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../lib/auth-nextauth';
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '@wikigaialab/database';
+import { getUserIdentityService } from '../../../../lib/auth/UserIdentityService';
 
 /**
  * NextAuth Session API Route
@@ -54,58 +53,47 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user data from database to get real admin status
-    let databaseUser = null;
+    // Use UserIdentityService to get synchronized user data
+    let user = null;
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+      const correlationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const userIdentityService = getUserIdentityService(correlationId);
       
-      if (supabaseUrl && supabaseKey) {
-        const supabase = createClient<Database>(supabaseUrl, supabaseKey);
-        
-        // First try by ID
-        const { data: userData, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (!error && userData) {
-          databaseUser = userData;
-        } else {
-          // Fallback to email lookup if ID fails (common with Google OAuth numeric IDs)
-          console.log('ID lookup failed, trying email lookup for:', session.user.email);
-          const { data: userByEmail, error: emailError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', session.user.email)
-            .single();
-          
-          if (!emailError && userByEmail) {
-            databaseUser = userByEmail;
-            console.log('Found user by email with admin status:', userByEmail.is_admin);
-          }
-        }
+      // Sync user from session to ensure database consistency
+      user = await userIdentityService.syncUserSession(session.user.id, {
+        email: session.user.email,
+        name: session.user.name,
+        image: session.user.image
+      });
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ User synchronized via UserIdentityService:', {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          isAdmin: user.isAdmin,
+          correlationId
+        });
       }
     } catch (error) {
-      console.warn('Failed to fetch user from database:', error);
+      console.error('❌ Failed to sync user via UserIdentityService:', error);
+      
+      // Fallback to basic session data
+      user = {
+        id: session.user.id || session.user.email || '',
+        email: session.user.email || '',
+        name: session.user.name || '',
+        avatar_url: session.user.image || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        last_login_at: new Date().toISOString(),
+        is_admin: false,
+        role: 'user' as const,
+        subscription_status: 'free',
+        total_votes_cast: 0,
+        total_problems_proposed: 0,
+      };
     }
-
-    // Convert NextAuth session to our AuthUser format with real database data
-    const user = {
-      id: session.user.id || session.user.email || '',
-      email: session.user.email || '',
-      name: session.user.name || '',
-      avatar_url: session.user.image || null,
-      created_at: databaseUser?.created_at || new Date().toISOString(),
-      updated_at: databaseUser?.updated_at || new Date().toISOString(),
-      last_login_at: databaseUser?.last_login_at || new Date().toISOString(),
-      is_admin: databaseUser?.is_admin || false, // Use real database value
-      role: databaseUser?.is_admin ? 'admin' : 'user' as const,
-      subscription_status: databaseUser?.subscription_status || 'free',
-      total_votes_cast: databaseUser?.total_votes_cast || 0,
-      total_problems_proposed: databaseUser?.total_problems_proposed || 0,
-    };
 
     if (process.env.NODE_ENV === 'development') {
       console.log('✅ Session API - Returning valid session');

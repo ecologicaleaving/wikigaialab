@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { auth } from '@/lib/auth-nextauth';
 import type { Database } from '@wikigaialab/database';
 import type { ProblemInsert } from '@wikigaialab/database';
-import { randomUUID } from 'crypto';
+import { getUserIdentityService } from '@/lib/auth/UserIdentityService';
 
 // Input validation import
 import { validateProblemInput, type CreateProblemInput } from '@/lib/validation/problem-schema';
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
       return await auth();
     });
     
-    if (!session?.user?.id) {
+    if (!session?.user?.id || !session?.user?.email) {
       const authError = new Error('Authentication required');
       tracker.trackError(authError, 401);
       
@@ -151,24 +151,39 @@ export async function POST(request: NextRequest) {
         correlationId: tracker.getCorrelationId()
       }, { status: 401 }));
     }
+
+    // Use UserIdentityService to ensure consistent user ID
+    const userIdentityService = getUserIdentityService(tracker.getCorrelationId());
     
-    const user = {
-      id: session.user.id,
-      email: session.user.email || 'unknown@email.com',
-      name: session.user.name || 'Unknown User'
-    };
-    
-    // Convert numeric OAuth IDs to UUID format for database compatibility
-    const userId = /^\d+$/.test(user.id) 
-      ? require('crypto').createHash('sha256').update(user.id).digest('hex').slice(0, 32).replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
-      : user.id;
+    let resolvedUser;
+    try {
+      // Sync user from session to ensure database consistency
+      resolvedUser = await userIdentityService.syncUserSession(session.user.id, {
+        email: session.user.email,
+        name: session.user.name,
+        image: session.user.image
+      });
+    } catch (error) {
+      const userSyncError = new Error('Failed to resolve user identity');
+      tracker.trackError(userSyncError, 500);
+      
+      return tracker.complete(NextResponse.json({
+        success: false,
+        error: 'Failed to resolve user identity. Please try signing out and back in.',
+        correlationId: tracker.getCorrelationId(),
+        details: error instanceof Error ? error.message : 'Unknown sync error'
+      }, { status: 500 }));
+    }
+
+    const userId = resolvedUser.id;
     
     // Set user context for tracking
     tracker.setUser(userId, {
-      email: user.email,
-      name: user.name,
-      sessionId: session.id,
-      originalId: user.id
+      email: resolvedUser.email,
+      name: resolvedUser.name,
+      sessionId: session.user.id,
+      role: resolvedUser.role,
+      isAdmin: resolvedUser.isAdmin
     });
 
     // STEP 2: Enhanced Input Validation & Sanitization
@@ -234,88 +249,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: false,
         error: 'Database connection failed',
-        correlationId
+        correlationId: tracker.getCorrelationId()
       }, { status: 500 });
     }
 
-    // STEP 3.1: Ensure user exists in database (fix foreign key constraint)
-    console.log('🔍 Ensuring user exists in database...');
-    try {
-      // First check if user already exists
-      const { data: existingUser, error: checkError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', userId)
-        .single();
-
-      if (!existingUser && (!checkError || checkError.code === 'PGRST116')) {
-        // User doesn't exist, try to create them
-        console.log('🔍 User not found, creating new user...');
-        
-        // Use insert instead of upsert to avoid email conflicts
-        const { error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: userId,
-            email: user.email,
-            name: user.name,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
-
-        if (insertError) {
-          // If insert fails due to email conflict, try update instead
-          if (insertError.code === '23505') {
-            console.log('🔍 Email conflict, trying to update existing user...');
-            const { error: updateError } = await supabase
-              .from('users')
-              .update({
-                name: user.name,
-                updated_at: new Date().toISOString()
-              })
-              .eq('id', userId);
-
-            if (updateError) {
-              console.log('❌ Failed to update user:', updateError);
-              return NextResponse.json({
-                success: false,
-                error: 'Failed to synchronize user data',
-                details: updateError.message,
-                correlationId
-              }, { status: 500 });
-            }
-          } else {
-            console.log('❌ Failed to create user:', insertError);
-            return NextResponse.json({
-              success: false,
-              error: 'Failed to create user',
-              details: insertError.message,
-              correlationId
-            }, { status: 500 });
-          }
-        }
-      } else if (checkError && checkError.code !== 'PGRST116') {
-        console.log('❌ Error checking user existence:', checkError);
-        return NextResponse.json({
-          success: false,
-          error: 'Failed to verify user existence',
-          details: checkError.message,
-          correlationId
-        }, { status: 500 });
-      } else {
-        console.log('✅ User already exists in database');
-      }
-
-      console.log('✅ User synchronized with database');
-    } catch (userSyncError) {
-      console.log('❌ User synchronization failed:', userSyncError);
-      return NextResponse.json({
-        success: false,
-        error: 'Failed to synchronize user with database',
-        details: userSyncError instanceof Error ? userSyncError.message : 'Unknown sync error',
-        correlationId
-      }, { status: 500 });
-    }
+    // User synchronization is now handled by UserIdentityService
+    console.log('✅ User synchronized via UserIdentityService:', {
+      id: userId,
+      email: resolvedUser.email,
+      role: resolvedUser.role
+    });
     
     // Verify category exists
     console.log('🔍 Verifying category exists...');
@@ -335,7 +278,7 @@ export async function POST(request: NextRequest) {
         success: false,
         error: 'Failed to verify category',
         details: queryError instanceof Error ? queryError.message : 'Unknown query error',
-        correlationId
+        correlationId: tracker.getCorrelationId()
       }, { status: 500 });
     }
 
@@ -344,7 +287,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: false,
         error: 'Invalid category selected',
-        correlationId
+        correlationId: tracker.getCorrelationId()
       }, { status: 400 });
     }
     
@@ -381,7 +324,7 @@ export async function POST(request: NextRequest) {
         success: false,
         error: 'Failed to create problem due to database error',
         details: insertException instanceof Error ? insertException.message : 'Unknown insert error',
-        correlationId
+        correlationId: tracker.getCorrelationId()
       }, { status: 500 });
     }
 
@@ -391,14 +334,13 @@ export async function POST(request: NextRequest) {
         success: false,
         error: 'Failed to create problem',
         details: insertError.message,
-        correlationId
+        correlationId: tracker.getCorrelationId()
       }, { status: 500 });
     }
 
     console.log('✅ Problem created successfully:', problem.id);
 
     // STEP 5: Success Response
-    const duration = Date.now() - startTime;
     
     return NextResponse.json({
       success: true,
@@ -412,27 +354,25 @@ export async function POST(request: NextRequest) {
         created_at: problem.created_at
       },
       metadata: {
-        correlationId,
-        duration
+        correlationId: tracker.getCorrelationId(),
+        userId: userId,
+        userRole: resolvedUser.role
       }
-    }, {
-      headers: {
-        'X-Request-ID': correlationId,
-        'X-Response-Time': duration.toString()
-        }
-      });
+    });
 
   } catch (error) {
+    const correlationId = tracker.getCorrelationId();
     console.error('❌ POST endpoint unexpected error:', {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       correlationId
     });
-    return NextResponse.json({
+    
+    return tracker.complete(NextResponse.json({
       success: false,
       error: 'Internal server error',
       details: error instanceof Error ? error.message : 'Unknown error occurred',
       correlationId
-    }, { status: 500 });
+    }, { status: 500 }));
   }
 }

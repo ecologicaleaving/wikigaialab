@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [fetchingUser, setFetchingUser] = useState(false);
 
   // Fetch user data from session API when session changes
+  // UserIdentityService now handles synchronization in the session API
   useEffect(() => {
     if (session?.user && !fetchingUser) {
       setFetchingUser(true);
@@ -39,6 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .then(data => {
           if (data.user) {
             setDatabaseUser(data.user);
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔄 User data synchronized via UserIdentityService:', {
+                id: data.user.id,
+                email: data.user.email,
+                role: data.user.role,
+                isAdmin: data.user.is_admin
+              });
+            }
           }
         })
         .catch(error => {
@@ -50,22 +60,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (!session?.user) {
       setDatabaseUser(null);
     }
-  }, [session?.user?.id, session?.user?.email]);
+  }, [session?.user?.id, session?.user?.email, fetchingUser]);
 
-  // Convert NextAuth session to our AuthUser type with real database data
-  const user: AuthUser | null = session?.user ? {
-    id: session.user.id || session.user.email || '',
-    email: session.user.email || '',
-    name: session.user.name || '',
-    avatar_url: session.user.image || null,
-    created_at: databaseUser?.created_at || new Date().toISOString(),
-    updated_at: databaseUser?.updated_at || new Date().toISOString(),
-    last_login_at: databaseUser?.last_login_at || new Date().toISOString(),
-    is_admin: databaseUser?.is_admin || false, // Use real database value
-    role: databaseUser?.role || 'user' as const,
-    subscription_status: databaseUser?.subscription_status || 'free',
-    total_votes_cast: databaseUser?.total_votes_cast || 0,
-    total_problems_proposed: databaseUser?.total_problems_proposed || 0,
+  // Convert NextAuth session to our AuthUser type with synchronized database data
+  // UserIdentityService ensures deterministic IDs and consistent data
+  const user: AuthUser | null = session?.user && databaseUser ? {
+    id: databaseUser.id, // Use synchronized ID from UserIdentityService
+    email: databaseUser.email,
+    name: databaseUser.name || session.user.name || '',
+    avatar_url: databaseUser.avatar_url || session.user.image || null,
+    created_at: databaseUser.created_at,
+    updated_at: databaseUser.updated_at,
+    last_login_at: databaseUser.last_login_at,
+    is_admin: databaseUser.is_admin,
+    role: databaseUser.role,
+    subscription_status: databaseUser.subscription_status,
+    total_votes_cast: databaseUser.total_votes_cast,
+    total_problems_proposed: databaseUser.total_problems_proposed,
   } : null;
 
   const signInWithGoogle = async () => {
