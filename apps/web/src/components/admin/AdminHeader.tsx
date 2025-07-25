@@ -42,25 +42,25 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             <Menu.Button className="-m-1.5 flex items-center p-1.5 hover:bg-gray-50 rounded-lg transition-colors">
               <span className="sr-only">Apri menu utente</span>
               
-              {user.avatar_url ? (
+              {user?.avatar_url ? (
                 <Image
                   className="h-8 w-8 rounded-full bg-gray-50"
                   src={user.avatar_url}
-                  alt={user.name || 'Admin'}
+                  alt={user?.name || 'Admin'}
                   width={32}
                   height={32}
                 />
               ) : (
                 <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
                   <span className="text-sm font-medium text-white">
-                    {user.name?.charAt(0).toUpperCase() || 'A'}
+                    {user?.name?.charAt(0).toUpperCase() || 'A'}
                   </span>
                 </div>
               )}
               
               <span className="hidden lg:flex lg:items-center">
                 <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                  {user.name || 'Admin'}
+                  {user?.name || 'Admin'}
                 </span>
                 <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
@@ -78,10 +78,10 @@ export function AdminHeader({ user }: AdminHeaderProps) {
               <Menu.Items className="absolute right-0 z-10 mt-2.5 w-64 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                 <div className="px-4 py-3 border-b border-gray-100">
                   <p className="text-sm font-medium text-gray-900">
-                    {user.name || 'Admin'}
+                    {user?.name || 'Admin'}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
-                    {user.email}
+                    {user?.email}
                   </p>
                   <p className="text-xs text-blue-600 font-medium mt-1">
                     Amministratore

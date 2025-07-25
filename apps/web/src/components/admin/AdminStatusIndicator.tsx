@@ -33,22 +33,22 @@ export const AdminStatusIndicator: React.FC<AdminStatusIndicatorProps> = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 ${className}`}
+        className={`bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-lg p-4 hover:shadow-md hover:border-teal-300 transition-all duration-300 ${className}`}
       >
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 bg-amber-100 rounded-lg">
-            <Crown className="w-5 h-5 text-amber-600" />
+          <div className="p-2 bg-teal-100 rounded-lg">
+            <Crown className="w-5 h-5 text-teal-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-amber-800">Accesso Amministratore</h3>
-            <p className="text-sm text-amber-600">Sei un amministratore di WikiGaiaLab</p>
+            <h3 className="font-semibold text-teal-800">Accesso Amministratore</h3>
+            <p className="text-sm text-teal-600">Sei un amministratore di WikiGaiaLab</p>
           </div>
         </div>
 
         <div className="space-y-2">
           <a 
             href="/admin" 
-            className="block w-full p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-center font-medium"
+            className="block w-full p-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors text-center font-medium"
           >
             🏛️ Dashboard Amministratore
           </a>
@@ -56,20 +56,20 @@ export const AdminStatusIndicator: React.FC<AdminStatusIndicatorProps> = ({
           <div className="grid grid-cols-2 gap-2">
             <a 
               href="/admin/categories" 
-              className="p-2 bg-white border border-amber-200 rounded hover:bg-amber-50 transition-colors text-center text-sm"
+              className="p-2 bg-white border border-teal-200 rounded hover:bg-teal-50 transition-colors text-center text-sm"
             >
               📂 Categorie
             </a>
             <a 
               href="/admin/monitoring" 
-              className="p-2 bg-white border border-amber-200 rounded hover:bg-amber-50 transition-colors text-center text-sm"
+              className="p-2 bg-white border border-teal-200 rounded hover:bg-teal-50 transition-colors text-center text-sm"
             >
               📊 Monitoring
             </a>
           </div>
         </div>
 
-        <div className="mt-3 p-2 bg-amber-100 rounded text-xs text-amber-700">
+        <div className="mt-3 p-2 bg-teal-100 rounded text-xs text-teal-700">
           <strong>Admin:</strong> {user?.email}
         </div>
       </motion.div>

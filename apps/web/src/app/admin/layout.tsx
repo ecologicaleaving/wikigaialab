@@ -50,7 +50,7 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader user={user} />
+      <AdminHeader user={user || {}} />
       
       <div className="flex">
         <AdminSidebar />
