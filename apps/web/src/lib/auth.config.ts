@@ -105,7 +105,7 @@ export const authConfig = {
           
           const { data: dbUser, error } = await supabase
             .from('users')
-            .select('id, email, name, role, is_admin')
+            .select('id, email, name, avatar_url, is_admin')
             .eq('email', token.email)
             .single();
           
@@ -114,7 +114,7 @@ export const authConfig = {
             session.user.id = dbUser.id;
             session.user.email = dbUser.email;
             session.user.name = dbUser.name || token.name as string;
-            session.user.image = token.picture as string;
+            session.user.image = dbUser.avatar_url || token.picture as string;
             
             if (process.env.NODE_ENV === 'development') {
               console.log('🔐 Session callback - Database user found:', {
@@ -136,11 +136,16 @@ export const authConfig = {
                 id: token.googleId,
                 email: token.email,
                 name: token.name || 'User',
-                role: 'user',
+                avatar_url: token.picture,
+                auth_provider: 'google',
                 is_admin: false,
+                subscription_status: 'free',
+                total_votes_cast: 0,
+                total_problems_proposed: 0,
+                last_login_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
               })
-              .select('id, email, name, role, is_admin')
+              .select('id, email, name, avatar_url, is_admin')
               .single();
 
             if (newUser) {
@@ -148,7 +153,7 @@ export const authConfig = {
               session.user.id = newUser.id;
               session.user.email = newUser.email;
               session.user.name = newUser.name;
-              session.user.image = token.picture as string;
+              session.user.image = newUser.avatar_url || token.picture as string;
               
               console.log('✅ Session callback - New user created:', {
                 databaseId: newUser.id,
