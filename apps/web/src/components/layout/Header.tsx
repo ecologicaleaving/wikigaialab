@@ -64,11 +64,8 @@ export const Header: React.FC<HeaderProps> = ({
                   />
                 </div>
                 <div className="hidden sm:block">
-                  <div className="text-lg font-bold text-teal-800 leading-tight">
-                    WikiGaiaLab
-                  </div>
-                  <div className="text-xs text-teal-600 leading-none">
-                    Laboratorio Digitale
+                  <div className="text-xs text-teal-600 leading-none text-center">
+                    Laboratorio digitale
                   </div>
                 </div>
               </Link>

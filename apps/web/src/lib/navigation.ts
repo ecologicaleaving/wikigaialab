@@ -25,7 +25,7 @@ export const mainNavigationItems: NavigationItem[] = [
   },
   { 
     id: 'dashboard', 
-    label: 'Il Mio Banco', 
+    label: 'Bacheca', 
     href: '/dashboard', 
     icon: BarChart3, 
     requiresAuth: true,
@@ -34,7 +34,7 @@ export const mainNavigationItems: NavigationItem[] = [
   },
   { 
     id: 'problems', 
-    label: 'Problemi del Quartiere', 
+    label: 'Problemi', 
     href: '/problems', 
     icon: Search, 
     requiresAuth: true,
