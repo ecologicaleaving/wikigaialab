@@ -19,7 +19,8 @@ import {
   CheckCircleIcon,
   CrownIcon,
   HeartIcon,
-  BookmarkIcon
+  BookmarkIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline';
 import {
   StarIcon as StarIconSolid,
