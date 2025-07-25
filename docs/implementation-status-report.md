@@ -90,7 +90,7 @@ WikiGaiaLab shows strong foundational implementation with sophisticated technica
    // Current (Corporate):
    <Button>Submit</Button>
    
-   // Should be (Artisanal Workshop):
+   // Should be (Artisanal Laboratory):
    <Button>Raccontaci che problema hai</Button>
    ```
 
@@ -98,9 +98,9 @@ WikiGaiaLab shows strong foundational implementation with sophisticated technica
    - Current voting text: "Vote" / "67 votes"
    - Should be: "Serve anche a me!" / "Siamo già in 67!"
 
-3. **Lacking Workshop Community Feel:**
+3. **Lacking Laboratory Community Feel:**
    - Current success messages are system-focused
-   - Should feel like encouragement from a friendly craftsperson ("Complimenti! La bottega ha accolto il vostro racconto")
+   - Should feel like encouragement from a friendly craftsperson ("Complimenti! Il laboratorio ha accolto il vostro racconto")
 
 **Updated Brand Identity Compliance Score: 5% ❌**
 
