@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { usePremiumAccess } from '../../hooks/usePremiumAccess';
 import { useVotingHistory } from '../../hooks/useVotingHistory';
@@ -34,6 +34,16 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+// Lazy load heavy components for better performance
+const RecommendationWidget = lazy(() => import('../recommendations/RecommendationWidget'));
+const VotingHistoryCard = lazy(() => import('../analytics/VotingHistoryCard'));
+const LeaderboardWidget = lazy(() => import('../growth/LeaderboardWidget'));
+
+// Loading skeleton for lazy components
+const ComponentSkeleton = () => (
+  <div className="animate-pulse bg-gray-200 rounded-lg h-32 w-full" />
+);
+
 interface DashboardTab {
   id: string;
   name: string;
@@ -62,19 +72,23 @@ export function EnhancedUserDashboard() {
   } = useRecommendations({ limit: 8 });
   const [activeTab, setActiveTab] = useState('overview');
 
-  if (!user) return null;
-
-  const displayName = user.name || user.email || 'Utente';
-
-  // Handle navigation to problems
-  const handleProblemClick = (problemId: string) => {
+  // Handle navigation to problems with performance optimization
+  const handleProblemClick = useCallback((problemId: string) => {
     window.location.href = `/problems/${problemId}`;
-  };
+  }, []);
+
+  // Memoize display name for performance
+  const displayName = useMemo(() => 
+    user?.name || user?.email || 'Utente', 
+    [user?.name, user?.email]
+  );
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <header className="bg-white border-b border-gray-200" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-6">
             <div className="flex items-center justify-between">
@@ -107,15 +121,29 @@ export function EnhancedUserDashboard() {
           </div>
           
           {/* Tab Navigation */}
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+          <nav className="border-b border-gray-200" role="navigation" aria-label="Dashboard tabs">
+            <div className="-mb-px flex space-x-8">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={`tabpanel-${tab.id}`}
+                    tabIndex={isActive ? 0 : -1}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
+                    onKeyDown={(e) => {
+                      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        const currentIndex = tabs.findIndex(t => t.id === tab.id);
+                        const nextIndex = e.key === 'ArrowRight' 
+                          ? (currentIndex + 1) % tabs.length
+                          : (currentIndex - 1 + tabs.length) % tabs.length;
+                        setActiveTab(tabs[nextIndex].id);
+                      }
+                    }}
+                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
                       isActive
                         ? 'border-teal-500 text-teal-600 transform scale-105'
                         : 'border-transparent text-gray-500 hover:text-teal-700 hover:border-teal-300 hover:transform hover:scale-102'
@@ -126,37 +154,50 @@ export function EnhancedUserDashboard() {
                   </button>
                 );
               })}
-            </nav>
-          </div>
+            </div>
+          </nav>
         </div>
-      </div>
+      </header>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && (
-          <OverviewTab 
-            user={user}
-            accessData={accessData}
-            stats={stats}
-            loading={accessLoading || statsLoading}
-            setActiveTab={setActiveTab}
-            personalRecommendations={personalRecommendations}
-            onProblemClick={handleProblemClick}
-          />
-        )}
-        
-        {activeTab === 'recommendations' && (
-          <RecommendationsTab 
-            onProblemClick={handleProblemClick}
-          />
-        )}
-        
-        {activeTab === 'voting' && <VotingHistoryTab />}
-        {activeTab === 'growth' && <GrowthTab user={user} />}
-        {activeTab === 'problems' && <ProblemsTab />}
-        {activeTab === 'apps' && <AppsTab />}
-        {activeTab === 'settings' && <SettingsTab />}
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
+        <div
+          role="tabpanel"
+          id={`tabpanel-${activeTab}`}
+          aria-labelledby={`tab-${activeTab}`}
+          tabIndex={0}
+        >
+          {activeTab === 'overview' && (
+            <OverviewTab 
+              user={user}
+              accessData={accessData}
+              stats={stats}
+              loading={accessLoading || statsLoading}
+              setActiveTab={setActiveTab}
+              personalRecommendations={personalRecommendations}
+              onProblemClick={handleProblemClick}
+            />
+          )}
+          
+          {activeTab === 'recommendations' && (
+            <Suspense fallback={<ComponentSkeleton />}>
+              <RecommendationsTab 
+                onProblemClick={handleProblemClick}
+              />
+            </Suspense>
+          )}
+          
+          {activeTab === 'voting' && (
+            <Suspense fallback={<ComponentSkeleton />}>
+              <VotingHistoryTab />
+            </Suspense>
+          )}
+          {activeTab === 'growth' && <GrowthTab user={user} />}
+          {activeTab === 'problems' && <ProblemsTab />}
+          {activeTab === 'apps' && <AppsTab />}
+          {activeTab === 'settings' && <SettingsTab />}
+        </div>
+      </main>
     </div>
   );
 }
@@ -200,11 +241,11 @@ function OverviewTab({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Main Content */}
-      <div className="lg:col-span-2 space-y-8">
+    <div className="grid grid-cols-12 gap-6">
+      {/* Main Content - 8 columns on large screens */}
+      <div className="col-span-12 lg:col-span-8 space-y-6">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4" aria-label="User statistics">
           <StatsCard
             title="Voti Totali"
             value={stats?.totalVotes || 0}
@@ -226,22 +267,22 @@ function OverviewTab({
             color="purple"
             subtitle="Giorni consecutivi"
           />
-        </div>
+        </section>
 
         {/* Recent Activity */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">
+        <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="recent-activity-heading">
+          <h3 id="recent-activity-heading" className="text-lg font-semibold text-gray-900 mb-6">
             Attività Recente
           </h3>
           <RecentActivityList />
-        </div>
+        </section>
 
         {/* Personal Recommendations Preview */}
         {personalRecommendations && personalRecommendations.length > 0 && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="recommendations-heading">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Heart className="h-5 w-5 text-teal-600 animate-pulse" />
+              <h3 id="recommendations-heading" className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Heart className="h-5 w-5 text-teal-600 animate-pulse" aria-hidden="true" />
                 Raccomandazioni per Te
               </h3>
               <button
@@ -278,12 +319,12 @@ function OverviewTab({
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">
+        <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="quick-actions-heading">
+          <h3 id="quick-actions-heading" className="text-lg font-semibold text-gray-900 mb-6">
             Azioni Rapide
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -318,11 +359,11 @@ function OverviewTab({
               onClick={() => setActiveTab('voting')}
             />
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* Sidebar */}
-      <div className="space-y-6">
+      {/* Sidebar - 4 columns on large screens */}
+      <aside className="col-span-12 lg:col-span-4 space-y-4" role="complementary" aria-label="Dashboard sidebar">
         {/* Access Status */}
         <AccessStatusCard />
         
@@ -333,11 +374,13 @@ function OverviewTab({
         <ReferralWidget userId={user.id} compact={true} />
         
         {/* Leaderboard Preview */}
-        <LeaderboardWidget userId={user.id} compact={true} showControls={false} />
+        <Suspense fallback={<ComponentSkeleton />}>
+          <LeaderboardWidget userId={user.id} compact={true} showControls={false} />
+        </Suspense>
         
         {/* Profile Stats */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="profile-stats-heading">
+          <h3 id="profile-stats-heading" className="text-lg font-semibold text-gray-900 mb-4">
             Le Tue Statistiche
           </h3>
           <div className="space-y-4">
@@ -365,8 +408,8 @@ function OverviewTab({
               </span>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </aside>
     </div>
   );
 }
@@ -382,13 +425,15 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
             Raccomandazioni Personalizzate
           </h2>
         </div>
-        <RecommendationWidget
-          type="personal"
-          title=""
-          limit={12}
-          showExplanations={true}
-          onProblemClick={onProblemClick}
-        />
+        <Suspense fallback={<ComponentSkeleton />}>
+          <RecommendationWidget
+            type="personal"
+            title=""
+            limit={12}
+            showExplanations={true}
+            onProblemClick={onProblemClick}
+          />
+        </Suspense>
       </div>
 
       {/* Trending Problems */}
@@ -399,13 +444,15 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
             Problemi di Tendenza
           </h2>
         </div>
-        <RecommendationWidget
-          type="trending"
-          title=""
-          limit={8}
-          showExplanations={false}
-          onProblemClick={onProblemClick}
-        />
+        <Suspense fallback={<ComponentSkeleton />}>
+          <RecommendationWidget
+            type="trending"
+            title=""
+            limit={8}
+            showExplanations={false}
+            onProblemClick={onProblemClick}
+          />
+        </Suspense>
       </div>
 
       {/* Recommendation Settings */}
@@ -449,11 +496,13 @@ function VotingHistoryTab() {
   return (
     <div className="space-y-6">
       {/* Voting History with Analytics */}
-      <VotingHistoryCard 
-        showHeader={true}
-        maxItems={20}
-        className="bg-white"
-      />
+      <Suspense fallback={<ComponentSkeleton />}>
+        <VotingHistoryCard 
+          showHeader={true}
+          maxItems={20}
+          className="bg-white"
+        />
+      </Suspense>
     </div>
   );
 }
@@ -504,7 +553,9 @@ function GrowthTab({ user }: { user: any }) {
               <Trophy className="h-5 w-5" />
               Classifiche Community
             </h3>
-            <LeaderboardWidget userId={user?.id} />
+            <Suspense fallback={<ComponentSkeleton />}>
+              <LeaderboardWidget userId={user?.id} />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -584,20 +635,22 @@ function StatsCard({ title, value, icon: Icon, color, subtitle }: StatsCardProps
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <article className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center">
         <div className={`w-8 h-8 rounded-md flex items-center justify-center ${colorClasses[color]}`}>
-          <Icon className="w-4 h-4" />
+          <Icon className="w-4 h-4" aria-hidden="true" />
         </div>
         <div className="ml-4">
           <p className="text-sm font-medium text-gray-500">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-2xl font-bold text-gray-900" aria-label={`${title}: ${value} ${subtitle || ''}`}>
+            {value}
+          </p>
           {subtitle && (
             <p className="text-xs text-gray-400">{subtitle}</p>
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
