@@ -180,20 +180,20 @@ export function QuickVotePrompt({
 
   if (compact) {
     return (
-      <div className={`bg-blue-50 border border-blue-200 rounded-lg p-3 ${className}`}>
+      <div className={`bg-primary-50 border border-primary-200 rounded-lg p-3 ${className}`}>
         <div className="flex items-center gap-3">
-          <Vote className="w-5 h-5 text-blue-600" />
+          <Vote className="w-5 h-5 text-primary-600" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-blue-900">
+            <p className="text-sm font-medium text-primary-900">
               {votesNeeded} voti per il premium
             </p>
-            <p className="text-xs text-blue-700">
+            <p className="text-xs text-primary-700">
               Hai votato {totalVotes} problemi
             </p>
           </div>
           <Link
             href="/problems"
-            className="bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="bg-primary-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-primary-700 transition-colors"
           >
             Vota
           </Link>

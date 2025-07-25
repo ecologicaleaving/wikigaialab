@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Link href="/" className="flex items-center space-x-3 group">
                 <div className="relative w-10 h-10 transition-transform group-hover:scale-105">
                   <Image
-                    src="/images/wikigaialab-logo.svg"
+                    src="/images/wikigaialab-logo.png"
                     alt="WikiGaiaLab"
                     width={40}
                     height={40}

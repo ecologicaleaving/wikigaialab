@@ -128,7 +128,7 @@ export function AccessStatusCard({ className = '' }: { className?: string }) {
             {/* Call to Action */}
             <Link
               href="/problems"
-              className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 text-center font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-primary-600 text-white rounded-lg px-4 py-3 text-center font-medium hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
             >
               <Vote className="w-4 h-4" />
               Vota per Avanzare
