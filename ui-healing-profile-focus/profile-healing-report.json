@@ -1,0 +1,567 @@
+{
+  "metadata": {
+    "generatedAt": "2025-07-25T14:38:03.207Z",
+    "focusPage": "/profile",
+    "totalEvaluations": 11,
+    "profileEvaluations": 2
+  },
+  "profileAnalysis": {
+    "status": "NEEDS_IMPROVEMENT",
+    "averageScore": 0,
+    "viewportResults": [
+      {
+        "viewport": "mobile",
+        "score": 0,
+        "topIssue": "No issues found"
+      },
+      {
+        "viewport": "tablet",
+        "score": 0,
+        "topIssue": "No issues found"
+      }
+    ],
+    "commonIssues": [],
+    "priorityRecommendations": []
+  },
+  "comparisonAnalysis": {
+    "available": true,
+    "profileScore": 0,
+    "comparisons": {
+      "homepage": {
+        "averageScore": 8.8,
+        "comparison": "PROFILE_WORSE",
+        "difference": -8.8
+      },
+      "dashboard": {
+        "averageScore": 0,
+        "comparison": "EQUAL",
+        "difference": 0
+      },
+      "problems": {
+        "averageScore": 7.7,
+        "comparison": "PROFILE_WORSE",
+        "difference": -7.7
+      }
+    }
+  },
+  "recommendations": [
+    "🔴 Profile page needs brand identity improvements (0/10)"
+  ],
+  "detailedResults": [
+    {
+      "page": "homepage",
+      "viewport": "mobile",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 10,
+        "branding": 10,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 330 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "racconta",
+            "condividi",
+            "problema",
+            "soluzione",
+            "comunità",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "insieme",
+            "aiuta",
+            "bene"
+          ],
+          "totalTextLength": 2587
+        },
+        "interactivity": {
+          "heartSystemPresent": true,
+          "buttonCount": 8,
+          "accessibleButtonCount": 8,
+          "linkCount": 27,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": true,
+          "logoDetails": {
+            "selector": "img[src*=\"wikigaia\"]",
+            "position": {
+              "top": 12,
+              "left": 16
+            },
+            "size": {
+              "width": 40,
+              "height": 40
+            },
+            "inHeader": true
+          },
+          "headerElements": 1
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 18,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 36
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 27
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "✅ Page meets WikiGaia brand identity standards"
+      ],
+      "timestamp": "2025-07-25T14:36:50.338Z",
+      "overallScore": 8.8,
+      "screenshotPath": "ui-healing-profile-focus/homepage-mobile.png",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "page": "homepage",
+      "viewport": "tablet",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 10,
+        "branding": 10,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 330 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "laboratorio",
+            "racconta",
+            "condividi",
+            "problema",
+            "soluzione",
+            "comunità",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "insieme",
+            "aiuta",
+            "bene"
+          ],
+          "totalTextLength": 2637
+        },
+        "interactivity": {
+          "heartSystemPresent": true,
+          "buttonCount": 8,
+          "accessibleButtonCount": 8,
+          "linkCount": 27,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": true,
+          "logoDetails": {
+            "selector": "img[src*=\"wikigaia\"]",
+            "position": {
+              "top": 12,
+              "left": 16
+            },
+            "size": {
+              "width": 40,
+              "height": 40
+            },
+            "inHeader": true
+          },
+          "headerElements": 1
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 18,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 48
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 27
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "✅ Page meets WikiGaia brand identity standards"
+      ],
+      "timestamp": "2025-07-25T14:36:58.882Z",
+      "overallScore": 8.8,
+      "screenshotPath": "ui-healing-profile-focus/homepage-tablet.png",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "page": "homepage",
+      "viewport": "desktop",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 10,
+        "branding": 10,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 330 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "laboratorio",
+            "racconta",
+            "condividi",
+            "problema",
+            "soluzione",
+            "comunità",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "insieme",
+            "aiuta",
+            "bene"
+          ],
+          "totalTextLength": 2637
+        },
+        "interactivity": {
+          "heartSystemPresent": true,
+          "buttonCount": 8,
+          "accessibleButtonCount": 8,
+          "linkCount": 27,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": true,
+          "logoDetails": {
+            "selector": "img[src*=\"wikigaia\"]",
+            "position": {
+              "top": 12,
+              "left": 208
+            },
+            "size": {
+              "width": 40,
+              "height": 40
+            },
+            "inHeader": true
+          },
+          "headerElements": 1
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 18,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 48
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 27
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "✅ Page meets WikiGaia brand identity standards"
+      ],
+      "timestamp": "2025-07-25T14:37:08.817Z",
+      "overallScore": 8.8,
+      "screenshotPath": "ui-healing-profile-focus/homepage-desktop.png",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "page": "profile",
+      "viewport": "mobile",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/profile\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/profile\", waiting until \"networkidle\"\u001b[22m\n",
+      "overallScore": 0
+    },
+    {
+      "page": "profile",
+      "viewport": "tablet",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/profile\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/profile\", waiting until \"networkidle\"\u001b[22m\n",
+      "overallScore": 0
+    },
+    {
+      "page": "dashboard",
+      "viewport": "mobile",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/dashboard\", waiting until \"networkidle\"\u001b[22m\n",
+      "overallScore": 0
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/dashboard\", waiting until \"networkidle\"\u001b[22m\n",
+      "overallScore": 0
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/dashboard\", waiting until \"networkidle\"\u001b[22m\n",
+      "overallScore": 0
+    },
+    {
+      "page": "problems",
+      "viewport": "mobile",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 8,
+        "branding": 5,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 162 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "laboratorio",
+            "banco",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "benvenuto",
+            "insieme"
+          ],
+          "totalTextLength": 811
+        },
+        "interactivity": {
+          "heartSystemPresent": false,
+          "buttonCount": 4,
+          "accessibleButtonCount": 4,
+          "linkCount": 5,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": false,
+          "logoDetails": {},
+          "headerElements": 0
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 3,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 30
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 2
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used",
+        "🏷️ WikiGaia logo missing or not properly placed in header"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "🏷️ Add WikiGaia logo to header with proper spacing (24px minimum)",
+        "🔧 Overall brand compliance needs improvement (7.7/10)"
+      ],
+      "timestamp": "2025-07-25T14:37:40.523Z",
+      "overallScore": 7.7,
+      "screenshotPath": "ui-healing-profile-focus/problems-mobile.png",
+      "url": "http://localhost:3000/problems"
+    },
+    {
+      "page": "problems",
+      "viewport": "tablet",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 8,
+        "branding": 5,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 162 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "laboratorio",
+            "banco",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "benvenuto",
+            "insieme"
+          ],
+          "totalTextLength": 811
+        },
+        "interactivity": {
+          "heartSystemPresent": false,
+          "buttonCount": 4,
+          "accessibleButtonCount": 4,
+          "linkCount": 5,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": false,
+          "logoDetails": {},
+          "headerElements": 0
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 3,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 30
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 2
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used",
+        "🏷️ WikiGaia logo missing or not properly placed in header"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "🏷️ Add WikiGaia logo to header with proper spacing (24px minimum)",
+        "🔧 Overall brand compliance needs improvement (7.7/10)"
+      ],
+      "timestamp": "2025-07-25T14:37:50.352Z",
+      "overallScore": 7.7,
+      "screenshotPath": "ui-healing-profile-focus/problems-tablet.png",
+      "url": "http://localhost:3000/problems"
+    },
+    {
+      "page": "problems",
+      "viewport": "desktop",
+      "scores": {
+        "colors": 3,
+        "language": 10,
+        "interactivity": 8,
+        "branding": 5,
+        "typography": 10,
+        "layout": 10
+      },
+      "compliance": {
+        "colors": {
+          "wikiGaiaColorsFound": false,
+          "colorUsageRatio": 0,
+          "details": "0 WikiGaia color matches in 162 elements"
+        },
+        "language": {
+          "laboratoryLanguage": true,
+          "warmTone": true,
+          "laboratoryTermsFound": [
+            "laboratorio",
+            "banco",
+            "insieme",
+            "cuore"
+          ],
+          "warmTermsFound": [
+            "benvenuto",
+            "insieme"
+          ],
+          "totalTextLength": 811
+        },
+        "interactivity": {
+          "heartSystemPresent": false,
+          "buttonCount": 4,
+          "accessibleButtonCount": 4,
+          "linkCount": 5,
+          "accessibilityRatio": 1
+        },
+        "branding": {
+          "logoPresent": false,
+          "logoDetails": {},
+          "headerElements": 0
+        },
+        "typography": {
+          "interFontUsed": true,
+          "fontFamily": "inter, \"inter fallback\"",
+          "headingCount": 3,
+          "fontSizeRange": {
+            "min": 14,
+            "max": 30
+          }
+        },
+        "layout": {
+          "responsiveClassesPresent": true,
+          "gridSystemUsed": true,
+          "containerSystemUsed": true,
+          "responsiveElementCount": 2
+        }
+      },
+      "issues": [
+        "🎨 WikiGaia brand colors (#00B894, #00695C) not prominently used",
+        "🏷️ WikiGaia logo missing or not properly placed in header"
+      ],
+      "recommendations": [
+        "🎨 Implement WikiGaia primary color (#00B894) for buttons and key actions",
+        "🏷️ Add WikiGaia logo to header with proper spacing (24px minimum)",
+        "🔧 Overall brand compliance needs improvement (7.7/10)"
+      ],
+      "timestamp": "2025-07-25T14:38:00.090Z",
+      "overallScore": 7.7,
+      "screenshotPath": "ui-healing-profile-focus/problems-desktop.png",
+      "url": "http://localhost:3000/problems"
+    }
+  ]
+}

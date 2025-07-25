@@ -1,0 +1,310 @@
+{
+  "metadata": {
+    "generatedAt": "2025-07-25T14:16:36.207Z",
+    "processingTime": 16,
+    "totalScreens": 29,
+    "successfulEvaluations": 0,
+    "failedEvaluations": 10,
+    "averageScore": 0,
+    "screensNeedingHealing": 0
+  },
+  "summary": {
+    "scoreDistribution": {
+      "excellent": 0,
+      "good": 0,
+      "fair": 0,
+      "poor": 0
+    },
+    "topIssues": [],
+    "priorityActions": []
+  },
+  "screenResults": [
+    {
+      "screenName": "homepage",
+      "urlPath": "/",
+      "description": "Landing page principale (focus: problema→soluzione condivisa)",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [
+        {
+          "severity": "medium",
+          "viewport": "all",
+          "category": "brand_messaging",
+          "description": "Ensure hero section communicates laboratory workshop feeling",
+          "impact": "Brand positioning clarity"
+        }
+      ],
+      "recommendations": [
+        {
+          "priority": "medium",
+          "category": "content_strategy",
+          "action": "Strengthen laboratory workshop messaging",
+          "details": [
+            "Emphasize community problem-solving approach",
+            "Use artisanal language ('Il Maestro', 'Strumenti')",
+            "Highlight collaborative solution creation process",
+            "Add warmth and familiarity to interface copy"
+          ],
+          "estimatedEffort": "2-3 hours"
+        }
+      ],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.124Z"
+    },
+    {
+      "screenName": "homepage",
+      "urlPath": "/",
+      "description": "Landing page principale (focus: problema→soluzione condivisa)",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.129Z"
+    },
+    {
+      "screenName": "login",
+      "urlPath": "/login",
+      "description": "Schermata di autenticazione con Google OAuth",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.138Z"
+    },
+    {
+      "screenName": "login",
+      "urlPath": "/login",
+      "description": "Schermata di autenticazione con Google OAuth",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.139Z"
+    },
+    {
+      "screenName": "test-login",
+      "urlPath": "/test-login",
+      "description": "Pagina di login dedicata per automazione Playwright",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.141Z"
+    },
+    {
+      "screenName": "test-login",
+      "urlPath": "/test-login",
+      "description": "Pagina di login dedicata per automazione Playwright",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.142Z"
+    },
+    {
+      "screenName": "help",
+      "urlPath": "/help",
+      "description": "Pagina di aiuto e documentazione",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.145Z"
+    },
+    {
+      "screenName": "help",
+      "urlPath": "/help",
+      "description": "Pagina di aiuto e documentazione",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.146Z"
+    },
+    {
+      "screenName": "terms",
+      "urlPath": "/terms",
+      "description": "Termini e condizioni di servizio",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.148Z"
+    },
+    {
+      "screenName": "terms",
+      "urlPath": "/terms",
+      "description": "Termini e condizioni di servizio",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.149Z"
+    },
+    {
+      "screenName": "problems-list",
+      "urlPath": "/problems",
+      "description": "Bacheca dei problemi comunitari (dashboard principale)",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [
+        {
+          "severity": "low",
+          "viewport": "all",
+          "category": "interaction_design",
+          "description": "Verify heart voting animation matches laboratory artigiano style",
+          "impact": "User engagement quality"
+        }
+      ],
+      "recommendations": [
+        {
+          "priority": "low",
+          "category": "interaction_enhancement",
+          "action": "Enhance interactive elements",
+          "details": [
+            "Implement smooth heart animation (300ms with bounce)",
+            "Add hover effects matching laboratory aesthetic",
+            "Ensure consistent feedback for all actions",
+            "Optimize touch interactions for mobile users"
+          ],
+          "estimatedEffort": "1-2 hours"
+        }
+      ],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.151Z"
+    },
+    {
+      "screenName": "problems-list",
+      "urlPath": "/problems",
+      "description": "Bacheca dei problemi comunitari (dashboard principale)",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.154Z"
+    },
+    {
+      "screenName": "problem-detail",
+      "urlPath": "/problems/123",
+      "description": "Pagina dettaglio di un problema specifico",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.157Z"
+    },
+    {
+      "screenName": "problem-detail",
+      "urlPath": "/problems/123",
+      "description": "Pagina dettaglio di un problema specifico",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.159Z"
+    },
+    {
+      "screenName": "apps-catalog",
+      "urlPath": "/apps",
+      "description": "Catalogo delle soluzioni create (vetrina strumenti)",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.162Z"
+    },
+    {
+      "screenName": "apps-catalog",
+      "urlPath": "/apps",
+      "description": "Catalogo delle soluzioni create (vetrina strumenti)",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.163Z"
+    },
+    {
+      "screenName": "volantino-generator",
+      "urlPath": "/apps/volantino-generator",
+      "description": "Prima app dimostrativa - Generatore Volantini",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.166Z"
+    },
+    {
+      "screenName": "volantino-generator",
+      "urlPath": "/apps/volantino-generator",
+      "description": "Prima app dimostrativa - Generatore Volantini",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.167Z"
+    },
+    {
+      "screenName": "app-detail",
+      "urlPath": "/apps/[slug]",
+      "description": "Pagina dettaglio di un'app specifica",
+      "authRequired": false,
+      "screenshots": {
+        "mobile": null,
+        "tablet": null,
+        "desktop": null
+      },
+      "scores": {},
+      "issues": [],
+      "recommendations": [],
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.172Z"
+    },
+    {
+      "screenName": "app-detail",
+      "urlPath": "/apps/[slug]",
+      "description": "Pagina dettaglio di un'app specifica",
+      "error": "page.waitForTimeout: Target page, context or browser has been closed",
+      "overallScore": 0,
+      "timestamp": "2025-07-25T14:16:36.173Z"
+    }
+  ],
+  "recommendations": {
+    "immediate": [],
+    "shortTerm": [],
+    "longTerm": []
+  }
+}

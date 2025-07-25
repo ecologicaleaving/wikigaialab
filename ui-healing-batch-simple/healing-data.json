@@ -1,0 +1,509 @@
+{
+  "summary": {
+    "processed": 6,
+    "successful": 6,
+    "averageScore": 6.783333333333334,
+    "needingHealing": 6
+  },
+  "screens": [
+    {
+      "name": "homepage",
+      "path": "/",
+      "description": "Main landing page",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/homepage-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/homepage-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/homepage-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:21:44.606Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 7.3,
+          "tablet": 6.9,
+          "desktop": 7.1
+        },
+        "issues": [
+          {
+            "severity": "low",
+            "viewport": "mobile",
+            "category": "polish_needed",
+            "description": "UI polish needed in mobile view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "tablet",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in tablet view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "low",
+            "viewport": "desktop",
+            "category": "polish_needed",
+            "description": "UI polish needed in desktop view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "all",
+            "category": "messaging",
+            "description": "Ensure homepage clearly communicates \"laboratorio digitale\" concept",
+            "impact": "Brand positioning and user understanding"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for homepage",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for homepage",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for homepage",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for homepage",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          }
+        ],
+        "overallScore": 7.1
+      }
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "description": "Login page",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/login-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/login-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/login-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:22:04.458Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 6.6,
+          "tablet": 7.2,
+          "desktop": 6.5
+        },
+        "issues": [
+          {
+            "severity": "medium",
+            "viewport": "mobile",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in mobile view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "low",
+            "viewport": "tablet",
+            "category": "polish_needed",
+            "description": "UI polish needed in tablet view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "desktop",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in desktop view",
+            "impact": "Affects brand perception and trust"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for login",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for login",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for login",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          }
+        ],
+        "overallScore": 6.8
+      }
+    },
+    {
+      "name": "problems-list",
+      "path": "/problems",
+      "description": "Problems listing",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/problems-list-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/problems-list-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/problems-list-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:22:18.460Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 7,
+          "tablet": 7.1,
+          "desktop": 6.7
+        },
+        "issues": [
+          {
+            "severity": "low",
+            "viewport": "mobile",
+            "category": "polish_needed",
+            "description": "UI polish needed in mobile view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "low",
+            "viewport": "tablet",
+            "category": "polish_needed",
+            "description": "UI polish needed in tablet view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "desktop",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in desktop view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "low",
+            "viewport": "all",
+            "category": "interaction_design",
+            "description": "Heart voting buttons should have artisan-style animations",
+            "impact": "User engagement and brand consistency"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for problems-list",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for problems-list",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for problems-list",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for problems-list",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          }
+        ],
+        "overallScore": 6.9
+      }
+    },
+    {
+      "name": "apps-catalog",
+      "path": "/apps",
+      "description": "Apps catalog",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/apps-catalog-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/apps-catalog-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/apps-catalog-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:22:32.016Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 7,
+          "tablet": 6.2,
+          "desktop": 6.5
+        },
+        "issues": [
+          {
+            "severity": "low",
+            "viewport": "mobile",
+            "category": "polish_needed",
+            "description": "UI polish needed in mobile view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "tablet",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in tablet view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "medium",
+            "viewport": "desktop",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in desktop view",
+            "impact": "Affects brand perception and trust"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for apps-catalog",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for apps-catalog",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for apps-catalog",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          }
+        ],
+        "overallScore": 6.6
+      }
+    },
+    {
+      "name": "help",
+      "path": "/help",
+      "description": "Help page",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/help-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/help-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/help-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:22:44.965Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 6.6,
+          "tablet": 6.6,
+          "desktop": 6.5
+        },
+        "issues": [
+          {
+            "severity": "medium",
+            "viewport": "mobile",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in mobile view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "medium",
+            "viewport": "tablet",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in tablet view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "medium",
+            "viewport": "desktop",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in desktop view",
+            "impact": "Affects brand perception and trust"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for help",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for help",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for help",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          }
+        ],
+        "overallScore": 6.6
+      }
+    },
+    {
+      "name": "volantino-generator",
+      "path": "/apps/volantino-generator",
+      "description": "Volantino generator app",
+      "screenshots": {
+        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/volantino-generator-mobile.png",
+        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/volantino-generator-tablet.png",
+        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/ui-healing-batch-simple/volantino-generator-desktop.png"
+      },
+      "timestamp": "2025-07-25T14:22:58.526Z",
+      "evaluation": {
+        "scores": {
+          "mobile": 7,
+          "tablet": 6.5,
+          "desktop": 6.7
+        },
+        "issues": [
+          {
+            "severity": "low",
+            "viewport": "mobile",
+            "category": "polish_needed",
+            "description": "UI polish needed in mobile view",
+            "impact": "Minor user experience improvements"
+          },
+          {
+            "severity": "medium",
+            "viewport": "tablet",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in tablet view",
+            "impact": "Affects brand perception and trust"
+          },
+          {
+            "severity": "medium",
+            "viewport": "desktop",
+            "category": "brand_consistency",
+            "description": "Brand consistency issues in desktop view",
+            "impact": "Affects brand perception and trust"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "long-term",
+            "action": "Polish UI details for volantino-generator",
+            "details": [
+              "Fine-tune micro-interactions",
+              "Enhance loading states",
+              "Improve accessibility attributes",
+              "Optimize animations (200-300ms transitions)"
+            ],
+            "effort": "1-2 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for volantino-generator",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          },
+          {
+            "priority": "short-term",
+            "action": "Improve brand consistency for volantino-generator",
+            "details": [
+              "Review color usage against WikiGaia standards",
+              "Update microcopy to match laboratory tone",
+              "Implement proper spacing using 4px grid",
+              "Add warm, welcoming language"
+            ],
+            "effort": "2-3 hours"
+          }
+        ],
+        "overallScore": 6.7
+      }
+    }
+  ],
+  "generated": "2025-07-25T14:23:11.234Z"
+}

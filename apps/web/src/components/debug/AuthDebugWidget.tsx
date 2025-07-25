@@ -28,8 +28,11 @@ export const AuthDebugWidget: React.FC<AuthDebugWidgetProps> = ({
     }
   }, [isAuthenticated]);
 
-  // Only show in development
-  if (process.env.NODE_ENV !== 'development') return null;
+  // Show in development or when debug param is present
+  const isDebugMode = process.env.NODE_ENV === 'development' || 
+                      (typeof window !== 'undefined' && window.location.search.includes('debug=auth'));
+  
+  if (!isDebugMode) return null;
 
   return (
     <motion.div

@@ -15,6 +15,7 @@ import { ReferralWidget } from '../growth/ReferralWidget';
 import { CampaignWidget } from '../growth/CampaignWidget';
 import { LeaderboardWidget } from '../growth/LeaderboardWidget';
 import { AdminAccessWidget } from '../admin/AdminAccessWidget';
+import { AdminStatusIndicator } from '../admin/AdminStatusIndicator';
 import { AuthDebugWidget } from '../debug/AuthDebugWidget';
 import { 
   Calendar, 
@@ -587,6 +588,9 @@ function OverviewTab({
       <aside className="col-span-12 lg:col-span-4 space-y-4" role="complementary" aria-label="Dashboard sidebar">
         {/* Auth Debug Widget (Development Only) */}
         <AuthDebugWidget />
+        
+        {/* Admin Status Indicator (Always Visible) */}
+        <AdminStatusIndicator />
         
         {/* Admin Access Widget */}
         <AdminAccessWidget />
