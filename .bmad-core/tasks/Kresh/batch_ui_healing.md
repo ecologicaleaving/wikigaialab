@@ -41,6 +41,17 @@ WAIT_FOR_ACKNOWLEDGMENT = true                       # Pause between screens in 
 BEFORE_AFTER_COMPARISON = true                       # Generate before/after screenshots
 DETAILED_FIX_PLANS = true                           # Provide step-by-step fix recommendations
 
+# SPECIALIZED FOCUS FLAGS
+INTERACTION_FOCUS = false                            # --interaction flag: Focus on UX patterns, micro-interactions
+BRAND_IDENTITY_FOCUS = false                         # --brand-identity flag: Focus on brand consistency, colors, typography  
+ICONS_FOCUS = false                                  # --icons flag: Focus on iconography, graphics standards
+MULTI_FOCUS_MODE = false                            # Automatically set when multiple flags are used
+
+# FOCUS-SPECIFIC SCORING WEIGHTS (when flags are active)
+SPECIALIZED_WEIGHT = 0.7                            # Weight for specialized focus area (70%)
+GENERAL_WEIGHT = 0.3                                # Weight for other aspects (30%)
+MULTI_FOCUS_EQUAL_WEIGHT = true                     # Equal distribution when multiple flags used
+
 # OUTPUT SETTINGS
 OUTPUT_DIR = "/docs/ui/healing-reports/"             # Directory for reports and screenshots
 SAVE_SCREENSHOTS = true                              # Save all screenshots to disk
@@ -226,17 +237,63 @@ USER_STATUS = "active"
 /ui-single-page-iteration https://your-app.com/specific-page
 ```
 
-**Modalità Supportate:**
-- **Total Mode**: `*ux-total-iteration` - Analizza tutte le pagine dell'applicazione automaticamente
-- **Single Page Mode**: `/ui-single-page-iteration /path` - Analizza solo la pagina specificata come argomento
-- **Same Process**: Stessa autenticazione, valutazione e healing per entrambe le modalità
+## Specialized Analysis Flags
 
-**Esempi pratici in Claude Code:**
+**Focus on specific UI aspects with specialized flags:**
+
+### Interaction & UX Focus
 ```
-/ui-single-page-iteration /dashboard
-/ui-single-page-iteration /user/profile
-/ui-single-page-iteration /admin/settings
-/ui-single-page-iteration /product/123
+*ux-total-iteration --interaction
+/ui-single-page-iteration /dashboard --interaction
+```
+- **Primary Reference**: `/docs/ui/interactivity.md`
+- **Focus Areas**: UX patterns, micro-interactions, user flow consistency
+- **Enhanced Scoring**: 70% weight on interaction compliance vs 30% other aspects
+- **Specialized Analysis**: Hover states, transitions, feedback mechanisms, error handling
+
+### Brand Identity Focus  
+```
+*ux-total-iteration --brand-identity
+/ui-single-page-iteration /homepage --brand-identity
+```
+- **Primary Reference**: `/docs/ui/identity.md` 
+- **Focus Areas**: Brand consistency, color compliance, typography adherence
+- **Enhanced Scoring**: 70% weight on brand identity vs 30% other aspects
+- **Specialized Analysis**: Logo usage, color palette adherence, brand voice consistency
+
+### Icons & Graphics Focus
+```
+*ux-total-iteration --icons
+/ui-single-page-iteration /dashboard --icons
+```
+- **Primary Reference**: `/docs/ui/icons-and-graphics.md`
+- **Focus Areas**: Icon consistency, graphic standards, visual hierarchy
+- **Enhanced Scoring**: 70% weight on iconography/graphics vs 30% other aspects  
+- **Specialized Analysis**: Icon style consistency, graphic quality, visual clarity
+
+### Combined Flags Support
+```
+*ux-total-iteration --interaction --brand-identity
+/ui-single-page-iteration /profile --icons --interaction
+*ux-total-iteration --interaction --brand-identity --icons
+```
+- **Multi-Focus Analysis**: Equal weight distribution among selected aspects
+- **Comprehensive Reporting**: Detailed analysis for each specified focus area
+- **Cross-Reference Validation**: Ensures consistency across selected aspects
+
+**Modalità Supportate:**
+- **Total Mode**: `*ux-total-iteration [flags]` - Analizza tutte le pagine con focus specificato
+- **Single Page Mode**: `/ui-single-page-iteration /path [flags]` - Analizza pagina specifica con focus
+- **Flag Combinations**: Supporta multiple flag per analisi multi-aspetto
+- **Same Process**: Stessa autenticazione, valutazione e healing con priorità focus
+
+**Esempi pratici con flag specializzate:**
+```
+*ux-total-iteration --interaction                    # Focus UX su tutta l'app
+/ui-single-page-iteration /dashboard --brand-identity # Focus brand sulla dashboard
+/ui-single-page-iteration /profile --icons           # Focus icone sul profilo  
+*ux-total-iteration --interaction --icons            # Focus UX + icone
+/ui-single-page-iteration /admin --interaction --brand-identity --icons # Tutti i focus
 ```
 
 ---
@@ -246,6 +303,11 @@ USER_STATUS = "active"
 ### Step 1: Auto-Discovery, User Management & Authentication Setup
 **For Total Mode (*ux-total-iteration):**
 - Check if `SCREENS_FILE` exists
+- **PARSE COMMAND FLAGS:**
+  - Detect `--interaction`, `--brand-identity`, `--icons` flags
+  - Set `INTERACTION_FOCUS`, `BRAND_IDENTITY_FOCUS`, `ICONS_FOCUS` accordingly
+  - Enable `MULTI_FOCUS_MODE` if multiple flags detected
+  - Adjust scoring weights based on active flags
 - **AUTO-ENDPOINT DETECTION:**
   - If `LOGIN_URL = "auto-detect"`: Test common endpoints (`/login`, `/signin`, `/auth`) 
   - If `SIGNUP_URL = "auto-detect"`: Test common endpoints (`/signup`, `/register`, `/auth/register`)
@@ -267,6 +329,7 @@ USER_STATUS = "active"
 
 **For Single Page Mode (/ui-single-page-iteration /path):**
 - Parse the provided page argument (URL path or full URL) and set `TARGET_PAGE`
+- **PARSE COMMAND FLAGS:** Same flag detection and configuration as Total Mode
 - Load authentication credentials from `SCREENS_FILE` (create if needed)
 - **AUTHENTICATION SETUP:** Same as total mode using global auth settings
 - **SINGLE PAGE VALIDATION:**
@@ -300,41 +363,115 @@ After each screenshot capture, **IMMEDIATELY DISPLAY**:
    - Screen name and URL
    - Screenshot preview (saved to `OUTPUT_DIR` if `SAVE_SCREENSHOTS = true`)
    - Accessibility structure summary
+   - **Active Focus Areas** (if specialized flags used): e.g., "🎯 INTERACTION FOCUS", "🎨 BRAND IDENTITY FOCUS", "🎨 ICONS FOCUS"
 
-2. **Detailed Scoring (1-10)**:
-   - Layout compliance: X/10 (with specific issues)
-   - Visual design adherence: X/10 (with specific issues) 
-   - UX rules conformity: X/10 (with specific issues)
-   - Accessibility standards: X/10 (with specific issues)
+2. **Detailed Scoring (1-10)** - **Adjusted for Active Flags**:
+   
+   **Standard Scoring (no flags):**
+   - Layout compliance: X/10 (25% weight)
+   - Visual design adherence: X/10 (25% weight) 
+   - UX rules conformity: X/10 (25% weight)
+   - Accessibility standards: X/10 (25% weight)
+   
+   **Flag-Specific Scoring Examples:**
+   
+   **With `--interaction` flag:**
+   - 🎯 **UX/Interaction compliance: X/10 (70% weight)** ← Primary focus
+     - Micro-interactions quality
+     - User flow consistency  
+     - Feedback mechanisms
+     - Error handling patterns
+   - General design/layout: X/10 (30% weight)
+   
+   **With `--brand-identity` flag:**
+   - 🎨 **Brand identity compliance: X/10 (70% weight)** ← Primary focus
+     - Color palette adherence
+     - Typography consistency
+     - Logo usage compliance
+     - Brand voice alignment
+   - General UX/layout: X/10 (30% weight)
+   
+   **With `--icons` flag:**
+   - 🎨 **Icons/Graphics compliance: X/10 (70% weight)** ← Primary focus
+     - Icon style consistency
+     - Graphic quality standards
+     - Visual hierarchy clarity
+     - Symbolic consistency
+   - General design/UX: X/10 (30% weight)
+   
+   **With multiple flags (e.g., `--interaction --brand-identity`):**
+   - 🎯 UX/Interaction compliance: X/10 (35% weight)
+   - 🎨 Brand identity compliance: X/10 (35% weight)  
+   - General aspects: X/10 (30% weight)
+   
    - **Overall Score**: X/10
 
-3. **Issue Documentation** (if score < `SCORE_THRESHOLD`):
-   - List of specific problems found
-   - Reference to violated style guide rules in `DOCS_PATH`
-   - Visual annotations on screenshots (if `ANNOTATE_ISSUES = true`)
-   - Impact assessment (Critical/High/Medium/Low)
+3. **Flag-Specific Issue Documentation** (if score < `SCORE_THRESHOLD`):
+   - **Primary Focus Issues**: Detailed analysis of flagged aspect violations
+   - **Reference Documentation**: Direct citations from relevant `/docs/ui/` files:
+     - `--interaction` → `/docs/ui/interactivity.md` rules
+     - `--brand-identity` → `/docs/ui/identity.md` guidelines  
+     - `--icons` → `/docs/ui/icons-and-graphics.md` standards
+   - **Secondary Issues**: Brief summary of non-focus problems
+   - **Cross-Reference Violations**: Issues affecting multiple focus areas
+   - Impact assessment prioritized by focus area
 
-4. **Fix Plan** (if score < `SCORE_THRESHOLD` AND `DETAILED_FIX_PLANS = true`):
-   - Prioritized action items
-   - Specific changes required
-   - Code/CSS modifications needed
-   - Estimated implementation effort
+4. **Focus-Oriented Fix Plan** (if score < `SCORE_THRESHOLD` AND `DETAILED_FIX_PLANS = true`):
+   - **Priority 1**: Focus area improvements (highest weight)
+   - **Priority 2**: Cross-cutting improvements affecting focus + general
+   - **Priority 3**: General improvements (lower weight)
+   - **Specialized Recommendations**: Specific to flag focus areas
+   - **Implementation Sequence**: Focus fixes first, then general improvements
 
 **For Single Page Mode:** Process stops here if score ≥ `SCORE_THRESHOLD`, continues to healing if below
 **For Total Mode:** **WAIT FOR USER ACKNOWLEDGMENT** (if `WAIT_FOR_ACKNOWLEDGMENT = true`) before proceeding to next screen
 
 ### Step 3: Batch Evaluation
-Reference the directory `/docs/ui/` and analyze the files:
+
+**Reference Documentation - Adjusted for Active Flags:**
+
+**Standard Analysis (no flags):**
+Reference the directory `/docs/ui/` and analyze all files equally:
 - `front_end_spec.md` - Technical specifications
 - `identity.md` & `identity_template.md` - Brand identity guidelines
 - `interactivity.md` & `interactivity_template.md` - UX interaction rules
+- `icons-and-graphics.md` - Iconography and graphics standards
 - `logo-guidelines.md` - Logo usage and branding
 - `wikigaiaLogo.png` - Visual brand reference
 
-For each captured screenshot:
-- Grade objectively against standards (1-10 scale)
-- Document specific compliance issues
-- Record detailed reasoning for each score
+**Flag-Specific Analysis:**
+
+**With `--interaction` flag:**
+- **Primary Reference**: `/docs/ui/interactivity.md` & `interactivity_template.md` (70% evaluation weight)
+- **Focus Areas**: UX patterns, micro-interactions, user flow consistency, feedback mechanisms
+- **Secondary References**: Other UI docs for context (30% weight)
+- **Specialized Evaluation**: Hover states, transitions, error handling, form interactions
+
+**With `--brand-identity` flag:**
+- **Primary Reference**: `/docs/ui/identity.md` & `identity_template.md` (70% evaluation weight)
+- **Focus Areas**: Color compliance, typography adherence, brand voice consistency
+- **Visual References**: `logo-guidelines.md`, `wikigaiaLogo.png` 
+- **Secondary References**: Other UI docs for context (30% weight)
+- **Specialized Evaluation**: Brand element placement, color palette usage, font consistency
+
+**With `--icons` flag:**
+- **Primary Reference**: `/docs/ui/icons-and-graphics.md` (70% evaluation weight)
+- **Focus Areas**: Icon consistency, graphic standards, visual hierarchy
+- **Visual References**: Existing iconography examples in documentation
+- **Secondary References**: Other UI docs for context (30% weight)
+- **Specialized Evaluation**: Icon style adherence, graphic quality, symbolic clarity
+
+**Multi-Flag Analysis:**
+When multiple flags are used, evaluation weight is distributed equally among active flags:
+- 2 flags: 35% each + 30% general
+- 3 flags: 23.3% each + 30% general
+
+**For each captured screenshot:**
+- **Primary Grading**: Against flagged aspects using specialized criteria (higher weight)
+- **Secondary Grading**: Against general standards (lower weight)
+- **Cross-Reference Validation**: Ensure focus areas don't conflict with general standards
+- **Flag-Specific Issue Documentation**: Detailed reasoning prioritized by active flags
+- **Specialized Scoring Matrix**: Enhanced detail for focus areas
 
 ### Step 4: Batch Healing Process
 For each screen with score < 8/10:
@@ -357,20 +494,26 @@ Generate focused report for the analyzed page:
 1. **Executive Summary**:
    - **Total Mode**: Number of screens processed, average score, critical issues across app
    - **Single Page**: Target page analysis, final score, issue resolution status
+   - **Active Flags Summary**: Which specialized focuses were applied and their impact
 
-2. **Detailed Analysis**:
+2. **Flag-Specific Analysis Section** (if specialized flags used):
+   - **Focus Area Performance**: Detailed scoring for flagged aspects across all analyzed pages
+   - **Cross-Page Consistency**: How focus areas perform consistently across different screens
+   - **Specialized Recommendations**: Focus-specific improvements prioritized by flag importance
+
+3. **Detailed Analysis**:
    - **Total Mode**: Score matrix for all screens, cross-page consistency issues
    - **Single Page**: Deep-dive analysis of the target page, detailed fix implementation
 
-3. **Visual Evidence**:
+4. **Visual Evidence**:
    - **Total Mode**: Gallery of all before/after screenshots organized by screen
    - **Single Page**: Complete before/after documentation for target page
 
-4. **Actionable Recommendations**:
+5. **Actionable Recommendations**:
    - **Total Mode**: Site-wide improvements, pattern fixes, priority roadmap
    - **Single Page**: Specific remaining tasks, related pages that may need similar fixes
 
-5. **Metrics & Tracking**:
+6. **Metrics & Tracking**:
    - **Total Mode**: Overall site health score, improvement percentages per screen
    - **Single Page**: Improvement metrics, compliance percentage, time to resolution
 
@@ -380,25 +523,49 @@ Generate focused report for the analyzed page:
 # BATCH UI HEALING REPORT
 Generated: [TIMESTAMP]
 Screens Processed: [COUNT]
+Active Flags: [INTERACTION/BRAND-IDENTITY/ICONS]
 Average Score: [X.X]/10
 Screens Healed: [COUNT]
 
-## SCORE SUMMARY
-┌─────────────────────────┬───────┬────────┬──────────┐
-│ Screen                  │ Score │ Status │ Issues   │
-├─────────────────────────┼───────┼────────┼──────────┤
-│ homepage                │  9/10 │   ✅   │    1     │
-│ login                   │  7/10 │   🔄   │    3     │
-│ dashboard               │  8/10 │   ✅   │    2     │
-└─────────────────────────┴───────┴────────┴──────────┘
+## FOCUS AREAS PERFORMANCE (if flags used)
+🎯 Interaction Focus: [X.X]/10 average
+🎨 Brand Identity Focus: [X.X]/10 average  
+🎨 Icons/Graphics Focus: [X.X]/10 average
 
-## CRITICAL ISSUES FOUND
-1. [Screen]: [Issue description]
-2. [Screen]: [Issue description]
+## SCORE SUMMARY
+┌─────────────────────────┬───────┬────────┬──────────┬─────────────┐
+│ Screen                  │ Score │ Status │ Issues   │ Focus Score │
+├─────────────────────────┼───────┼────────┼──────────┼─────────────┤
+│ homepage                │  9/10 │   ✅   │    1     │ 🎯 9/10     │
+│ login                   │  7/10 │   🔄   │    3     │ 🎯 6/10     │
+│ dashboard               │  8/10 │   ✅   │    2     │ 🎯 8/10     │
+└─────────────────────────┴───────┴────────┴──────────┴─────────────┘
+
+## FOCUS-SPECIFIC CRITICAL ISSUES
+🎯 Interaction Issues:
+1. [Screen]: [Interaction-specific issue]
+2. [Screen]: [UX pattern violation]
+
+🎨 Brand Identity Issues:
+1. [Screen]: [Brand consistency problem]
+2. [Screen]: [Color/typography issue]
+
+🎨 Icons/Graphics Issues:
+1. [Screen]: [Icon inconsistency]
+2. [Screen]: [Graphics quality issue]
 
 ## HEALING ACTIONS TAKEN
-1. [Screen]: [Action description]
-2. [Screen]: [Action description]
+🎯 Interaction Improvements:
+1. [Screen]: [UX enhancement action]
+2. [Screen]: [Interaction pattern fix]
+
+🎨 Brand Improvements:
+1. [Screen]: [Brand consistency fix]
+2. [Screen]: [Typography correction]
+
+🎨 Icon/Graphics Improvements:
+1. [Screen]: [Icon standardization]
+2. [Screen]: [Graphics quality enhancement]
 ```
 
 ## Advanced Configuration
@@ -426,6 +593,13 @@ SCORING_WEIGHTS = {
   ux_rules: 0.3,
   accessibility: 0.1
 }
+
+# Flag-specific weight overrides
+FLAG_SCORING_WEIGHTS = {
+  interaction: {interaction_compliance: 0.7, general: 0.3},
+  brand_identity: {brand_compliance: 0.7, general: 0.3},
+  icons: {iconography_compliance: 0.7, general: 0.3}
+}
 ```
 
 ---
@@ -437,7 +611,24 @@ SCORING_WEIGHTS = {
 *ux-total-iteration
 ```
 
-### Method 2: Manual Steps
+### Method 1a: Quick Start with Specialized Focus
+```
+*ux-total-iteration --interaction          # Focus on UX patterns and interactions
+*ux-total-iteration --brand-identity       # Focus on brand consistency  
+*ux-total-iteration --icons                # Focus on iconography and graphics
+*ux-total-iteration --interaction --brand-identity  # Combined focus areas
+```
+
+### Method 2: Single Page Analysis
+```
+/ui-single-page-iteration /dashboard
+/ui-single-page-iteration /profile --interaction
+/ui-single-page-iteration /homepage --brand-identity  
+/ui-single-page-iteration /admin --icons
+/ui-single-page-iteration /settings --interaction --icons
+```
+
+### Method 3: Manual Steps
 
 #### 1. Prerequisites - Microsoft Playwright MCP
 **MANDATORY**: Install Microsoft Playwright MCP server
@@ -536,23 +727,28 @@ Begin by checking for /docs/ui/page-list.md and creating it if needed, then proc
 ### 6. Monitoring Total Progress
 The system will show:
 - Current screen being processed (X of Y)
-- Real-time scores as they're calculated
+- **Active flags and focus areas** being applied
+- Real-time scores as they're calculated (both general and focus-specific)
 - Healing actions being applied
 - Progress through the batch
 
 ### 7. Final Output
 - Consolidated report with all results
+- **Flag-specific performance summaries**
 - Before/after screenshots organized by screen
-- Actionable recommendations for remaining issues
+- **Focus-area-prioritized actionable recommendations** for remaining issues
 - Export data for external tracking
 
-**Ready for total or single page healing with mandatory reporting?** Update the APPLICATION_URL and run your preferred command! 🚀
+**Ready for total or single page healing with specialized focus flags?** Update the APPLICATION_URL and run your preferred command! 🚀
 
 ## System Integration Summary
 
-This Total UI Healing System provides **comprehensive evaluation and fix reporting** with **flexible analysis modes**:
+This Total UI Healing System provides **comprehensive evaluation and fix reporting** with **flexible analysis modes and specialized focus capabilities**:
 
 ✅ **Dual Execution Modes**: Total iteration (`*ux-total-iteration`) or single page (`*ux-single-page /path`)  
+✅ **Specialized Focus Flags**: `--interaction`, `--brand-identity`, `--icons` for targeted analysis
+✅ **Intelligent Scoring Weights**: 70% focus area + 30% general when flags are used
+✅ **Multi-Flag Support**: Combine multiple flags for comprehensive specialized analysis
 ✅ **Mandatory Evaluation Display**: Every screen gets detailed scoring and issue analysis  
 ✅ **Comprehensive Fix Plans**: Step-by-step remediation with priorities and effort estimates  
 ✅ **Before/After Documentation**: Visual evidence of all improvements  
@@ -564,15 +760,27 @@ This Total UI Healing System provides **comprehensive evaluation and fix reporti
 
 **Analyze entire application:**
 ```
-*ux-total-iteration
+*ux-total-iteration                                  # Complete analysis all aspects
+*ux-total-iteration --interaction                   # Focus on UX patterns across app
+*ux-total-iteration --brand-identity                # Focus on brand consistency across app  
+*ux-total-iteration --icons                         # Focus on iconography across app
+*ux-total-iteration --interaction --brand-identity  # Combined UX + brand focus
 ```
 
 **Analyze specific pages:**
 ```
-*ux-single-page /dashboard
-*ux-single-page /profile
-*ux-single-page /admin/settings
-*ux-single-page https://your-app.com/special-page
+/ui-single-page-iteration /dashboard                           # Standard analysis
+/ui-single-page-iteration /dashboard --interaction             # UX-focused analysis
+/ui-single-page-iteration /homepage --brand-identity           # Brand-focused analysis
+/ui-single-page-iteration /profile --icons                     # Icons-focused analysis
+/ui-single-page-iteration /admin/settings --interaction --icons # Combined UX + icons focus
+/ui-single-page-iteration https://your-app.com/special-page --brand-identity
+```
+
+**Flag Combinations for Comprehensive Analysis:**
+```
+*ux-total-iteration --interaction --brand-identity --icons     # All specialized aspects
+/ui-single-page-iteration /critical-page --interaction --brand-identity --icons
 ```
 
 ## Documentation References
@@ -629,3 +837,45 @@ USER_STATUS = "active"                               # Auto-set after successful
 - **Password**: Uses `UIHealing2025!` (secure default, can be customized)
 - **URLs**: Auto-detects login/signup endpoints or uses configured values
 - **Ready to run**: No placeholder replacement needed - works out of the box!
+
+## 🎯 Flag-Specific Focus Areas Summary
+
+### `--interaction` Flag
+- **Primary Reference**: `/docs/ui/interactivity.md`
+- **Analysis Weight**: 70% interaction + 30% general
+- **Key Focus Areas**:
+  - Micro-interactions (hover, click, focus states)
+  - User flow consistency and navigation
+  - Feedback mechanisms and response patterns
+  - Error handling and validation UX
+  - Form interactions and input patterns
+  - Transition smoothness and timing
+
+### `--brand-identity` Flag  
+- **Primary Reference**: `/docs/ui/identity.md`
+- **Analysis Weight**: 70% brand + 30% general
+- **Key Focus Areas**:
+  - Color palette consistency and compliance
+  - Typography hierarchy and font usage
+  - Logo placement and usage guidelines
+  - Brand voice and messaging consistency
+  - Visual identity element alignment
+  - Brand-specific component styling
+
+### `--icons` Flag
+- **Primary Reference**: `/docs/ui/icons-and-graphics.md`
+- **Analysis Weight**: 70% iconography + 30% general  
+- **Key Focus Areas**:
+  - Icon style consistency across app
+  - Graphics quality and resolution standards
+  - Visual hierarchy and icon sizing
+  - Symbolic consistency and meaning clarity
+  - Icon accessibility and contrast
+  - Graphics performance and optimization
+
+### Multi-Flag Combinations
+When multiple flags are used simultaneously:
+- **2 flags**: 35% each + 30% general aspects
+- **3 flags**: 23.3% each + 30% general aspects
+- **Cross-validation**: Ensures focus areas complement rather than conflict
+- **Unified reporting**: Integrates all focus areas into cohesive recommendations
