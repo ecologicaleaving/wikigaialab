@@ -50,7 +50,7 @@ export default function HomePage() {
           
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Unisciti ai vicini che capiscono esattamente cosa stai passando
+            Condividi il tuo problema, insieme creiamo la soluzione
           </p>
 
           {/* Hero Image Placeholder - Will be replaced with real photo */}
@@ -75,7 +75,7 @@ export default function HomePage() {
           
           {/* Social Proof */}
           <p className="text-gray-600 text-lg">
-            Oltre 2.000 vicini che si aiutano a vicenda
+            Oltre 2.000 problemi trasformati in soluzioni condivise
           </p>
         </div>
       </section>
@@ -87,7 +87,7 @@ export default function HomePage() {
             Problemi che Risolviamo Ogni Giorno
           </h2>
           <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            Nessun problema è troppo piccolo quando i vicini si prendono cura l'uno dell'altro
+            Quando abbastanza persone condividono lo stesso problema, creiamo insieme la soluzione
           </p>
 
           <div className="grid md:grid-cols-3 gap-12">
@@ -140,10 +140,10 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-center text-gray-900 mb-4">
-            È Semplice Come Chiedere a un Amico
+            Dal Problema alla Soluzione Condivisa
           </h2>
           <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            Tre semplici passi per ottenere l'aiuto di cui hai bisogno
+            Tre semplici passi per trasformare il tuo problema in una soluzione per tutti
           </p>
 
           <div className="space-y-12">
@@ -157,8 +157,8 @@ export default function HomePage() {
                   Condividi il Tuo Problema
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Raccontaci di cosa hai bisogno, proprio come chiederesti a un vicino di casa. 
-                  Usa parole semplici - siamo tutti persone normali qui.
+                  Descrivi il tuo problema con parole semplici. Ogni problema condiviso 
+                  è il primo passo verso una soluzione che aiuterà anche altri.
                 </p>
               </div>
             </div>
@@ -170,11 +170,11 @@ export default function HomePage() {
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-3">
-                  Altri si Riconoscono
+                  La Comunità si Mobilita
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  I vicini che hanno lo stesso problema ti sostengono con un cuore. 
-                  Quando abbastanza persone condividono lo stesso bisogno, sappiamo che è importante.
+                  Le persone che vivono lo stesso problema ti sostengono con un cuore. 
+                  Quando raggiungiamo abbastanza sostegno, sappiamo che vale la pena creare una soluzione.
                 </p>
               </div>
             </div>
@@ -186,11 +186,11 @@ export default function HomePage() {
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-3">
-                  Aiutiamo Insieme
+                  Creiamo la Soluzione
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Quando abbastanza persone hanno bisogno dello stesso aiuto, creiamo insieme una soluzione. 
-                  Persone vere che aiutano persone vere, non tecnologia complicata.
+                  Il nostro team sviluppa strumenti e risorse specifiche per risolvere il problema. 
+                  Ogni soluzione nasce dall'esperienza reale di chi vive quella difficoltà.
                 </p>
               </div>
             </div>
@@ -243,7 +243,7 @@ export default function HomePage() {
             Pronto per Iniziare?
           </h2>
           <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-            Unisciti ai tuoi vicini e inizia a ricevere aiuto per le sfide quotidiane
+            Condividi il tuo problema e contribuisci a creare soluzioni che aiuteranno migliaia di persone
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -257,7 +257,7 @@ export default function HomePage() {
               onClick={handleExplorProblems}
               className="border-2 border-white text-white text-xl px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-teal-600 transition-colors duration-200"
             >
-              Vedi Cosa Chiedono gli Altri
+              Scopri le Soluzioni Create
             </button>
           </div>
         </div>
