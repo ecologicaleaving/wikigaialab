@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
       }, { status: 401 }));
     }
 
-    // SIMPLE: Use session user directly (like the original working version)
+    // Use session user directly - session callback already resolved DB user
     const user = {
       id: session.user.id,
       email: session.user.email || 'unknown@email.com',
@@ -237,12 +237,6 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    // User synchronization is now handled by UserIdentityService
-    console.log('✅ User synchronized via UserIdentityService:', {
-      id: userId,
-      email: resolvedUser.email,
-      role: resolvedUser.role
-    });
     
     // Verify category exists
     console.log('🔍 Verifying category exists...');

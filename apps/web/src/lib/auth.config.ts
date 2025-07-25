@@ -48,29 +48,32 @@ export const authConfig = {
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
       if (user && account) {
-        // Get Google's stable identifier
+        // Store Google UID as stable authentication identifier
         const googleId = account.providerAccountId || profile?.sub || user.id;
         
-        // Convert numeric Google ID to UUID format for database compatibility
-        let userId = googleId;
+        // Convert numeric Google ID to UUID for consistency
+        let googleUuid = googleId;
         if (googleId && /^\d+$/.test(googleId)) {
-          // If it's a numeric string, convert to UUID using deterministic method
           const { v5: uuidv5 } = require('uuid');
           const GOOGLE_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-          userId = uuidv5(googleId, GOOGLE_NAMESPACE);
+          googleUuid = uuidv5(googleId, GOOGLE_NAMESPACE);
         }
         
-        token.id = userId || user.email;
+        // Store both Google UUID (for login identity) and user info
+        token.googleId = googleUuid;
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
         
+        // Database user ID will be resolved in session callback by email lookup
+        token.id = null; // Will be populated in session callback
+        
         if (process.env.NODE_ENV === 'development') {
-          console.log('🔐 JWT callback - Setting user ID:', {
+          console.log('🔐 JWT callback - Authentication identity:', {
             originalGoogleId: googleId,
-            convertedId: token.id,
+            googleUuid: googleUuid,
             email: token.email,
-            wasNumeric: /^\d+$/.test(googleId || '')
+            databaseId: 'will be resolved in session callback'
           });
         }
       }
@@ -83,11 +86,59 @@ export const authConfig = {
       return token;
     },
     session: async ({ session, token }) => {
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
-        session.user.image = token.picture as string;
+      if (token && token.email) {
+        // Look up database user by email
+        try {
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_KEY!
+          );
+          
+          const { data: dbUser, error } = await supabase
+            .from('users')
+            .select('id, email, name, image, role, is_admin')
+            .eq('email', token.email)
+            .single();
+          
+          if (dbUser) {
+            // Use database user ID for session
+            session.user.id = dbUser.id;
+            session.user.email = dbUser.email;
+            session.user.name = dbUser.name || token.name as string;
+            session.user.image = dbUser.image || token.picture as string;
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔐 Session callback - Database user found:', {
+                googleId: token.googleId,
+                databaseId: dbUser.id,
+                email: dbUser.email
+              });
+            }
+          } else {
+            // User not found in database, use Google info but flag for creation
+            session.user.id = token.googleId as string; // Fallback to Google UUID
+            session.user.email = token.email as string;
+            session.user.name = token.name as string;
+            session.user.image = token.picture as string;
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔐 Session callback - No database user, using Google ID:', {
+                googleId: token.googleId,
+                email: token.email,
+                needsDbCreation: true
+              });
+            }
+          }
+        } catch (dbError) {
+          // Database error, fallback to Google info
+          session.user.id = token.googleId as string;
+          session.user.email = token.email as string;
+          session.user.name = token.name as string;
+          session.user.image = token.picture as string;
+          
+          console.error('🔐 Session callback - Database lookup failed:', dbError);
+        }
       }
       return session;
     },
