@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 import { usePremiumAccess } from '../../hooks/usePremiumAccess';
 import { useVotingHistory } from '../../hooks/useVotingHistory';
@@ -34,12 +35,27 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-// Loading skeleton for components
+// Enhanced loading skeleton for components with sophisticated animations
 const ComponentSkeleton = () => (
-  <div className="animate-pulse bg-gray-200 rounded-lg h-32 w-full" />
+  <motion.div 
+    className="bg-gray-200 rounded-lg h-32 w-full relative overflow-hidden"
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.3 }}
+  >
+    <motion.div
+      className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200"
+      animate={{ x: ['-100%', '100%'] }}
+      transition={{ 
+        duration: 1.5, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }}
+    />
+  </motion.div>
 );
 
-// Laboratory heart beating animation - "Il cuore batte una volta"
+// Enhanced laboratory heart beating animation with Framer Motion - "Il cuore batte una volta"
 const HeartBeat = ({ className = "", children, onClick }: { 
   className?: string; 
   children?: React.ReactNode; 
@@ -50,29 +66,32 @@ const HeartBeat = ({ className = "", children, onClick }: {
   const handleClick = () => {
     if (onClick) {
       setIsBeating(true);
-      setTimeout(() => setIsBeating(false), 600); // Duration of heartbeat
+      setTimeout(() => setIsBeating(false), 600);
       onClick();
     }
   };
 
   return (
-    <button
+    <motion.button
       onClick={handleClick}
-      className={`${className} ${
-        isBeating 
-          ? 'animate-pulse transform scale-110 transition-all duration-300' 
-          : 'transition-all duration-200 hover:scale-105'
-      }`}
-      style={{
-        animation: isBeating ? 'laboratory-heartbeat 0.6s ease-in-out' : undefined
-      }}
+      className={className}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      animate={isBeating ? {
+        scale: [1, 1.2, 1.1, 1.15, 1],
+        transition: { 
+          duration: 0.6,
+          times: [0, 0.3, 0.5, 0.7, 1],
+          ease: "easeInOut"
+        }
+      } : {}}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 
-// Numbers that grow with joyful bounce - "Numeri che crescono con rimbalzo gioioso"
+// Enhanced numbers with sophisticated Framer Motion bounce - "Numeri che crescono con rimbalzo gioioso"
 const AnimatedNumber = ({ value, duration = 500 }: { value: number; duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -106,9 +125,19 @@ const AnimatedNumber = ({ value, duration = 500 }: { value: number; duration?: n
   }, [value, displayValue, duration]);
 
   return (
-    <span className={`${isAnimating ? 'transform scale-110 transition-transform duration-300' : ''}`}>
+    <motion.span
+      animate={isAnimating ? {
+        scale: [1, 1.15, 1],
+        color: ['#374151', '#059669', '#374151']
+      } : {}}
+      transition={{ 
+        duration: 0.4,
+        type: "spring",
+        stiffness: 300
+      }}
+    >
       {displayValue}
-    </span>
+    </motion.span>
   );
 };
 
@@ -170,47 +199,111 @@ export function EnhancedUserDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <motion.div 
+      className="min-h-screen bg-gray-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
       {/* Header */}
-      <header className="bg-white border-b border-gray-200" role="banner">
+      <motion.header 
+        className="bg-white border-b border-gray-200" 
+        role="banner"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
+          <motion.div 
+            className="py-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <motion.h1 
+                  className="text-2xl font-bold text-gray-900"
+                  whileHover={{ color: "#0f766e" }}
+                  transition={{ duration: 0.2 }}
+                >
                   Il Mio Angolo di Laboratorio
-                </h1>
-                <p className="text-teal-700">
+                </motion.h1>
+                <motion.p 
+                  className="text-teal-700"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
                   Ciao {displayName}, bentornato nel nostro laboratorio!
-                </p>
-              </div>
+                </motion.p>
+              </motion.div>
               
-              {/* Access Level Badge */}
-              {accessData && (
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">
-                      {accessData.currentLevel.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {accessData.totalVotes} voti espressi
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full flex items-center justify-center animate-pulse">
-                    <Star className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              )}
+              {/* Enhanced Access Level Badge */}
+              <AnimatePresence>
+                {accessData && (
+                  <motion.div 
+                    className="flex items-center gap-4"
+                    initial={{ x: 20, opacity: 0, scale: 0.9 }}
+                    animate={{ x: 0, opacity: 1, scale: 1 }}
+                    exit={{ x: 20, opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <motion.div 
+                      className="text-right"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.7 }}
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        {accessData.currentLevel.name}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        <AnimatedNumber value={accessData.totalVotes} /> voti espressi
+                      </p>
+                    </motion.div>
+                    <motion.div 
+                      className="w-12 h-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full flex items-center justify-center"
+                      animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{ 
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      whileHover={{ 
+                        scale: 1.1,
+                        boxShadow: "0 10px 25px rgba(20, 184, 166, 0.4)"
+                      }}
+                    >
+                      <Star className="w-6 h-6 text-white" />
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
           
-          {/* Tab Navigation */}
-          <nav className="border-b border-gray-200" role="navigation" aria-label="Dashboard tabs">
+          {/* Enhanced Tab Navigation */}
+          <motion.nav 
+            className="border-b border-gray-200" 
+            role="navigation" 
+            aria-label="Dashboard tabs"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
             <div className="-mb-px flex space-x-8">
-              {tabs.map((tab) => {
+              {tabs.map((tab, index) => {
                 const isActive = activeTab === tab.id;
                 return (
-                  <button
+                  <motion.button
                     key={tab.id}
                     role="tab"
                     aria-selected={isActive}
@@ -227,59 +320,102 @@ export function EnhancedUserDashboard() {
                         handleTabSwitch(tabs[nextIndex].id);
                       }
                     }}
-                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
+                    className={`relative flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
                       isActive
-                        ? 'border-teal-500 text-teal-600 transform scale-105'
-                        : 'border-transparent text-gray-500 hover:text-teal-700 hover:border-teal-300 hover:transform hover:scale-102'
+                        ? 'border-teal-500 text-teal-600'
+                        : 'border-transparent text-gray-500'
                     }`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.0 + (index * 0.1), duration: 0.4 }}
+                    whileHover={{ 
+                      y: -2,
+                      color: isActive ? "#0d9488" : "#0f766e"
+                    }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <tab.icon className="w-4 h-4" />
-                    {tab.name}
-                  </button>
+                    <motion.div
+                      animate={isActive ? {
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0]
+                      } : {}}
+                      transition={{ 
+                        duration: 2,
+                        repeat: isActive ? Infinity : 0,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <tab.icon className="w-4 h-4" />
+                    </motion.div>
+                    <span>{tab.name}</span>
+                    
+                    {/* Active tab indicator */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500"
+                        layoutId="activeTab"
+                        transition={{ 
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30
+                        }}
+                      />
+                    )}
+                  </motion.button>
                 );
               })}
             </div>
-          </nav>
+          </motion.nav>
         </div>
-      </header>
+      </motion.header>
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
-        <div
-          role="tabpanel"
-          id={`tabpanel-${activeTab}`}
-          aria-labelledby={`tab-${activeTab}`}
-          tabIndex={0}
-          className={`transition-opacity duration-400 ${
-            isTabTransitioning ? 'opacity-0' : 'opacity-100'
-          }`}
-        >
-          {activeTab === 'overview' && (
-            <OverviewTab 
-              user={user}
-              accessData={accessData}
-              stats={stats}
-              loading={accessLoading || statsLoading}
-              setActiveTab={setActiveTab}
-              personalRecommendations={personalRecommendations}
-              onProblemClick={handleProblemClick}
-            />
-          )}
-          
-          {activeTab === 'recommendations' && (
-            <RecommendationsTab 
-              onProblemClick={handleProblemClick}
-            />
-          )}
-          
-          {activeTab === 'voting' && <VotingHistoryTab />}
-          {activeTab === 'growth' && <GrowthTab user={user} />}
-          {activeTab === 'problems' && <ProblemsTab />}
-          {activeTab === 'apps' && <AppsTab />}
-          {activeTab === 'settings' && <SettingsTab />}
-        </div>
-      </main>
-    </div>
+      <motion.main 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" 
+        role="main"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.6 }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            role="tabpanel"
+            id={`tabpanel-${activeTab}`}
+            aria-labelledby={`tab-${activeTab}`}
+            tabIndex={0}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === 'overview' && (
+              <OverviewTab 
+                user={user}
+                accessData={accessData}
+                stats={stats}
+                loading={accessLoading || statsLoading}
+                setActiveTab={setActiveTab}
+                personalRecommendations={personalRecommendations}
+                onProblemClick={handleProblemClick}
+              />
+            )}
+            
+            {activeTab === 'recommendations' && (
+              <RecommendationsTab 
+                onProblemClick={handleProblemClick}
+              />
+            )}
+            
+            {activeTab === 'voting' && <VotingHistoryTab />}
+            {activeTab === 'growth' && <GrowthTab user={user} />}
+            {activeTab === 'problems' && <ProblemsTab />}
+            {activeTab === 'apps' && <AppsTab />}
+            {activeTab === 'settings' && <SettingsTab />}
+          </motion.div>
+        </AnimatePresence>
+      </motion.main>
+    </motion.div>
   );
 }
 
