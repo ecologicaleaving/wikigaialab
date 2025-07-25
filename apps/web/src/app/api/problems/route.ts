@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 import { auth } from '@/lib/auth-nextauth';
 import type { Database } from '@wikigaialab/database';
 import type { ProblemInsert } from '@wikigaialab/database';
-import { getUserIdentityService } from '@/lib/auth/UserIdentityService';
 
 // Input validation import
 import { validateProblemInput, type CreateProblemInput } from '@/lib/validation/problem-schema';
@@ -152,90 +151,23 @@ export async function POST(request: NextRequest) {
       }, { status: 401 }));
     }
 
-    // BYPASS UserIdentityService - use session data directly
-    console.log('🔍 DIAGNOSTIC: Using session data directly (UserIdentityService bypassed)', {
-      sessionUserId: session.user.id,
-      sessionEmail: session.user.email,
-      hasName: !!session.user.name,
-      hasImage: !!session.user.image
-    });
-
-    // Generate deterministic UUID if session ID is email
-    let userId = session.user.id;
-    if (session.user.email && session.user.id === session.user.email) {
-      try {
-        const { v5: uuidv5 } = require('uuid');
-        const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-        userId = uuidv5(session.user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE);
-        console.log('🔄 DIAGNOSTIC: Generated deterministic UUID from email', {
-          email: session.user.email,
-          generatedId: userId
-        });
-      } catch (uuidError) {
-        console.warn('⚠️ DIAGNOSTIC: UUID generation failed, using session ID:', uuidError);
-        userId = session.user.id;
-      }
-    }
-
-    // Create user object directly from session
-    const resolvedUser = {
-      id: userId,
-      email: session.user.email!,
-      name: session.user.name || 'Unknown User',
-      image: session.user.image,
-      role: 'user' as const,
-      isAdmin: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+    // SIMPLE: Use session user directly (like the original working version)
+    const user = {
+      id: session.user.id,
+      email: session.user.email || 'unknown@email.com',
+      name: session.user.name || 'Unknown User'
     };
-
-    // Ensure user exists in database
-    try {
-      const supabase = getSupabaseClient();
-      const { data: dbUser, error: upsertError } = await supabase
-        .from('users')
-        .upsert({
-          id: resolvedUser.id,
-          email: resolvedUser.email,
-          name: resolvedUser.name,
-          image: resolvedUser.image,
-          role: 'user',
-          is_admin: false,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'id',
-          ignoreDuplicates: false
-        })
-        .select('id, email, name, image, role, is_admin')
-        .single();
-
-      if (upsertError) {
-        console.warn('⚠️ DIAGNOSTIC: User upsert failed (continuing anyway):', upsertError);
-      } else {
-        console.log('✅ DIAGNOSTIC: User ensured in database:', {
-          id: dbUser.id,
-          email: dbUser.email
-        });
-      }
-    } catch (dbError) {
-      console.warn('⚠️ DIAGNOSTIC: Database user sync failed (continuing anyway):', dbError);
-    }
-
-    console.log('✅ DIAGNOSTIC: Using direct session-based user resolution:', {
-      resolvedUserId: resolvedUser.id,
-      resolvedEmail: resolvedUser.email,
-      resolvedRole: resolvedUser.role
+    
+    console.log('✅ User authenticated:', { 
+      userId: user.id, 
+      userEmail: user.email 
     });
 
-    const userId = resolvedUser.id;
-    
     // Set user context for tracking
-    tracker.setUser(userId, {
-      email: resolvedUser.email,
-      name: resolvedUser.name,
-      sessionId: session.user.id,
-      role: resolvedUser.role,
-      isAdmin: resolvedUser.isAdmin
+    tracker.setUser(user.id, {
+      email: user.email,
+      name: user.name,
+      sessionId: session.user.id
     });
 
     // STEP 2: Enhanced Input Validation & Sanitization
@@ -351,7 +283,7 @@ export async function POST(request: NextRequest) {
       title: validatedInput.title,
       description: validatedInput.description,
       category_id: validatedInput.category_id,
-      proposer_id: userId,
+      proposer_id: user.id,
       status: 'Proposed', // Match status from screenshot
       vote_count: 0, // Start with 0 votes - users can't vote on their own problems
       created_at: new Date().toISOString(),
@@ -407,8 +339,8 @@ export async function POST(request: NextRequest) {
       },
       metadata: {
         correlationId: tracker.getCorrelationId(),
-        userId: userId,
-        userRole: resolvedUser.role
+        userId: user.id,
+        userRole: 'user'
       }
     });
 

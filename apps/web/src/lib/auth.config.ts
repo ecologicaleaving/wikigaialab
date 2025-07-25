@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
-import { getUserIdentityService, type OAuthUserData } from "./auth/UserIdentityService"
 
 // Validate required environment variables
 if (!process.env.GOOGLE_CLIENT_ID) {
@@ -49,23 +48,21 @@ export const authConfig = {
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
       if (user && account) {
-        console.log('🔐 JWT callback - MINIMAL VERSION:', { 
-          email: user.email, 
-          provider: account.provider 
-        });
-
-        // MINIMAL: Just set basic token data, no complex logic
-        token.id = user.email || account.providerAccountId || 'unknown';
-        token.email = user.email || '';
-        token.name = user.name || '';
-        token.picture = user.image || '';
-        token.isAdmin = false;
-        token.role = 'user';
-
-        console.log('✅ JWT callback - MINIMAL auth set:', {
-          id: token.id,
-          email: token.email
-        });
+        // Use Google's stable 'sub' identifier as the user ID
+        // This ensures the same user always gets the same ID across sessions
+        token.id = account.providerAccountId || profile?.sub || user.id || user.email;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔐 JWT callback - Setting user ID:', {
+            id: token.id,
+            email: token.email,
+            providerAccountId: account.providerAccountId,
+            sub: profile?.sub
+          });
+        }
       }
       
       if (account) {
@@ -81,15 +78,6 @@ export const authConfig = {
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.image = token.picture as string;
-        
-        // Add extended user data to session
-        session.user.isAdmin = token.isAdmin as boolean;
-        session.user.role = token.role as string;
-        
-        // Include error information if user resolution failed
-        if (token.error) {
-          session.error = token.error as string;
-        }
       }
       return session;
     },
@@ -109,17 +97,13 @@ export const authConfig = {
       if (process.env.NODE_ENV === 'development') {
         console.log("✅ Sign in successful:", { 
           user: user.email, 
-          provider: account?.provider,
-          deterministic: 'using UserIdentityService'
+          provider: account?.provider 
         });
       }
     },
     signOut: async ({ token }) => {
       if (process.env.NODE_ENV === 'development') {
-        console.log("👋 User signed out:", {
-          email: token?.email,
-          id: token?.id
-        });
+        console.log("👋 User signed out:", token?.email);
       }
     },
   },
