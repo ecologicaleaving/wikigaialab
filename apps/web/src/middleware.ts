@@ -4,7 +4,21 @@ import { authRateLimit } from "./lib/rate-limiter"
 
 export default auth(async (req) => {
   const { nextUrl } = req
-  const isLoggedIn = !!req.auth
+  
+  // Check for both NextAuth session and test authentication
+  const hasNextAuthSession = !!req.auth
+  const hasTestAuth = req.cookies.get('test-auth')?.value
+  const isLoggedIn = hasNextAuthSession || !!hasTestAuth
+  
+  // Log authentication status for debugging in development
+  if (process.env.NODE_ENV === 'development' && (hasNextAuthSession || hasTestAuth)) {
+    console.log('🔐 Middleware auth check:', {
+      path: nextUrl.pathname,
+      hasNextAuthSession,
+      hasTestAuth: !!hasTestAuth,
+      isLoggedIn
+    })
+  }
 
   // Apply rate limiting to OAuth endpoints
   if (nextUrl.pathname.startsWith('/api/auth/')) {
