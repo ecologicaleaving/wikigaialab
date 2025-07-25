@@ -66,42 +66,55 @@ export default function AdminDashboard() {
 
   const quickStats = [
     {
-      name: 'Problemi Totali',
+      name: 'Problemi del Quartiere',
       value: data.stats.totalProblems,
       icon: ChartBarIcon,
       change: data.trends.problemsGrowth,
       changeType: 'increase' as const,
+      color: 'teal',
     },
     {
-      name: 'In Moderazione',
+      name: 'In Attesa del Maestro',
       value: data.stats.pendingModeration,
       icon: FlagIcon,
       change: null,
       changeType: 'neutral' as const,
+      color: 'amber',
     },
     {
-      name: 'In Evidenza',
+      name: 'Storie in Evidenza',
       value: data.stats.featuredProblems,
       icon: RectangleStackIcon,
       change: null,
       changeType: 'neutral' as const,
+      color: 'emerald',
     },
     {
-      name: 'Voti Totali',
+      name: 'Cuori Donati',
       value: data.stats.totalVotes,
       icon: HeartIcon,
       change: data.trends.votesGrowth,
       changeType: 'increase' as const,
+      color: 'rose',
     },
   ];
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
-        <p className="mt-2 text-sm text-gray-700">
-          Panoramica generale della piattaforma WikiGaiaLab
+      {/* Header with WikiGaia Branding */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg border border-teal-200">
+        <div className="flex items-center space-x-3 mb-4">
+          <div className="p-2 bg-teal-100 rounded-lg">
+            <ChartBarIcon className="w-8 h-8 text-teal-600" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-teal-800">Il Banco del Maestro</h1>
+            <p className="text-teal-700 font-medium">WikiGaiaLab - Laboratorio Artigiano Digitale</p>
+          </div>
+        </div>
+        <p className="text-teal-700">
+          Da qui tieni d'occhio la salute del nostro laboratorio e aiuti la comunità a crescere. 
+          Ogni numero racconta la storia del nostro quartiere digitale.
         </p>
       </div>
 
@@ -136,20 +149,22 @@ export default function AdminDashboard() {
         />
       </div>
 
-      {/* Additional Stats */}
+      {/* Additional Stats with Enhanced WikiGaia Styling */}
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <UsersIcon className="h-6 w-6 text-gray-400" />
+                <div className="p-2 bg-teal-100 rounded-lg">
+                  <UsersIcon className="h-6 w-6 text-teal-600" />
+                </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
-                    Categorie Attive
+                  <dt className="text-sm font-medium text-teal-700 truncate">
+                    Scaffali del Laboratorio
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-teal-800">
                     {data.stats.totalCategories}
                   </dd>
                 </dl>
@@ -158,18 +173,20 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <EyeIcon className="h-6 w-6 text-gray-400" />
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <EyeIcon className="h-6 w-6 text-emerald-600" />
+                </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
-                    Media Voti
+                  <dt className="text-sm font-medium text-emerald-700 truncate">
+                    Cuori per Storia
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-emerald-800">
                     {data.stats.averageVotes}
                   </dd>
                 </dl>
@@ -178,18 +195,20 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <RectangleStackIcon className="h-6 w-6 text-gray-400" />
+                <div className="p-2 bg-amber-100 rounded-lg">
+                  <RectangleStackIcon className="h-6 w-6 text-amber-600" />
+                </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
-                    Collezioni
+                  <dt className="text-sm font-medium text-amber-700 truncate">
+                    Raccolte Speciali
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-amber-800">
                     {data.stats.totalCollections}
                   </dd>
                 </dl>

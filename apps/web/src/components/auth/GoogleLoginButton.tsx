@@ -61,10 +61,10 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     lg: 'px-6 py-4 text-lg',
   };
 
-  // Variant styles
+  // Variant styles - enhanced for WikiGaia brand
   const variantClasses = {
-    default: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500',
-    outline: 'bg-transparent text-gray-700 border-2 border-gray-300 hover:bg-gray-50 focus:ring-blue-500',
+    default: 'bg-white text-gray-700 border border-teal-300 hover:bg-teal-50 hover:border-teal-400 focus:ring-teal-500 shadow-lg',
+    outline: 'bg-transparent text-gray-700 border-2 border-teal-300 hover:bg-teal-50 hover:border-teal-400 focus:ring-teal-500',
   };
 
   const baseClasses = `

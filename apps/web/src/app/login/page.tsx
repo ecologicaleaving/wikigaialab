@@ -73,15 +73,23 @@ function LoginComponent() {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 text-teal-600">
+          <div className="mx-auto h-16 w-16">
             {/* WikiGaiaLab Logo */}
-            <svg
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              className="w-full h-full"
-            >
-              <path d="M12 2L2 7v10c0 5.55 3.84 9.36 9 11 5.16-1.64 9-5.45 9-11V7l-10-5z" />
-            </svg>
+            <div className="relative w-full h-full bg-teal-600 rounded-full flex items-center justify-center">
+              <svg
+                fill="white"
+                viewBox="0 0 24 24"
+                className="w-8 h-8"
+              >
+                <path d="M12 2L2 7v10c0 5.55 3.84 9.36 9 11 5.16-1.64 9-5.45 9-11V7l-10-5z" />
+              </svg>
+              {/* Heart accent for community focus */}
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Benvenuto nel Laboratorio
@@ -134,22 +142,25 @@ function LoginComponent() {
 
             {/* Google Login Button */}
             <div className="space-y-4">
-              <div className="bg-teal-50 border border-teal-200 rounded-md p-4 mb-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-teal-800">
-                      <strong>🔧 Authentication Mode:</strong><br/>
-                      • <a href="/login?demo=true" className="underline">Demo Mode</a> - Test with mock user<br/>
-                      • <a href="/login?demo=false" className="underline">Real OAuth</a> - Use Google authentication
-                    </p>
+              {/* Development mode debug info - only show in development */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="bg-teal-50 border border-teal-200 rounded-md p-4 mb-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-teal-800">
+                        <strong>🔧 Development Mode:</strong><br/>
+                        • <a href="/login?demo=true" className="underline hover:text-teal-900">Demo Mode</a> - Test with mock user<br/>
+                        • <a href="/login?demo=false" className="underline hover:text-teal-900">Real OAuth</a> - Use Google authentication
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <GoogleLoginButton />
             </div>
 
@@ -158,22 +169,38 @@ function LoginComponent() {
               <h3 className="text-sm font-medium text-gray-900 mb-4">
                 Cosa puoi fare nel Laboratorio:
               </h3>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-3 text-sm text-gray-600">
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
-                  Porta i tuoi problemi quotidiani al banco del laboratorio
+                  <div className="flex-shrink-0 w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Porta i tuoi problemi quotidiani al banco del laboratorio</span>
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
-                  Riconosci i problemi degli altri e dona il tuo cuore
+                  <div className="flex-shrink-0 w-5 h-5 bg-rose-100 rounded-full flex items-center justify-center mr-3">
+                    <svg className="w-3 h-3 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Riconosci i problemi degli altri e dona il tuo cuore</span>
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
-                  Collabora con i maestri artigiani per costruire soluzioni
+                  <div className="flex-shrink-0 w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Collabora con i maestri artigiani per costruire soluzioni</span>
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
-                  Usa tutti gli attrezzi del laboratorio gratuitamente
+                  <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mr-3">
+                    <svg className="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Usa tutti gli attrezzi del laboratorio gratuitamente</span>
                 </li>
               </ul>
             </div>
