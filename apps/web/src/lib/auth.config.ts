@@ -86,6 +86,14 @@ export const authConfig = {
       return token;
     },
     session: async ({ session, token }) => {
+      console.log('🔐 Session callback called:', {
+        hasToken: !!token,
+        hasTokenEmail: !!token?.email,
+        tokenEmail: token?.email,
+        tokenGoogleId: token?.googleId,
+        sessionUserId: session?.user?.id
+      });
+      
       if (token && token.email) {
         // Look up database user by email
         try {
@@ -164,7 +172,14 @@ export const authConfig = {
           session.user.name = token.name as string;
           session.user.image = token.picture as string;
           
-          console.error('🔐 Session callback - Database lookup failed:', dbError);
+          console.error('🔐 Session callback - Database lookup failed:', {
+            error: dbError instanceof Error ? dbError.message : 'Unknown error',
+            stack: dbError instanceof Error ? dbError.stack : undefined,
+            tokenEmail: token.email,
+            tokenGoogleId: token.googleId,
+            hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+            hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY
+          });
         }
       }
       return session;
