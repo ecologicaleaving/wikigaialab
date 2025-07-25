@@ -20,6 +20,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   clearError: () => void;
   refreshSession: () => Promise<void>;
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -230,6 +231,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // NextAuth handles errors internally, so this is mostly for compatibility
   };
 
+  const refreshUserData = async () => {
+    if (!session?.user) return;
+    
+    try {
+      setFetchingUser(true);
+      // Force refresh by clearing cache
+      setLastFetchedUserId(null);
+      
+      const response = await fetch('/api/auth/session');
+      const data = await response.json();
+      
+      if (data.user) {
+        setDatabaseUser(data.user);
+        setLastFetchedUserId(session.user.id);
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔄 Forced user data refresh:', {
+            id: data.user.id,
+            email: data.user.email,
+            role: data.user.role,
+            isAdmin: data.user.is_admin
+          });
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to refresh user data:', error);
+    } finally {
+      setFetchingUser(false);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     loading: overallLoading,
@@ -239,6 +271,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     clearError,
     refreshSession,
+    refreshUserData,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

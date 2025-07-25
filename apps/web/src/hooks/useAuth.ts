@@ -36,6 +36,11 @@ export const useAuth = () => {
      * Check if user has required role
      */
     hasRole: (role: 'user' | 'admin') => hasRole(context.user, role),
+    
+    /**
+     * Force refresh user data from database
+     */
+    refreshUserData: context.refreshUserData,
   };
 };
 

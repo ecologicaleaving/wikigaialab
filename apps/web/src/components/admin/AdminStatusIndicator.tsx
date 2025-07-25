@@ -12,7 +12,7 @@ interface AdminStatusIndicatorProps {
 export const AdminStatusIndicator: React.FC<AdminStatusIndicatorProps> = ({ 
   className = '' 
 }) => {
-  const { user, isAdmin, isAuthenticated, loading } = useAuth();
+  const { user, isAdmin, isAuthenticated, loading, refreshUserData } = useAuth();
   const [adminCheckResult, setAdminCheckResult] = useState<any>(null);
 
   // Check admin status via API
@@ -101,6 +101,24 @@ export const AdminStatusIndicator: React.FC<AdminStatusIndicatorProps> = ({
           <strong>Email:</strong> {user?.email}
         </div>
 
+        {/* Show refresh button if admin in DB but not in frontend */}
+        {adminCheckResult?.isAdmin && !isAdmin && (
+          <button
+            onClick={async () => {
+              try {
+                await refreshUserData();
+                alert('Dati utente aggiornati! Se sei admin dovresti ora vedere l\'interfaccia admin.');
+              } catch (error) {
+                alert('Errore durante l\'aggiornamento dei dati utente');
+              }
+            }}
+            className="w-full p-3 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
+          >
+            🔄 Aggiorna Status Admin
+          </button>
+        )}
+
+        {/* Show grant button if not admin in DB */}
         {adminCheckResult && !adminCheckResult.isAdmin && (
           <button
             onClick={async () => {
@@ -108,8 +126,9 @@ export const AdminStatusIndicator: React.FC<AdminStatusIndicatorProps> = ({
                 const response = await fetch('/api/admin/grant-admin', { method: 'POST' });
                 const result = await response.json();
                 if (result.success) {
-                  alert('Privilegi admin assegnati! Ricaricando la pagina...');
-                  window.location.reload();
+                  // Refresh user data instead of page reload
+                  await refreshUserData();
+                  alert('Privilegi admin assegnati e status aggiornato!');
                 } else {
                   alert(`Errore: ${result.error}`);
                 }
