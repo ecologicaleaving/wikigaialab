@@ -181,7 +181,7 @@ export function LeaderboardWidget({
               
               {currentUserRank && currentUserRank > 3 && (
                 <div className="border-t pt-2 mt-2">
-                  <div className="flex items-center justify-between text-blue-600">
+                  <div className="flex items-center justify-between text-primary-600">
                     <span className="text-sm font-medium">La tua posizione: #{currentUserRank}</span>
                   </div>
                 </div>
@@ -238,10 +238,10 @@ export function LeaderboardWidget({
 
         {/* Current User Rank */}
         {currentUserRank && (
-          <Card className="p-4 bg-blue-50 border-blue-200">
+          <Card className="p-4 bg-primary-50 border-primary-200">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-blue-900">La Tua Posizione Attuale</span>
-              <span className="text-2xl font-bold text-blue-600">#{currentUserRank}</span>
+              <span className="font-medium text-primary-900">La Tua Posizione Attuale</span>
+              <span className="text-2xl font-bold text-primary-600">#{currentUserRank}</span>
             </div>
           </Card>
         )}
@@ -257,7 +257,7 @@ export function LeaderboardWidget({
               <div
                 key={entry.user.id}
                 className={`flex items-center justify-between p-3 rounded-lg border ${
-                  userId === entry.user.id ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'
+                  userId === entry.user.id ? 'bg-primary-50 border-primary-200' : 'bg-gray-50'
                 }`}
               >
                 <div className="flex items-center space-x-4">

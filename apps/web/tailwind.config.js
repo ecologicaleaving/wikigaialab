@@ -8,42 +8,42 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // WikiGaiaLab brand colors
+        // WikiGaia brand colors (teal-based laboratory aesthetic)
         primary: {
-          50: '#f0f9f0',
-          100: '#dcf2dc',
-          200: '#bce5bc',
-          300: '#8fd18f',
-          400: '#5bb55b',
-          500: '#2D5A27', // Main primary
-          600: '#234723',
-          700: '#1c361c',
-          800: '#162916',
-          900: '#0f1d0f',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#00B894', // Main WikiGaia teal
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
         },
         secondary: {
-          50: '#f5f8f0',
-          100: '#e8f0dc',
-          200: '#d3e2bc',
-          300: '#b8ce8f',
-          400: '#9bb45b',
-          500: '#6B8E23', // Main secondary
-          600: '#567123',
-          700: '#44571c',
-          800: '#354416',
-          900: '#29330f',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#00695C', // Dark WikiGaia teal
+          600: '#0f766e',
+          700: '#115e59',
+          800: '#134e4a',
+          900: '#0f3f3c',
         },
         accent: {
-          50: '#f0fff4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#32CD32', // Main accent
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#26A69A', // Light WikiGaia teal
+          500: '#2dd4bf',
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
         },
         neutral: {
           50: '#fafafa',
