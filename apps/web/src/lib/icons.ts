@@ -1,5 +1,52 @@
 // Central icon library following WikiGaia documentation
-// Primary: Lucide React
+import { 
+  Heart,
+  Users,
+  Lightbulb,
+  Settings,
+  Search,
+  Plus,
+  MessageCircle,
+  Wrench,
+  Home,
+  User,
+  BarChart3,
+  CheckCircle,
+  AlertCircle,
+  Info,
+  X,
+  BookOpen,
+  DollarSign,
+  Zap,
+  Laptop,
+  Bell,
+  Menu,
+  ChevronRight,
+  ArrowRight,
+  TrendingUp,
+  Calendar,
+  Clock,
+  Star,
+  Download,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  Share2,
+  ExternalLink,
+  ChevronDown,
+  Check,
+  Leaf,
+} from 'lucide-react';
+
+import { 
+  SparklesIcon,
+  GlobeAltIcon,
+  CogIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/outline';
+
+// Primary: Lucide React (re-export for external use)
 export { 
   Heart,          // Voti e supporto
   Users,          // Comunità
@@ -38,25 +85,25 @@ export {
   ChevronDown,    // Dropdowns
   Check,          // Checkmarks
   Leaf,           // Nature/ecology
-} from 'lucide-react';
+};
 
-// Secondary: Heroicons (complementary)
+// Secondary: Heroicons (re-export for external use)
 export { 
   SparklesIcon,     // Celebrazioni
   GlobeAltIcon,     // Aspetti globali/ecologici
   CogIcon,          // Configurazioni avanzate
   ShieldCheckIcon   // Sicurezza e privacy
-} from '@heroicons/react/24/outline';
+};
 
-// Note: Using Lucide React icons for ecological themes until phosphor-react is installed
-// These approximate the ecological/artisan themes from the documentation
+// Ecological icons mapping (using available Lucide icons)
+// Note: These will be replaced with phosphor-react when installed
 export const Plant = Leaf;           // Using Leaf for plant growth
-export const Recycle = ArrowRight;   // Temporary until proper recycle icon
-export const HandHeart = Heart;      // Using Heart for solidarity  
 export const TreeEvergreen = Leaf;   // Using Leaf for ecology
+export const HandHeart = Heart;      // Using Heart for solidarity  
 export const Hammer = Wrench;        // Using Wrench for artisan tools
 export const Gears = Settings;       // Using Settings for mechanics
 export const Bicycle = ArrowRight;   // Temporary until proper bicycle icon
+export const Recycle = ArrowRight;   // Temporary until proper recycle icon
 
 // Icon mapping for semantic usage
 export const iconMap = {
