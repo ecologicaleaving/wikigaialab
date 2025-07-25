@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { usePremiumAccess } from '../../hooks/usePremiumAccess';
 import { useVotingHistory } from '../../hooks/useVotingHistory';
@@ -34,12 +34,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-// Lazy load heavy components for better performance
-const RecommendationWidget = lazy(() => import('../recommendations/RecommendationWidget'));
-const VotingHistoryCard = lazy(() => import('../analytics/VotingHistoryCard'));
-const LeaderboardWidget = lazy(() => import('../growth/LeaderboardWidget'));
-
-// Loading skeleton for lazy components
+// Loading skeleton for components
 const ComponentSkeleton = () => (
   <div className="animate-pulse bg-gray-200 rounded-lg h-32 w-full" />
 );
@@ -180,18 +175,12 @@ export function EnhancedUserDashboard() {
           )}
           
           {activeTab === 'recommendations' && (
-            <Suspense fallback={<ComponentSkeleton />}>
-              <RecommendationsTab 
-                onProblemClick={handleProblemClick}
-              />
-            </Suspense>
+            <RecommendationsTab 
+              onProblemClick={handleProblemClick}
+            />
           )}
           
-          {activeTab === 'voting' && (
-            <Suspense fallback={<ComponentSkeleton />}>
-              <VotingHistoryTab />
-            </Suspense>
-          )}
+          {activeTab === 'voting' && <VotingHistoryTab />}
           {activeTab === 'growth' && <GrowthTab user={user} />}
           {activeTab === 'problems' && <ProblemsTab />}
           {activeTab === 'apps' && <AppsTab />}
@@ -374,9 +363,7 @@ function OverviewTab({
         <ReferralWidget userId={user.id} compact={true} />
         
         {/* Leaderboard Preview */}
-        <Suspense fallback={<ComponentSkeleton />}>
-          <LeaderboardWidget userId={user.id} compact={true} showControls={false} />
-        </Suspense>
+        <LeaderboardWidget userId={user.id} compact={true} showControls={false} />
         
         {/* Profile Stats */}
         <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="profile-stats-heading">
@@ -425,15 +412,13 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
             Raccomandazioni Personalizzate
           </h2>
         </div>
-        <Suspense fallback={<ComponentSkeleton />}>
-          <RecommendationWidget
-            type="personal"
-            title=""
-            limit={12}
-            showExplanations={true}
-            onProblemClick={onProblemClick}
-          />
-        </Suspense>
+        <RecommendationWidget
+          type="personal"
+          title=""
+          limit={12}
+          showExplanations={true}
+          onProblemClick={onProblemClick}
+        />
       </div>
 
       {/* Trending Problems */}
@@ -444,15 +429,13 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
             Problemi di Tendenza
           </h2>
         </div>
-        <Suspense fallback={<ComponentSkeleton />}>
-          <RecommendationWidget
-            type="trending"
-            title=""
-            limit={8}
-            showExplanations={false}
-            onProblemClick={onProblemClick}
-          />
-        </Suspense>
+        <RecommendationWidget
+          type="trending"
+          title=""
+          limit={8}
+          showExplanations={false}
+          onProblemClick={onProblemClick}
+        />
       </div>
 
       {/* Recommendation Settings */}
@@ -496,13 +479,11 @@ function VotingHistoryTab() {
   return (
     <div className="space-y-6">
       {/* Voting History with Analytics */}
-      <Suspense fallback={<ComponentSkeleton />}>
-        <VotingHistoryCard 
-          showHeader={true}
-          maxItems={20}
-          className="bg-white"
-        />
-      </Suspense>
+      <VotingHistoryCard 
+        showHeader={true}
+        maxItems={20}
+        className="bg-white"
+      />
     </div>
   );
 }
@@ -553,9 +534,7 @@ function GrowthTab({ user }: { user: any }) {
               <Trophy className="h-5 w-5" />
               Classifiche Community
             </h3>
-            <Suspense fallback={<ComponentSkeleton />}>
-              <LeaderboardWidget userId={user?.id} />
-            </Suspense>
+            <LeaderboardWidget userId={user?.id} />
           </div>
         </div>
       </div>
