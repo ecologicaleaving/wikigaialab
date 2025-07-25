@@ -39,6 +39,79 @@ const ComponentSkeleton = () => (
   <div className="animate-pulse bg-gray-200 rounded-lg h-32 w-full" />
 );
 
+// Laboratory heart beating animation - "Il cuore batte una volta"
+const HeartBeat = ({ className = "", children, onClick }: { 
+  className?: string; 
+  children?: React.ReactNode; 
+  onClick?: () => void;
+}) => {
+  const [isBeating, setIsBeating] = useState(false);
+  
+  const handleClick = () => {
+    if (onClick) {
+      setIsBeating(true);
+      setTimeout(() => setIsBeating(false), 600); // Duration of heartbeat
+      onClick();
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className={`${className} ${
+        isBeating 
+          ? 'animate-pulse transform scale-110 transition-all duration-300' 
+          : 'transition-all duration-200 hover:scale-105'
+      }`}
+      style={{
+        animation: isBeating ? 'laboratory-heartbeat 0.6s ease-in-out' : undefined
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
+// Numbers that grow with joyful bounce - "Numeri che crescono con rimbalzo gioioso"
+const AnimatedNumber = ({ value, duration = 500 }: { value: number; duration?: number }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (value !== displayValue) {
+      setIsAnimating(true);
+      const startTime = Date.now();
+      const startValue = displayValue;
+      const difference = value - startValue;
+
+      const updateValue = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease-out with bounce
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const newValue = Math.round(startValue + difference * eased);
+        
+        setDisplayValue(newValue);
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateValue);
+        } else {
+          setIsAnimating(false);
+        }
+      };
+      
+      requestAnimationFrame(updateValue);
+    }
+  }, [value, displayValue, duration]);
+
+  return (
+    <span className={`${isAnimating ? 'transform scale-110 transition-transform duration-300' : ''}`}>
+      {displayValue}
+    </span>
+  );
+};
+
 interface DashboardTab {
   id: string;
   name: string;
@@ -66,11 +139,27 @@ export function EnhancedUserDashboard() {
     refreshRecommendations
   } = useRecommendations({ limit: 8 });
   const [activeTab, setActiveTab] = useState('overview');
+  const [isTabTransitioning, setIsTabTransitioning] = useState(false);
 
   // Handle navigation to problems with performance optimization
   const handleProblemClick = useCallback((problemId: string) => {
     window.location.href = `/problems/${problemId}`;
   }, []);
+
+  // Handle tab switching with laboratory fluid transitions - "danza coordinata"
+  const handleTabSwitch = useCallback((newTab: string) => {
+    if (newTab !== activeTab && !isTabTransitioning) {
+      setIsTabTransitioning(true);
+      
+      // Create coordinated dance effect - content fades out, then new content fades in
+      setTimeout(() => {
+        setActiveTab(newTab);
+        setTimeout(() => {
+          setIsTabTransitioning(false);
+        }, 200); // Content fade-in duration
+      }, 200); // Content fade-out duration
+    }
+  }, [activeTab, isTabTransitioning]);
 
   // Memoize display name for performance
   const displayName = useMemo(() => 
@@ -127,7 +216,7 @@ export function EnhancedUserDashboard() {
                     aria-selected={isActive}
                     aria-controls={`tabpanel-${tab.id}`}
                     tabIndex={isActive ? 0 : -1}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabSwitch(tab.id)}
                     onKeyDown={(e) => {
                       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                         e.preventDefault();
@@ -135,7 +224,7 @@ export function EnhancedUserDashboard() {
                         const nextIndex = e.key === 'ArrowRight' 
                           ? (currentIndex + 1) % tabs.length
                           : (currentIndex - 1 + tabs.length) % tabs.length;
-                        setActiveTab(tabs[nextIndex].id);
+                        handleTabSwitch(tabs[nextIndex].id);
                       }
                     }}
                     className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
@@ -161,6 +250,9 @@ export function EnhancedUserDashboard() {
           id={`tabpanel-${activeTab}`}
           aria-labelledby={`tab-${activeTab}`}
           tabIndex={0}
+          className={`transition-opacity duration-400 ${
+            isTabTransitioning ? 'opacity-0' : 'opacity-100'
+          }`}
         >
           {activeTab === 'overview' && (
             <OverviewTab 
@@ -271,12 +363,14 @@ function OverviewTab({
           <section className="bg-white rounded-lg border border-gray-200 p-6" aria-labelledby="recommendations-heading">
             <div className="flex items-center justify-between mb-6">
               <h3 id="recommendations-heading" className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Heart className="h-5 w-5 text-teal-600 animate-pulse" aria-hidden="true" />
+                <HeartBeat className="p-1 rounded-full">
+                  <Heart className="h-5 w-5 text-teal-600" aria-hidden="true" />
+                </HeartBeat>
                 Raccomandazioni per Te
               </h3>
               <button
-                onClick={() => setActiveTab('recommendations')}
-                className="text-teal-600 hover:text-teal-700 text-sm font-medium transition-colors duration-200"
+                onClick={() => handleTabSwitch('recommendations')}
+                className="text-teal-600 hover:text-teal-700 text-sm font-medium transition-all duration-200 hover:scale-105 px-2 py-1 rounded"
               >
                 Vedi tutte
               </button>
@@ -330,7 +424,7 @@ function OverviewTab({
               href="#"
               icon={Heart}
               color="purple"
-              onClick={() => setActiveTab('recommendations')}
+              onClick={() => handleTabSwitch('recommendations')}
             />
             <ActionCard
               title="Proponi Soluzione"
@@ -345,7 +439,7 @@ function OverviewTab({
               href="#"
               icon={History}
               color="orange"
-              onClick={() => setActiveTab('voting')}
+              onClick={() => handleTabSwitch('voting')}
             />
           </div>
         </section>
@@ -407,7 +501,9 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
       {/* Personal Recommendations */}
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <Heart className="h-6 w-6 text-teal-600 animate-pulse" />
+          <HeartBeat className="p-1 rounded-full">
+            <Heart className="h-6 w-6 text-teal-600" />
+          </HeartBeat>
           <h2 className="text-xl font-semibold text-gray-900">
             Raccomandazioni Personalizzate
           </h2>
@@ -614,15 +710,15 @@ function StatsCard({ title, value, icon: Icon, color, subtitle }: StatsCardProps
   };
 
   return (
-    <article className="bg-white rounded-lg border border-gray-200 p-6">
+    <article className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md hover:border-teal-200 transition-all duration-300 group">
       <div className="flex items-center">
-        <div className={`w-8 h-8 rounded-md flex items-center justify-center ${colorClasses[color]}`}>
+        <div className={`w-8 h-8 rounded-md flex items-center justify-center ${colorClasses[color]} group-hover:scale-110 transition-transform duration-300`}>
           <Icon className="w-4 h-4" aria-hidden="true" />
         </div>
         <div className="ml-4">
-          <p className="text-sm font-medium text-gray-500">{title}</p>
+          <p className="text-sm font-medium text-gray-500 group-hover:text-teal-600 transition-colors duration-300">{title}</p>
           <p className="text-2xl font-bold text-gray-900" aria-label={`${title}: ${value} ${subtitle || ''}`}>
-            {value}
+            <AnimatedNumber value={typeof value === 'number' ? value : parseInt(value.toString()) || 0} />
           </p>
           {subtitle && (
             <p className="text-xs text-gray-400">{subtitle}</p>
@@ -652,13 +748,13 @@ function ActionCard({ title, description, href = '#', onClick, icon: Icon, color
   };
 
   const content = (
-    <div className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors cursor-pointer">
+    <div className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-lg hover:transform hover:translate-y-[-8px] transition-all duration-300 cursor-pointer group">
       <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-lg text-white flex items-center justify-center ${colorClasses[color]}`}>
+        <div className={`w-10 h-10 rounded-lg text-white flex items-center justify-center ${colorClasses[color]} group-hover:scale-110 transition-transform duration-300`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <h4 className="font-medium text-gray-900">{title}</h4>
+          <h4 className="font-medium text-gray-900 group-hover:text-teal-700 transition-colors duration-300">{title}</h4>
           <p className="text-sm text-gray-600">{description}</p>
         </div>
       </div>

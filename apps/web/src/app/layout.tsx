@@ -1,4 +1,5 @@
-import './globals.css';
+import './globals.css'
+import '../styles/laboratory-animations.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '../contexts/AuthContextNextAuth';

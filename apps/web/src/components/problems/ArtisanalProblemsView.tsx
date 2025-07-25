@@ -78,7 +78,7 @@ export const ArtisanalProblemsView: React.FC = () => {
         ]);
 
         let transformedProblems: Problem[] = [];
-        let categoriesMap: Record<string, any> = {};
+        const categoriesMap: Record<string, any> = {};
 
         // Process categories first to create lookup map
         if (categoriesResponse.ok) {

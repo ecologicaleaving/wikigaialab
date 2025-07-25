@@ -1,0 +1,137 @@
+/* Laboratory Artisan Animations for WikiGaiaLab Dashboard */
+
+/* Heart beating animation - "Il cuore batte una volta" */
+@keyframes laboratory-heartbeat {
+  0% { 
+    transform: scale(1); 
+  }
+  25% { 
+    transform: scale(1.2); 
+    filter: drop-shadow(0 0 8px rgba(0, 184, 148, 0.6));
+  }
+  50% { 
+    transform: scale(1.1); 
+    filter: drop-shadow(0 0 12px rgba(0, 184, 148, 0.8));
+  }
+  75% { 
+    transform: scale(1.15); 
+    filter: drop-shadow(0 0 8px rgba(0, 184, 148, 0.6));
+  }
+  100% { 
+    transform: scale(1); 
+    filter: none;
+  }
+}
+
+/* Golden sparkles for milestone achievements */
+@keyframes golden-sparkles {
+  0% { 
+    opacity: 0; 
+    transform: scale(0) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1) rotate(180deg); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0) rotate(360deg); 
+  }
+}
+
+/* Gentle ripple effect for community activity */
+@keyframes gentle-ripple {
+  0% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: scale(2.5); 
+    opacity: 0; 
+  }
+}
+
+/* Number counting bounce */
+@keyframes number-bounce {
+  0% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.1); 
+  }
+  100% { 
+    transform: scale(1); 
+  }
+}
+
+/* Tab transition fade with coordinated dance */
+@keyframes tab-fade-out {
+  0% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+}
+
+@keyframes tab-fade-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Card lifting animation - "si solleva di 8px" */
+@keyframes card-lift {
+  0% { 
+    transform: translateY(0) scale(1); 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+  }
+  100% { 
+    transform: translateY(-8px) scale(1.02); 
+    box-shadow: 0 10px 25px rgba(0, 184, 148, 0.15); 
+  }
+}
+
+/* Utility classes for applying animations */
+.laboratory-heartbeat {
+  animation: laboratory-heartbeat 0.6s ease-in-out;
+}
+
+.golden-sparkles {
+  animation: golden-sparkles 1.2s ease-out;
+}
+
+.gentle-ripple {
+  animation: gentle-ripple 0.8s ease-out;
+}
+
+.number-bounce {
+  animation: number-bounce 0.3s ease-in-out;
+}
+
+.card-lift {
+  animation: card-lift 0.3s ease-out forwards;
+}
+
+/* Progressive enhancement for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes laboratory-heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .laboratory-heartbeat,
+  .golden-sparkles,
+  .gentle-ripple,
+  .number-bounce,
+  .card-lift {
+    animation-duration: 0.2s;
+  }
+}
