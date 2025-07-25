@@ -30,34 +30,27 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show loading spinner while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <AuthLoadingSpinner message="Verifica dell'autenticazione in corso..." />
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🛠️</div>
+          <div className="text-lg text-teal-700">Preparando il laboratorio...</div>
+        </div>
       </div>
     );
   }
 
-  // User not authenticated
+  // User not authenticated - redirect immediately without showing UI
   if (!user) {
+    // Silent redirect to avoid flash
+    if (typeof window !== 'undefined') {
+      router.push(`${redirectTo}?redirect=${encodeURIComponent(window.location.pathname)}`);
+    }
+    
     return fallback || (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Accesso richiesto
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Devi effettuare l'accesso per visualizzare questa pagina.
-          </p>
-          <button
-            onClick={() => {
-              if (process.env.NODE_ENV === 'development') {
-                console.log('🔄 Redirecting to login from ProtectedRoute');
-              }
-              router.push(redirectTo);
-            }}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Vai al Login
-          </button>
+          <div className="text-4xl mb-4">🛠️</div>
+          <div className="text-lg text-teal-700">Reindirizzamento...</div>
         </div>
       </div>
     );

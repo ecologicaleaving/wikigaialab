@@ -47,8 +47,11 @@ function LoginComponent() {
   // Show loading spinner on initial load
   if (isInitialLoad && loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <AuthLoadingSpinner message="Caricamento..." />
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🛠️</div>
+          <div className="text-lg text-teal-700">Preparando il laboratorio...</div>
+        </div>
       </div>
     );
   }
@@ -56,18 +59,21 @@ function LoginComponent() {
   // Redirect if already authenticated
   if (user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <AuthLoadingSpinner message="Reindirizzamento..." />
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🛠️</div>
+          <div className="text-lg text-teal-700">Reindirizzamento...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-emerald-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 text-blue-600">
+          <div className="mx-auto h-12 w-12 text-teal-600">
             {/* WikiGaiaLab Logo */}
             <svg
               fill="currentColor"
@@ -78,10 +84,10 @@ function LoginComponent() {
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Benvenuto in WikiGaiaLab
+            Benvenuto nel Laboratorio
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Partecipa alla comunità e contribuisci al cambiamento
+            Come in un antico laboratorio di paese, qui ci ritroviamo per creare soluzioni insieme
           </p>
         </div>
 
@@ -128,15 +134,15 @@ function LoginComponent() {
 
             {/* Google Login Button */}
             <div className="space-y-4">
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
+              <div className="bg-teal-50 border border-teal-200 rounded-md p-4 mb-4">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-blue-800">
+                    <p className="text-sm text-teal-800">
                       <strong>🔧 Authentication Mode:</strong><br/>
                       • <a href="/login?demo=true" className="underline">Demo Mode</a> - Test with mock user<br/>
                       • <a href="/login?demo=false" className="underline">Real OAuth</a> - Use Google authentication
@@ -148,26 +154,26 @@ function LoginComponent() {
             </div>
 
             {/* Features */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-teal-200">
               <h3 className="text-sm font-medium text-gray-900 mb-4">
-                Cosa puoi fare con WikiGaiaLab:
+                Cosa puoi fare nel Laboratorio:
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-green-500 mr-2" />
-                  Proponi soluzioni innovative per i problemi del mondo
+                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
+                  Porta i tuoi problemi quotidiani al banco del laboratorio
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-green-500 mr-2" />
-                  Vota e supporta le migliori idee
+                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
+                  Riconosci i problemi degli altri e dona il tuo cuore
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-green-500 mr-2" />
-                  Collabora con una comunità globale
+                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
+                  Collabora con i maestri artigiani per costruire soluzioni
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 text-green-500 mr-2" />
-                  Monitora l'impatto delle tue proposte
+                  <CheckIcon className="h-4 w-4 text-teal-500 mr-2" />
+                  Usa tutti gli attrezzi del laboratorio gratuitamente
                 </li>
               </ul>
             </div>
@@ -176,11 +182,11 @@ function LoginComponent() {
           {/* Footer */}
           <div className="text-center text-sm text-gray-600">
             Continuando, accetti i nostri{' '}
-            <Link href="/terms" className="text-blue-600 hover:text-blue-800">
+            <Link href="/terms" className="text-teal-600 hover:text-teal-800">
               Termini di Servizio
             </Link>{' '}
             e la{' '}
-            <Link href="/privacy" className="text-blue-600 hover:text-blue-800">
+            <Link href="/privacy" className="text-teal-600 hover:text-teal-800">
               Privacy Policy
             </Link>
             .
@@ -190,9 +196,9 @@ function LoginComponent() {
           <div className="text-center">
             <Link
               href="/"
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              className="text-teal-600 hover:text-teal-800 text-sm font-medium"
             >
-              ← Torna alla Home
+              ← Torna al Laboratorio
             </Link>
           </div>
         </div>
@@ -208,8 +214,11 @@ function LoginComponent() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <AuthLoadingSpinner message="Caricamento..." />
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🛠️</div>
+          <div className="text-lg text-teal-700">Preparando il laboratorio...</div>
+        </div>
       </div>
     }>
       <LoginComponent />
