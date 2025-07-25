@@ -48,19 +48,29 @@ export const authConfig = {
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
       if (user && account) {
-        // Use Google's stable 'sub' identifier as the user ID
-        // This ensures the same user always gets the same ID across sessions
-        token.id = account.providerAccountId || profile?.sub || user.id || user.email;
+        // Get Google's stable identifier
+        const googleId = account.providerAccountId || profile?.sub || user.id;
+        
+        // Convert numeric Google ID to UUID format for database compatibility
+        let userId = googleId;
+        if (googleId && /^\d+$/.test(googleId)) {
+          // If it's a numeric string, convert to UUID using deterministic method
+          const { v5: uuidv5 } = require('uuid');
+          const GOOGLE_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+          userId = uuidv5(googleId, GOOGLE_NAMESPACE);
+        }
+        
+        token.id = userId || user.email;
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
         
         if (process.env.NODE_ENV === 'development') {
           console.log('🔐 JWT callback - Setting user ID:', {
-            id: token.id,
+            originalGoogleId: googleId,
+            convertedId: token.id,
             email: token.email,
-            providerAccountId: account.providerAccountId,
-            sub: profile?.sub
+            wasNumeric: /^\d+$/.test(googleId || '')
           });
         }
       }
