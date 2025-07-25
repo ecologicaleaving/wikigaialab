@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Heart, Users, Zap, ArrowRight, TrendingUp, BookOpen } from 'lucide-react';
+import { Heart, Users, Zap, ArrowRight, TrendingUp, BookOpen, MessageCircle, Wrench } from 'lucide-react';
+import { HandHeart } from '../lib/icons';
+import { Icon } from '../components/ui/Icon';
 import { useAuth } from '../hooks/useAuth';
 import { analytics } from '../lib/analytics';
 import { abTesting } from '../lib/ab-testing';
@@ -101,7 +103,7 @@ export default function HomePage() {
             {/* Step 1: Racconta */}
             <div className="text-center group">
               <div className="bg-gradient-to-br from-teal-100 to-emerald-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
-                <div className="text-3xl">🗣️</div>
+                <Icon icon={MessageCircle} size="xl" color="primary" aria-label="Porta i tuoi problemi" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">Porta</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -127,7 +129,7 @@ export default function HomePage() {
             {/* Step 3: Impara */}
             <div className="text-center group">
               <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
-                <div className="text-3xl">🛠️</div>
+                <Icon icon={Wrench} size="xl" color="primary" aria-label="Usa gli strumenti del laboratorio" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">Impara</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -140,7 +142,9 @@ export default function HomePage() {
           {/* Workshop Promise */}
           <div className="mt-16 text-center">
             <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto border border-teal-200 shadow-sm">
-              <div className="text-2xl mb-4">🤝</div>
+              <div className="mb-4 flex justify-center">
+                <Icon icon={HandHeart} size="xl" color="primary" aria-label="La promessa del laboratorio" />
+              </div>
               <h4 className="text-xl font-semibold text-gray-900 mb-3">
                 La Promessa del Laboratorio
               </h4>

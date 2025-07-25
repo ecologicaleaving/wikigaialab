@@ -11,7 +11,8 @@ import {
   BarChart3,
   Plus,
   Search,
-  Heart
+  Heart,
+  MessageCircle
 } from 'lucide-react';
 
 // Artisanal Laboratory Navigation - Community-focused hierarchy
@@ -49,7 +50,7 @@ export const mainNavigationItems: NavigationItem[] = [
     requiresAuth: true,
     priority: 3,
     description: 'Porta il tuo problema',
-    badge: { text: '💭', color: 'bg-orange-500' }
+    badge: { icon: MessageCircle, color: 'bg-orange-500' }
   },
   { 
     id: 'apps', 

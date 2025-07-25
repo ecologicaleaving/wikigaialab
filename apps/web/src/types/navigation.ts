@@ -6,7 +6,8 @@ export interface NavigationItem {
   requiresAuth?: boolean;
   adminOnly?: boolean;
   badge?: {
-    text: string;
+    text?: string;
+    icon?: React.ComponentType<any>;
     color: string;
   } | number;
   active?: boolean;
@@ -44,7 +45,8 @@ export interface NavigationLinkProps {
   children: React.ReactNode;
   icon?: React.ComponentType<{ size?: number; className?: string }>;
   badge?: {
-    text: string;
+    text?: string;
+    icon?: React.ComponentType<any>;
     color: string;
   } | number;
   active?: boolean;

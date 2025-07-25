@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Heart, Ear, Plus, Filter, Search, Users } from 'lucide-react';
+import { Heart, Ear, Plus, Filter, Search, Users, DollarSign, Zap, Laptop, Home, Briefcase, BookOpen, Folder, Wrench } from 'lucide-react';
+import { TreeEvergreen, Plant, Bicycle, HandHeart } from '../../lib/icons';
 import { AuthenticatedLayout } from '../layout';
 import { Button } from '../ui/button';
 import { useAuth } from '../../hooks/useAuth';
 import ArtisanalProblemCard from './ArtisanalProblemCard';
+import { Icon } from '../ui/Icon';
 import Link from 'next/link';
 
 interface Problem {
@@ -18,7 +20,7 @@ interface Problem {
   category: {
     id: string;
     name: string;
-    icon?: string;
+    icon?: React.ComponentType<any>;
   };
   proposer: {
     id: string;
@@ -29,29 +31,29 @@ interface Problem {
 interface Category {
   id: string;
   name: string;
-  icon: string;
+  icon: React.ComponentType<any>;
   count: number;
 }
 
-// Map category names to appropriate icons
-const getIconForCategory = (categoryName: string | undefined): string => {
-  if (!categoryName) return '📂';
+// Map category names to appropriate React icon components
+const getIconForCategory = (categoryName: string | undefined): React.ComponentType<any> => {
+  if (!categoryName) return Folder;
   
-  const iconMap: Record<string, string> = {
-    'Ambiente': '🌱',
-    'Mobilità': '🚲',
-    'Energia': '⚡',
-    'Sociale': '🤝',
-    'Tecnologia': '💻',
-    'Economia': '💰',
-    'Famiglia': '👨‍👩‍👧‍👦',
-    'Quartiere': '🏘️',
-    'Hobby': '📚',
-    'Lavoro': '💼',
-    'Casa': '🏡'
+  const iconMap: Record<string, React.ComponentType<any>> = {
+    'Ambiente': TreeEvergreen,
+    'Mobilità': Bicycle,
+    'Energia': Zap,
+    'Sociale': HandHeart,
+    'Tecnologia': Laptop,
+    'Economia': DollarSign,
+    'Famiglia': Users,
+    'Quartiere': Home,
+    'Hobby': BookOpen,
+    'Lavoro': Briefcase,
+    'Casa': Home
   };
 
-  return iconMap[categoryName] || '📂';
+  return iconMap[categoryName] || Folder;
 };
 
 export const ArtisanalProblemsView: React.FC = () => {
@@ -159,7 +161,9 @@ export const ArtisanalProblemsView: React.FC = () => {
       <AuthenticatedLayout>
         <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-4xl mb-4">🛠️</div>
+            <div className="mb-4 flex justify-center">
+              <Icon icon={Wrench} size="xl" color="primary" aria-label="Preparando il laboratorio" />
+            </div>
             <div className="text-lg text-teal-700">Preparando il laboratorio...</div>
           </div>
         </div>
@@ -231,7 +235,9 @@ export const ArtisanalProblemsView: React.FC = () => {
                       : 'bg-white text-teal-700 border border-teal-200 hover:bg-teal-50'
                   }`}
                 >
-                  <span className="mr-2">{category.icon}</span>
+                  <span className="mr-2">
+                    <Icon icon={category.icon} size="sm" color="neutral" aria-hidden="true" />
+                  </span>
                   {category.name} ({category.count})
                 </button>
               ))}
@@ -296,8 +302,9 @@ export const ArtisanalProblemsView: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-sm text-gray-600 mt-6">
-                💝 Nel nostro laboratorio, ogni cuore donato è un passo verso la soluzione di un problema comune
+              <p className="text-sm text-gray-600 mt-6 flex items-center justify-center gap-2">
+                <Icon icon={Heart} size="sm" color="primary" aria-hidden="true" />
+                Nel nostro laboratorio, ogni cuore donato è un passo verso la soluzione di un problema comune
               </p>
             </div>
           </div>
