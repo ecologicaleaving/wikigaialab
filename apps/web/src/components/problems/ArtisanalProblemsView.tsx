@@ -33,6 +33,27 @@ interface Category {
   count: number;
 }
 
+// Map category names to appropriate icons
+const getIconForCategory = (categoryName: string | undefined): string => {
+  if (!categoryName) return '📂';
+  
+  const iconMap: Record<string, string> = {
+    'Ambiente': '🌱',
+    'Mobilità': '🚲',
+    'Energia': '⚡',
+    'Sociale': '🤝',
+    'Tecnologia': '💻',
+    'Economia': '💰',
+    'Famiglia': '👨‍👩‍👧‍👦',
+    'Quartiere': '🏘️',
+    'Hobby': '📚',
+    'Lavoro': '💼',
+    'Casa': '🏡'
+  };
+
+  return iconMap[categoryName] || '📂';
+};
+
 export const ArtisanalProblemsView: React.FC = () => {
   const { user } = useAuth();
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -42,54 +63,78 @@ export const ArtisanalProblemsView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<'stories' | 'workshop'>('stories');
 
-  // Mock data for artisanal workshop
+  // Load real data from database
   useEffect(() => {
-    const mockProblems: Problem[] = [
-      {
-        id: '1',
-        title: 'Organizzare le feste di compleanno dei bambini',
-        description: 'Ogni volta che devo organizzare una festa per mia figlia, perdo ore a cercare fornitori, confrontare prezzi, e coordinare tutto. Vorrei un aiuto per semplificare questo processo e non dimenticare nulla.',
-        vote_count: 67,
-        status: 'proposed',
-        created_at: '2024-07-20T10:00:00Z',
-        category: { id: 'famiglia', name: 'Vita di Famiglia', icon: '👨‍👩‍👧‍👦' },
-        proposer: { id: '1', name: 'Maria R.' }
-      },
-      {
-        id: '2', 
-        title: 'Trovare qualcuno per aiutare gli anziani del condominio',
-        description: 'Nel nostro palazzo ci sono diversi anziani che hanno difficoltà con la spesa e le commissioni. Vorrei organizzare un sistema di aiuto tra vicini, ma non so come coordinarlo.',
-        vote_count: 89,
-        status: 'proposed',
-        created_at: '2024-07-19T15:30:00Z',
-        category: { id: 'comunita', name: 'Vita di Quartiere', icon: '🏘️' },
-        proposer: { id: '2', name: 'Giuseppe M.' }
-      },
-      {
-        id: '3',
-        title: 'Gestire il gruppo di lettura del circolo',
-        description: 'Coordino un gruppo di lettura ma è difficile scegliere i libri, organizzare gli incontri e tenere traccia di chi ha letto cosa. Serve qualcosa di semplice per gestire tutto.',
-        vote_count: 34,
-        status: 'proposed', 
-        created_at: '2024-07-18T09:15:00Z',
-        category: { id: 'hobby', name: 'Passioni e Hobby', icon: '📚' },
-        proposer: { id: '3', name: 'Sofia B.' }
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch problems and categories in parallel
+        const [problemsResponse, categoriesResponse] = await Promise.all([
+          fetch('/api/problems'),
+          fetch('/api/categories')
+        ]);
+
+        let transformedProblems: Problem[] = [];
+        let categoriesMap: Record<string, any> = {};
+
+        // Process categories first to create lookup map
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          if (categoriesData.success && categoriesData.data) {
+            categoriesData.data.forEach((category: any) => {
+              categoriesMap[category.id] = category;
+            });
+          }
+        }
+
+        if (problemsResponse.ok) {
+          const problemsData = await problemsResponse.json();
+          if (problemsData.success && problemsData.data?.problems) {
+            // Transform database problems with category lookup
+            transformedProblems = problemsData.data.problems.map((problem: any) => {
+              const category = categoriesMap[problem.category_id];
+              return {
+                id: problem.id,
+                title: problem.title,
+                description: problem.description,
+                vote_count: problem.vote_count || 0,
+                status: problem.status || 'Proposed',
+                created_at: problem.created_at,
+                category: {
+                  id: problem.category_id,
+                  name: category?.name || 'Categoria',
+                  icon: getIconForCategory(category?.name) || '📂'
+                },
+                proposer: {
+                  id: problem.proposer_id,
+                  name: 'Artigiano del Laboratorio'
+                }
+              };
+            });
+            setProblems(transformedProblems);
+          }
+        } else {
+          console.error('Failed to fetch problems:', problemsResponse.status);
+        }
+
+        // Transform categories for display
+        const transformedCategories = Object.values(categoriesMap).map((category: any) => ({
+          id: category.id,
+          name: category.name,
+          icon: getIconForCategory(category.name),
+          count: transformedProblems.filter(p => p.category.id === category.id).length
+        }));
+        setCategories(transformedCategories);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    const mockCategories: Category[] = [
-      { id: 'famiglia', name: 'Vita di Famiglia', icon: '👨‍👩‍👧‍👦', count: 23 },
-      { id: 'comunita', name: 'Vita di Quartiere', icon: '🏘️', count: 18 },
-      { id: 'hobby', name: 'Passioni e Hobby', icon: '📚', count: 15 },
-      { id: 'lavoro', name: 'Vita Lavorativa', icon: '💼', count: 12 },
-      { id: 'casa', name: 'Casa e Giardino', icon: '🏡', count: 9 }
-    ];
-
-    setTimeout(() => {
-      setProblems(mockProblems);
-      setCategories(mockCategories);
-      setLoading(false);
-    }, 500);
+    fetchData();
   }, []);
 
   const filteredProblems = problems.filter(problem => {
