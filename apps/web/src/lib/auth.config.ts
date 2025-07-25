@@ -116,18 +116,45 @@ export const authConfig = {
               });
             }
           } else {
-            // User not found in database, use Google info but flag for creation
-            session.user.id = token.googleId as string; // Fallback to Google UUID
-            session.user.email = token.email as string;
-            session.user.name = token.name as string;
-            session.user.image = token.picture as string;
-            
-            if (process.env.NODE_ENV === 'development') {
-              console.log('🔐 Session callback - No database user, using Google ID:', {
-                googleId: token.googleId,
+            // User not found in database, create them
+            console.log('🔐 Session callback - Creating new database user:', {
+              googleId: token.googleId,
+              email: token.email
+            });
+
+            const { data: newUser, error: createError } = await supabase
+              .from('users')
+              .insert({
+                id: token.googleId,
                 email: token.email,
-                needsDbCreation: true
+                name: token.name || 'User',
+                image: token.picture,
+                role: 'user',
+                is_admin: false,
+                updated_at: new Date().toISOString()
+              })
+              .select('id, email, name, image, role, is_admin')
+              .single();
+
+            if (newUser) {
+              // Use new database user
+              session.user.id = newUser.id;
+              session.user.email = newUser.email;
+              session.user.name = newUser.name;
+              session.user.image = newUser.image;
+              
+              console.log('✅ Session callback - New user created:', {
+                databaseId: newUser.id,
+                email: newUser.email
               });
+            } else {
+              // Creation failed, fallback to Google UUID
+              session.user.id = token.googleId as string;
+              session.user.email = token.email as string;
+              session.user.name = token.name as string;
+              session.user.image = token.picture as string;
+              
+              console.error('❌ Session callback - User creation failed:', createError);
             }
           }
         } catch (dbError) {
