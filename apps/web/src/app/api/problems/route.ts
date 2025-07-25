@@ -152,192 +152,80 @@ export async function POST(request: NextRequest) {
       }, { status: 401 }));
     }
 
-    // Use UserIdentityService to ensure consistent user ID
-    console.log('🔍 DIAGNOSTIC: About to initialize UserIdentityService', {
-      correlationId: tracker.getCorrelationId(),
-      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
-      nodeEnv: process.env.NODE_ENV
+    // BYPASS UserIdentityService - use session data directly
+    console.log('🔍 DIAGNOSTIC: Using session data directly (UserIdentityService bypassed)', {
+      sessionUserId: session.user.id,
+      sessionEmail: session.user.email,
+      hasName: !!session.user.name,
+      hasImage: !!session.user.image
     });
 
-    let userIdentityService;
-    try {
-      userIdentityService = getUserIdentityService(tracker.getCorrelationId());
-      console.log('✅ DIAGNOSTIC: UserIdentityService created successfully');
-    } catch (initError) {
-      console.error('❌ DIAGNOSTIC: Failed to initialize UserIdentityService:', {
-        error: initError instanceof Error ? initError.message : 'Unknown error',
-        stack: initError instanceof Error ? initError.stack : undefined,
-        type: initError instanceof Error ? initError.constructor.name : 'unknown'
-      });
-      throw initError;
-    }
-    
-    let resolvedUser;
-    try {
-      console.log('🔍 DIAGNOSTIC: About to sync user session', {
-        sessionUserId: session.user.id,
-        sessionEmail: session.user.email,
-        hasName: !!session.user.name,
-        hasImage: !!session.user.image
-      });
-
-      // Sync user from session to ensure database consistency
-      resolvedUser = await userIdentityService.syncUserSession(session.user.id, {
-        email: session.user.email,
-        name: session.user.name,
-        image: session.user.image
-      });
-
-      console.log('✅ DIAGNOSTIC: User session sync successful', {
-        resolvedUserId: resolvedUser.id,
-        resolvedEmail: resolvedUser.email,
-        resolvedRole: resolvedUser.role
-      });
-    } catch (error) {
-      const userSyncError = new Error('Failed to resolve user identity');
-      tracker.trackError(userSyncError, 500);
-      
-      // Enhanced error logging for production debugging
-      const errorDetails = {
-        sessionUserId: session.user.id,
-        sessionUserEmail: session.user.email,
-        sessionUserName: session.user.name,
-        sessionUserImage: session.user.image,
-        errorType: error instanceof Error ? error.constructor.name : 'unknown',
-        errorMessage: error instanceof Error ? error.message : 'Unknown sync error',
-        stack: error instanceof Error ? error.stack : undefined,
-        nodeEnv: process.env.NODE_ENV,
-        hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-        hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
-        timestamp: new Date().toISOString()
-      };
-      
-      console.error('❌ DIAGNOSTIC: UserIdentityService.syncUserSession failed:', errorDetails);
-      
-      // Try fallback approach - attempt direct user creation
+    // Generate deterministic UUID if session ID is email
+    let userId = session.user.id;
+    if (session.user.email && session.user.id === session.user.email) {
       try {
-        console.log('🔄 DIAGNOSTIC: Attempting fallback user resolution...');
-        
-        // Create a new UserIdentityService instance with clean state
-        const fallbackService = getUserIdentityService(`fallback-${tracker.getCorrelationId()}`);
-        
-        // Try to resolve user with OAuth data format
-        const oauthData = {
-          id: session.user.id,
-          email: session.user.email!,
-          name: session.user.name || 'Unknown User',
-          image: session.user.image,
-          provider: 'google' // Assume Google OAuth for now
-        };
-        
-        console.log('🔄 Fallback OAuth data:', { 
-          id: oauthData.id, 
-          email: oauthData.email, 
-          hasName: !!oauthData.name 
+        const { v5: uuidv5 } = require('uuid');
+        const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+        userId = uuidv5(session.user.email.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE);
+        console.log('🔄 DIAGNOSTIC: Generated deterministic UUID from email', {
+          email: session.user.email,
+          generatedId: userId
         });
-        
-        resolvedUser = await fallbackService.resolveUser(oauthData);
-        
-        console.log('✅ DIAGNOSTIC: Fallback user resolution succeeded:', {
-          id: resolvedUser.id,
-          email: resolvedUser.email,
-          role: resolvedUser.role
-        });
-        
-      } catch (fallbackError) {
-        console.error('❌ DIAGNOSTIC: Fallback user resolution also failed:', {
-          fallbackErrorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
-          fallbackErrorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error',
-          originalError: errorDetails
-        });
-
-        // Last resort: use session data directly with deterministic UUID and create in database
-        try {
-          console.log('🆘 DIAGNOSTIC: Attempting direct session-based user creation...');
-          
-          const { v5: uuidv5 } = require('uuid');
-          const WIKIGAIALAB_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-          const directUserId = uuidv5(session.user.email!.toLowerCase().trim(), WIKIGAIALAB_NAMESPACE);
-          
-          // Actually create the user in the database
-          const supabase = getSupabaseClient();
-          const { data: createdUser, error: createError } = await supabase
-            .from('users')
-            .upsert({
-              id: directUserId,
-              email: session.user.email!,
-              name: session.user.name || 'Unknown User',
-              image: session.user.image,
-              role: 'user',
-              is_admin: false,
-              updated_at: new Date().toISOString()
-            }, {
-              onConflict: 'id',
-              ignoreDuplicates: false
-            })
-            .select('id, email, name, image, role, is_admin, created_at, updated_at')
-            .single();
-
-          if (createError) {
-            console.error('❌ DIAGNOSTIC: Direct database user creation failed:', createError);
-            throw createError;
-          }
-
-          resolvedUser = {
-            id: createdUser.id,
-            email: createdUser.email,
-            name: createdUser.name || 'Unknown User',
-            image: createdUser.image || undefined,
-            role: (createdUser.role as 'user' | 'admin') || 'user',
-            isAdmin: createdUser.is_admin || false,
-            created_at: createdUser.created_at,
-            updated_at: createdUser.updated_at
-          };
-          
-          console.log('✅ DIAGNOSTIC: Direct session-based user creation succeeded:', {
-            id: resolvedUser.id,
-            email: resolvedUser.email,
-            createdInDatabase: true
-          });
-          
-        } catch (directError) {
-          console.error('❌ DIAGNOSTIC: Direct session-based user creation failed:', {
-            directErrorType: directError instanceof Error ? directError.constructor.name : 'unknown',
-            directErrorMessage: directError instanceof Error ? directError.message : 'Unknown direct error'
-          });
-          
-          return tracker.complete(NextResponse.json({
-            success: false,
-            error: 'Failed to resolve user identity. Please try signing out and back in.',
-            correlationId: tracker.getCorrelationId(),
-            details: process.env.NODE_ENV === 'development' ? {
-              original: errorDetails,
-              fallback: {
-                errorType: fallbackError instanceof Error ? fallbackError.constructor.name : 'unknown',
-                errorMessage: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error'
-              },
-              direct: {
-                errorType: directError instanceof Error ? directError.constructor.name : 'unknown',
-                errorMessage: directError instanceof Error ? directError.message : 'Unknown direct error'
-              }
-            } : 'User identity resolution failed',
-            troubleshooting: {
-              steps: [
-                '1. Sign out of your account completely',
-                '2. Clear your browser cache and cookies for this site',
-                '3. Close all browser tabs for this site',
-                '4. Sign back in with the same Google account',
-                '5. If the problem persists, try a different browser or incognito mode',
-                '6. Contact support with this correlation ID if issue continues'
-              ],
-              correlationId: tracker.getCorrelationId(),
-              supportEmail: 'support@wikigaialab.com'
-            }
-          }, { status: 500 }));
-        }
+      } catch (uuidError) {
+        console.warn('⚠️ DIAGNOSTIC: UUID generation failed, using session ID:', uuidError);
+        userId = session.user.id;
       }
     }
+
+    // Create user object directly from session
+    const resolvedUser = {
+      id: userId,
+      email: session.user.email!,
+      name: session.user.name || 'Unknown User',
+      image: session.user.image,
+      role: 'user' as const,
+      isAdmin: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    // Ensure user exists in database
+    try {
+      const supabase = getSupabaseClient();
+      const { data: dbUser, error: upsertError } = await supabase
+        .from('users')
+        .upsert({
+          id: resolvedUser.id,
+          email: resolvedUser.email,
+          name: resolvedUser.name,
+          image: resolvedUser.image,
+          role: 'user',
+          is_admin: false,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id',
+          ignoreDuplicates: false
+        })
+        .select('id, email, name, image, role, is_admin')
+        .single();
+
+      if (upsertError) {
+        console.warn('⚠️ DIAGNOSTIC: User upsert failed (continuing anyway):', upsertError);
+      } else {
+        console.log('✅ DIAGNOSTIC: User ensured in database:', {
+          id: dbUser.id,
+          email: dbUser.email
+        });
+      }
+    } catch (dbError) {
+      console.warn('⚠️ DIAGNOSTIC: Database user sync failed (continuing anyway):', dbError);
+    }
+
+    console.log('✅ DIAGNOSTIC: Using direct session-based user resolution:', {
+      resolvedUserId: resolvedUser.id,
+      resolvedEmail: resolvedUser.email,
+      resolvedRole: resolvedUser.role
+    });
 
     const userId = resolvedUser.id;
     
