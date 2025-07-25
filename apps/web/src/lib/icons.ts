@@ -37,6 +37,8 @@ import {
   ChevronDown,
   Check,
   Leaf,
+  Crown,
+  Shield,
 } from 'lucide-react';
 
 import { 
@@ -85,6 +87,8 @@ export {
   ChevronDown,    // Dropdowns
   Check,          // Checkmarks
   Leaf,           // Nature/ecology
+  Crown,          // Admin/Authority
+  Shield,         // Security/Protection
 };
 
 // Secondary: Heroicons (re-export for external use)
@@ -125,7 +129,9 @@ export const iconMap = {
     delete: Trash2,
     share: Share2,
     view: Eye,
-    close: X
+    close: X,
+    admin: Crown,
+    protect: Shield
   },
   states: {
     success: CheckCircle,
