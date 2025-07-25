@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { useSession, signIn, signOut as nextAuthSignOut } from 'next-auth/react';
 import { AuthUser } from '../types/auth';
 
@@ -143,22 +143,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [session?.user?.id, session?.user?.email]);
 
-  // Priority: Test user > NextAuth user with database data
-  // If test user exists, use it; otherwise use NextAuth session data
-  const user: AuthUser | null = testUser ? testUser : (session?.user && databaseUser ? {
-    id: databaseUser.id, // Use synchronized ID from UserIdentityService
-    email: databaseUser.email,
-    name: databaseUser.name || session.user.name || '',
-    avatar_url: databaseUser.avatar_url || session.user.image || null,
-    created_at: databaseUser.created_at,
-    updated_at: databaseUser.updated_at,
-    last_login_at: databaseUser.last_login_at,
-    is_admin: databaseUser.is_admin,
-    role: databaseUser.role,
-    subscription_status: databaseUser.subscription_status,
-    total_votes_cast: databaseUser.total_votes_cast,
-    total_problems_proposed: databaseUser.total_problems_proposed,
-  } : null);
+  // Priority: Test user > NextAuth session with admin status > Database fallback
+  // After our NextAuth fix, session.user should include is_admin
+  // Use useMemo to prevent re-creating user object unnecessarily
+  const user: AuthUser | null = useMemo(() => {
+    if (testUser) return testUser;
+    
+    if (!session?.user) return null;
+    
+    return {
+      id: session.user.id,
+      email: session.user.email || '',
+      name: session.user.name || '',
+      avatar_url: session.user.image || null,
+      created_at: databaseUser?.created_at || new Date().toISOString(),
+      updated_at: databaseUser?.updated_at || new Date().toISOString(),
+      last_login_at: databaseUser?.last_login_at || new Date().toISOString(),
+      is_admin: (session.user as any).is_admin || false, // Get from session first
+      role: databaseUser?.role || 'user',
+      subscription_status: databaseUser?.subscription_status || 'free',
+      total_votes_cast: databaseUser?.total_votes_cast || 0,
+      total_problems_proposed: databaseUser?.total_problems_proposed || 0,
+    };
+  }, [testUser, session?.user, databaseUser]);
 
   // Include test loading in overall loading state
   const overallLoading = loading || testLoading;
@@ -236,8 +243,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       setFetchingUser(true);
-      // Force refresh by clearing cache
-      setLastFetchedUserId(null);
+      
+      // Force NextAuth session refresh first
+      await update();
+      
+      // Then fetch database user data
+      setLastFetchedUserId(null); // Clear cache to force refresh
       
       const response = await fetch('/api/auth/session');
       const data = await response.json();
@@ -251,7 +262,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: data.user.id,
             email: data.user.email,
             role: data.user.role,
-            isAdmin: data.user.is_admin
+            isAdmin: data.user.is_admin,
+            sessionAdmin: (session.user as any).is_admin
           });
         }
       }
