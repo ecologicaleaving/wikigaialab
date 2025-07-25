@@ -134,12 +134,12 @@ export function LeaderboardWidget({
 
   const getScoreLabel = (type: string) => {
     switch (type) {
-      case 'votes': return 'Votes';
-      case 'problems': return 'Problems';
-      case 'referrals': return 'Referrals';
-      case 'engagement': return 'Days Active';
-      case 'reputation': return 'Points';
-      default: return 'Score';
+      case 'votes': return 'Voti';
+      case 'problems': return 'Problemi';
+      case 'referrals': return 'Inviti';
+      case 'engagement': return 'Giorni Attivi';
+      case 'reputation': return 'Punti';
+      default: return 'Punteggio';
     }
   };
 
@@ -150,7 +150,7 @@ export function LeaderboardWidget({
       <Card className={`p-4 ${className}`}>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <h3 className="font-medium">Leaderboard</h3>
+            <h3 className="font-medium">Classifica</h3>
             {showControls && (
               <Button
                 onClick={refreshLeaderboard}
@@ -182,7 +182,7 @@ export function LeaderboardWidget({
               {currentUserRank && currentUserRank > 3 && (
                 <div className="border-t pt-2 mt-2">
                   <div className="flex items-center justify-between text-blue-600">
-                    <span className="text-sm font-medium">Your rank: #{currentUserRank}</span>
+                    <span className="text-sm font-medium">La tua posizione: #{currentUserRank}</span>
                   </div>
                 </div>
               )}
@@ -199,7 +199,7 @@ export function LeaderboardWidget({
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-semibold">Community Leaderboard</h2>
+            <h2 className="text-xl font-semibold">Classifica Community</h2>
             {currentLeaderboard && (
               <p className="text-gray-600 text-sm mt-1">
                 {currentLeaderboard.description}
@@ -214,7 +214,7 @@ export function LeaderboardWidget({
               variant="outline"
               size="sm"
             >
-              {refreshing ? 'Refreshing...' : 'Refresh'}
+              {refreshing ? 'Aggiornando...' : 'Aggiorna'}
             </Button>
           )}
         </div>
@@ -240,7 +240,7 @@ export function LeaderboardWidget({
         {currentUserRank && (
           <Card className="p-4 bg-blue-50 border-blue-200">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-blue-900">Your Current Rank</span>
+              <span className="font-medium text-blue-900">La Tua Posizione Attuale</span>
               <span className="text-2xl font-bold text-blue-600">#{currentUserRank}</span>
             </div>
           </Card>
@@ -303,7 +303,7 @@ export function LeaderboardWidget({
                       <div className="font-medium">{entry.user.name}</div>
                       {entry.user.reputation_score > 0 && (
                         <div className="text-xs text-gray-500">
-                          {entry.user.reputation_score} reputation
+                          {entry.user.reputation_score} reputazione
                         </div>
                       )}
                     </div>
@@ -318,7 +318,7 @@ export function LeaderboardWidget({
                   </div>
                   {entry.streakCount > 0 && (
                     <div className="text-xs text-orange-600">
-                      🔥 {entry.streakCount} streak
+                      🔥 {entry.streakCount} serie
                     </div>
                   )}
                 </div>
@@ -327,13 +327,13 @@ export function LeaderboardWidget({
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
-            <p>No leaderboard data available</p>
+            <p>Nessun dato della classifica disponibile</p>
             <Button
               onClick={refreshLeaderboard}
               variant="outline"
               className="mt-2"
             >
-              Refresh
+              Aggiorna
             </Button>
           </div>
         )}
@@ -341,9 +341,9 @@ export function LeaderboardWidget({
         {/* Footer Info */}
         {currentLeaderboard && (
           <div className="text-xs text-gray-500 text-center">
-            Last updated: {new Date(currentLeaderboard.lastUpdated).toLocaleDateString()}
+            Ultimo aggiornamento: {new Date(currentLeaderboard.lastUpdated).toLocaleDateString('it-IT')}
             {currentLeaderboard.period !== 'all_time' && (
-              <span> • Period: {currentLeaderboard.period}</span>
+              <span> • Periodo: {currentLeaderboard.period}</span>
             )}
           </div>
         )}

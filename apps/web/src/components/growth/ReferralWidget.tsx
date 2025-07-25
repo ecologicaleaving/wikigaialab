@@ -120,9 +120,9 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
       <Card className={`p-4 ${className}`}>
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="font-medium">Invite Friends</h3>
+            <h3 className="font-medium">Invita Amici</h3>
             <p className="text-sm text-gray-600">
-              {referralData.successfulReferrals} successful referrals
+              {referralData.successfulReferrals} inviti riusciti
             </p>
           </div>
           <Button
@@ -130,7 +130,7 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
             disabled={copying}
             size="sm"
           >
-            {copied ? 'Copied!' : copying ? 'Copying...' : 'Share'}
+            {copied ? 'Copiato!' : copying ? 'Copiando...' : 'Condividi'}
           </Button>
         </div>
       </Card>
@@ -142,9 +142,9 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-xl font-semibold">Invite Friends to WikiGaiaLab</h2>
+          <h2 className="text-xl font-semibold">Invita Amici su WikiGaiaLab</h2>
           <p className="text-gray-600 mt-1">
-            Earn rewards for every friend you bring to the community
+            Guadagna ricompense per ogni amico che porti nella community
           </p>
         </div>
 
@@ -152,26 +152,26 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{referralData.totalReferrals}</div>
-            <div className="text-sm text-gray-600">Total Invites</div>
+            <div className="text-sm text-gray-600">Inviti Totali</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{referralData.successfulReferrals}</div>
-            <div className="text-sm text-gray-600">Successful</div>
+            <div className="text-sm text-gray-600">Riusciti</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-yellow-600">{referralData.pendingReferrals}</div>
-            <div className="text-sm text-gray-600">Pending</div>
+            <div className="text-sm text-gray-600">In Attesa</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{referralData.totalRewards}</div>
-            <div className="text-sm text-gray-600">Points Earned</div>
+            <div className="text-sm text-gray-600">Punti Guadagnati</div>
           </div>
         </div>
 
         {/* Referral Code */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Your Referral Code
+            Il Tuo Codice Invito
           </label>
           <div className="flex">
             <input
@@ -185,7 +185,7 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
               disabled={copying}
               className="rounded-l-none"
             >
-              {copied ? 'Copied!' : copying ? 'Copying...' : 'Copy Link'}
+              {copied ? 'Copiato!' : copying ? 'Copiando...' : 'Copia Link'}
             </Button>
           </div>
         </div>
@@ -193,7 +193,7 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
         {/* Social Sharing */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">
-            Share Your Invite
+            Condividi il Tuo Invito
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             <Button
@@ -245,23 +245,23 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
         {/* Recent Referrals */}
         {referralData.recentReferrals.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Recent Referrals</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Inviti Recenti</h3>
             <div className="space-y-2">
               {referralData.recentReferrals.slice(0, 5).map((referral, index) => (
                 <div key={referral.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 rounded-full bg-gray-400"></div>
                     <span className="text-sm">
-                      {referral.referee?.name || 'Pending signup'}
+                      {referral.referee?.name || 'Registrazione in attesa'}
                     </span>
                   </div>
                   <div className="text-xs text-gray-500">
                     {referral.status === 'completed' ? (
-                      <span className="text-green-600 font-medium">Joined!</span>
+                      <span className="text-green-600 font-medium">Iscritto!</span>
                     ) : referral.clicked_at ? (
-                      <span className="text-yellow-600">Clicked</span>
+                      <span className="text-yellow-600">Cliccato</span>
                     ) : (
-                      <span className="text-gray-400">Sent</span>
+                      <span className="text-gray-400">Inviato</span>
                     )}
                   </div>
                 </div>
@@ -272,11 +272,11 @@ export function ReferralWidget({ userId, compact = false, className = '' }: Refe
 
         {/* Call to Action */}
         <div className="bg-blue-50 p-4 rounded-lg">
-          <h3 className="font-medium text-blue-900">How it works</h3>
+          <h3 className="font-medium text-blue-900">Come Funziona</h3>
           <ul className="text-sm text-blue-800 mt-2 space-y-1">
-            <li>• Share your referral link with friends</li>
-            <li>• When they sign up and vote, you both earn points</li>
-            <li>• Unlock rewards and premium features</li>
+            <li>• Condividi il tuo link di invito con gli amici</li>
+            <li>• Quando si iscrivono e votano, entrambi guadagnate punti</li>
+            <li>• Sblocca ricompense e funzionalità premium</li>
           </ul>
         </div>
       </div>

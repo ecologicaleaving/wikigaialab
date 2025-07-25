@@ -44,7 +44,7 @@ const tabs: DashboardTab[] = [
   { id: 'overview', name: 'Panoramica', icon: BarChart3 },
   { id: 'recommendations', name: 'Raccomandazioni', icon: Heart },
   { id: 'voting', name: 'Cronologia Voti', icon: Vote },
-  { id: 'growth', name: 'Community Growth', icon: UserPlus },
+  { id: 'growth', name: 'Crescita Community', icon: UserPlus },
   { id: 'problems', name: 'I Miei Problemi', icon: Users },
   { id: 'apps', name: 'Le Mie App', icon: AppWindow },
   { id: 'settings', name: 'Impostazioni', icon: Settings }
@@ -466,7 +466,7 @@ function GrowthTab({ user }: { user: any }) {
         <div className="flex items-center gap-3 mb-2">
           <UserPlus className="h-6 w-6 text-primary-600" />
           <h2 className="text-2xl font-semibold text-gray-900">
-            Community Growth
+            Crescita Community
           </h2>
         </div>
         <p className="text-gray-600">
