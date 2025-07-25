@@ -18,7 +18,7 @@ USER_STATUS = "active"
 # SCHERMATE PRINCIPALI
 # =====================
 
-/ | homepage | Landing page principale del laboratorio digitale | false
+/ | homepage | Landing page principale (focus: problema→soluzione condivisa) | false
 /dashboard | dashboard | Dashboard personale dell'utente (Il Mio Angolo) | true
 /login | login | Schermata di autenticazione con Google OAuth | false
 /test-login | test-login | Pagina di login dedicata per automazione Playwright | false
@@ -93,6 +93,7 @@ USER_STATUS = "active"
 # TEMI UI DA VERIFICARE:
 # - Identità WikiGaia (verde #00B894, palette naturale)
 # - Linguaggio laboratorio artigiano ("Il Mio Angolo", "Racconta", etc.)
+# - Focus problema→soluzione ("Condividi", "Creiamo la Soluzione", etc.)
 # - Accessibilità WCAG AA
 # - Micro-interazioni e animazioni fluide
-# - Sistema di consensi (cuoricini) e feedback
+# - Sistema di consensi (cuoricini) e feedback scalabile

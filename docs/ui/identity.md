@@ -2,7 +2,7 @@
 
 ## Brand Personality Framework
 
-WikiGaiaLab è un laboratorio artigiano digitale che unisce la saggezza ecologica di WikiGaia con l'innovazione dell'intelligenza artificiale. Qui persone comuni portano i loro problemi quotidiani per creare insieme soluzioni su misura, utilizzando l'AI come un attrezzo amichevole. Come in un vero laboratorio artigiano, qui non si comprano soluzioni già pronte, ma si lavora insieme per costruire esattamente quello che serve a ciascuno, nel rispetto dei valori di sostenibilità e partecipazione di WikiGaia.
+WikiGaiaLab è un laboratorio artigiano digitale che trasforma i problemi individuali in soluzioni collettive, unendo la saggezza ecologica di WikiGaia con l'innovazione dell'intelligenza artificiale. Qui le persone condividono i loro problemi quotidiani per contribuire alla creazione di strumenti e risorse che aiuteranno migliaia di altri, utilizzando l'AI come un attrezzo amichevole. Come in un vero laboratorio artigiano, ogni soluzione nasce dall'esperienza reale di chi vive quella difficoltà, creando valore per l'intera comunità nel rispetto dei valori di sostenibilità e partecipazione di WikiGaia.
 
 ### PRIMARY TONE IDENTITY
 
@@ -81,7 +81,7 @@ WikiGaiaLab è un laboratorio artigiano digitale che unisce la saggezza ecologic
 ## Microcopy and Content Strategy
 
 ### Core Philosophy
-Parlare come in un laboratorio di quartiere dove le persone portano i loro problemi per costruire insieme soluzioni personalizzate, usando l'intelligenza artificiale come uno strumento familiare e amichevole per creare esattamente quello che serve.
+Parlare come in un laboratorio di innovazione dove le persone condividono i loro problemi per contribuire alla creazione di soluzioni scalabili, usando l'intelligenza artificiale come uno strumento familiare e amichevole per trasformare le difficoltà individuali in valore collettivo.
 
 ### Key Principles
 
@@ -119,22 +119,26 @@ Parlare come in un laboratorio di quartiere dove le persone portano i loro probl
 
 #### **Benvenuto e Primi Passi**
 - Welcome: "Ciao! Benvenuto nel nostro laboratorio digitale"
-- Registration: "Entra a far parte del laboratorio per proporre e aiutare"
-- First steps: "Dai un'occhiata ai problemi che stiamo già sistemando"
+- Hero messaging: "Condividi il tuo problema, insieme creiamo la soluzione"
+- Registration: "Entra a far parte del laboratorio per contribuire alle soluzioni"
+- First steps: "Scopri i problemi che stiamo trasformando in soluzioni"
+- Social proof: "Oltre 2.000 problemi trasformati in soluzioni condivise"
 
 #### **Proporre un Problema**
 - Form header: "Che problema hai portato nel nostro laboratorio?"
+- Description: "Descrivi il tuo problema con parole semplici. Ogni problema condiviso è il primo passo verso una soluzione che aiuterà anche altri"
 - Input placeholder: "Es: Non riesco a tenere in ordine le foto di famiglia..."
 - Category selection: "Di che tipo di problema si tratta?"
 - Submit button: "Porta il problema al laboratorio"
-- Success: "Perfetto! Ora gli altri possono dire se gli serve anche a loro"
+- Success: "Perfetto! Ora contribuisci a creare una soluzione per tutti quelli che hanno lo stesso problema"
 
-#### **Dare una Mano con i Voti**
+#### **Sostenere i Problemi**
 - Vote button: "Serve anche a me!"
+- Vote description: "Le persone che vivono lo stesso problema ti sostengono con un cuore. Quando raggiungiamo abbastanza sostegno, sappiamo che vale la pena creare una soluzione"
 - Vote count: "67 persone hanno questo problema"
-- Progress to development: "Ancora 33 persone e iniziamo a costruirlo"
-- Voted state: "Hai detto che ti serve anche a te"
-- Milestone reached: "🎉 Siamo in 100! Iniziamo a costruire!"
+- Progress to development: "Ancora 33 persone e iniziamo a creare la soluzione"
+- Voted state: "Contribuisci a questa soluzione"
+- Milestone reached: "🎉 Siamo in 100! Il nostro team sviluppa la soluzione!"
 
 #### **Accesso agli Strumenti**
 - Access granted: "Grazie per aver aiutato! Ecco tutti gli attrezzi"
@@ -142,10 +146,19 @@ Parlare come in un laboratorio di quartiere dove le persone portano i loro probl
 - Upgrade prompt: "Aiuta con un voto per avere tutti gli attrezzi"
 - Premium badge: "Tutti gli attrezzi - Grazie per il tuo aiuto!"
 
+#### **Dal Problema alla Soluzione**
+- Process title: "Dal Problema alla Soluzione Condivisa"
+- Process description: "Tre semplici passi per trasformare il tuo problema in una soluzione per tutti"
+- Step 1: "Condividi il Tuo Problema"
+- Step 2: "La Comunità si Mobilita"
+- Step 3: "Creiamo la Soluzione"
+- Final CTA: "Condividi il tuo problema e contribuisci a creare soluzioni che aiuteranno migliaia di persone"
+- Secondary button: "Scopri le Soluzioni Create"
+
 #### **Muoversi nel Laboratorio**
 - Main sections: "Problemi", "I Miei Attrezzi", "Il Laboratorio", "Il Mio Angolo"
 - Search placeholder: "Cerca problemi o soluzioni che ti servono..."
-- Loading states: "Caricando...", "Registrando il tuo aiuto..."
+- Loading states: "Caricando...", "Registrando il tuo sostegno..."
 - Empty states: "Ancora nessun problema - Inizia tu!"
 
 #### **Quando Qualcosa Non Va**
@@ -156,9 +169,10 @@ Parlare come in un laboratorio di quartiere dove le persone portano i loro probl
 
 #### **Quando Va Tutto Bene**
 - Proposal accepted: "Ecco fatto! Ora è nella bacheca del laboratorio"
-- Vote recorded: "Registrato! Grazie per aver dato una mano"
-- Milestone notifications: "Il problema che hai segnalato piace a 50 persone!"
-- Development start: "Bella notizia! Abbiamo iniziato a lavorare su quello che ti serve"
+- Vote recorded: "Registrato! Grazie per aver contribuito alla soluzione"
+- Milestone notifications: "Il problema che hai condiviso ora interessa 50 persone!"
+- Development start: "Bella notizia! Il nostro team sviluppa strumenti e risorse specifiche per risolvere il problema"
+- Solution created: "Ecco la soluzione che abbiamo creato insieme basata sulla tua esperienza!"
 
 ### Usage Template
 

@@ -9,23 +9,23 @@ Questo documento descrive come trasformare WikiGaiaLab in un laboratorio digital
 
 #### Chi Frequenta il Nostro Laboratorio
 
-**La Mamma del Quartiere (Maria, 42 anni):** Organizza eventi per la scuola, coordina i gruppi WhatsApp del condominio, ha sempre mille cose da fare ma poca confidenza con la tecnologia. Viene nel laboratorio quando ha bisogno di aiuto per organizzare la festa di compleanno di suo figlio o creare un volantino per il mercatino.
+**La Mamma Organizzatrice (Maria, 42 anni):** Gestisce la logistica familiare e coordina attività di gruppo, ma ha poco tempo per imparare strumenti complessi. Condivide problemi pratici come "organizzare carpools" o "gestire eventi scolastici" e contribuisce a creare soluzioni che aiutano migliaia di altri genitori.
 
-**Il Pensionato Curioso (Giuseppe, 67 anni):** Ex operaio, ora dedica tempo al volontariato e ai suoi hobby. Sa usare il telefono ma non si fida dei "computer complicati". Nel laboratorio trova un ambiente familiare dove può chiedere aiuto per digitalizzare le foto del circolo o organizzare le attività dell'orto condiviso.
+**Il Pensionato Contributore (Giuseppe, 67 anni):** Ex operaio con esperienza pratica, ora dedica tempo al volontariato. Porta problemi concreti come "digitalizzare archivi associazioni" o "coordinare attività di gruppo" e aiuta a testare le soluzioni create per renderle accessibili a tutti.
 
-**La Studentessa Impegnata (Sofia, 23 anni):** Studia e lavora part-time, organizza eventi per l'associazione studentesca. È tecnologica ma non ha tempo per imparare strumenti complessi. Viene nel laboratorio per soluzioni rapide: creare sondaggi, gestire liste partecipanti, automatizzare cose noiose.
+**La Studentessa Efficiente (Sofia, 23 anni):** Studia e lavora, organizza eventi e progetti. Condivide problemi di produttività come "gestire progetti complessi" o "automatizzare task ripetitivi" e contribuisce a sviluppare soluzioni scalabili per giovani professionisti.
 
-**Il Vicino di Casa Generoso (Marco, 35 anni):** Papà che lavora da casa, sempre disponibile ad aiutare i vicini. Non è un tecnico ma sa arrangiarsi. Nel laboratorio condivide i suoi piccoli problemi risolti e aiuta altri genitori con questioni simili.
+**Il Genitore Collaborativo (Marco, 35 anni):** Papà che lavora da casa e affronta sfide quotidiane di work-life balance. Condivide problemi come "organizzare routine familiari" o "gestire spese condivise" e aiuta a creare strumenti che semplificano la vita di altre famiglie.
 
 **Il Maestro Artigiano (Sistema AI):** L'intelligenza artificiale del laboratorio, presentata come un vecchio artigiano saggio che conosce tutti i trucchi del mestiere. Non è un robot freddo, ma un mentore paziente che guida ogni persona verso la soluzione giusta per lei.
 
 #### Come Vogliamo che si Sentano i Nostri Ospiti
 
-- **"Mi sento a casa":** Chi entra per la prima volta capisce subito che questo è un posto sicuro dove può chiedere aiuto senza giudizi
-- **"Posso farcela anch'io":** Anche chi non è pratico di tecnologia riesce a esprimere il suo sostegno con un semplice gesto
-- **"Finalmente qualcuno mi capisce":** Raccontare il proprio problema quotidiano è semplice come parlare con un vicino di casa
-- **"Ecco cosa ci guadagno":** È chiaro che aiutando gli altri, ricevo aiuto anch'io - come in una vera comunità di quartiere
-- **"Tutti sono benvenuti":** L'ambiente è inclusivo e parla la lingua del cuore, accessibile a ogni tipo di persona
+- **"Mi sento a casa":** Chi entra per la prima volta capisce subito che questo è un posto sicuro dove può condividere i propri problemi senza giudizi
+- **"Posso contribuire anch'io":** Anche chi non è pratico di tecnologia riesce a sostenere i problemi altrui e contribuire alle soluzioni
+- **"Finalmente qualcuno mi capisce":** Raccontare il proprio problema quotidiano porta a soluzioni concrete che aiutano migliaia di persone
+- **"Il mio problema conta":** È chiaro che condividendo il mio problema, contribuisco a creare valore per l'intera comunità
+- **"Tutti possono contribuire":** L'ambiente è inclusivo e permette a chiunque di partecipare al processo di creazione delle soluzioni
 
 #### I Principi del Nostro Laboratorio
 
