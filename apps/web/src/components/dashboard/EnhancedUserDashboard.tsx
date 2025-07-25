@@ -80,10 +80,10 @@ export function EnhancedUserDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Dashboard
+                  Il Mio Angolo di Laboratorio
                 </h1>
-                <p className="text-gray-600">
-                  Benvenuto, {displayName}!
+                <p className="text-teal-700">
+                  Ciao {displayName}, bentornato nel nostro laboratorio!
                 </p>
               </div>
               
@@ -98,7 +98,7 @@ export function EnhancedUserDashboard() {
                       {accessData.totalVotes} voti espressi
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full flex items-center justify-center animate-pulse">
                     <Star className="w-6 h-6 text-white" />
                   </div>
                 </div>
@@ -115,10 +115,10 @@ export function EnhancedUserDashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${
+                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
                       isActive
-                        ? 'border-primary-500 text-primary-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-teal-500 text-teal-600 transform scale-105'
+                        : 'border-transparent text-gray-500 hover:text-teal-700 hover:border-teal-300 hover:transform hover:scale-102'
                     }`}
                   >
                     <tab.icon className="w-4 h-4" />
@@ -241,12 +241,12 @@ function OverviewTab({
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Heart className="h-5 w-5 text-primary-600" />
+                <Heart className="h-5 w-5 text-teal-600 animate-pulse" />
                 Raccomandazioni per Te
               </h3>
               <button
                 onClick={() => setActiveTab('recommendations')}
-                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                className="text-teal-600 hover:text-teal-700 text-sm font-medium transition-colors duration-200"
               >
                 Vedi tutte
               </button>
@@ -259,7 +259,7 @@ function OverviewTab({
                   onClick={() => onProblemClick(problem.id)}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary-100 text-primary-700 rounded-full">
+                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-teal-100 text-teal-700 rounded-full">
                       {problem.category?.name || 'Categoria'}
                     </span>
                     <div className="flex items-center text-xs text-gray-500">
@@ -271,7 +271,7 @@ function OverviewTab({
                     {problem.title}
                   </h4>
                   {problem.reasoning && (
-                    <p className="text-xs text-primary-600">
+                    <p className="text-xs text-teal-600">
                       Consigliato per i tuoi interessi
                     </p>
                   )}
@@ -377,7 +377,7 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
       {/* Personal Recommendations */}
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <Heart className="h-6 w-6 text-primary-600" />
+          <Heart className="h-6 w-6 text-teal-600 animate-pulse" />
           <h2 className="text-xl font-semibold text-gray-900">
             Raccomandazioni Personalizzate
           </h2>
@@ -394,7 +394,7 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
       {/* Trending Problems */}
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <TrendingUp className="h-6 w-6 text-secondary-600" />
+          <TrendingUp className="h-6 w-6 text-emerald-600" />
           <h2 className="text-xl font-semibold text-gray-900">
             Problemi di Tendenza
           </h2>
@@ -436,7 +436,7 @@ function RecommendationsTab({ onProblemClick }: { onProblemClick: (problemId: st
           </div>
         </div>
         <div className="mt-4">
-          <button className="btn-primary btn-sm">
+          <button className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
             Salva Preferenze
           </button>
         </div>
@@ -464,7 +464,7 @@ function GrowthTab({ user }: { user: any }) {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <UserPlus className="h-6 w-6 text-primary-600" />
+          <UserPlus className="h-6 w-6 text-teal-600" />
           <h2 className="text-2xl font-semibold text-gray-900">
             Crescita Community
           </h2>
@@ -510,9 +510,9 @@ function GrowthTab({ user }: { user: any }) {
       </div>
 
       {/* Growth Tips */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-100">
+      <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg p-6 border border-teal-100">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-blue-600" />
+          <Lightbulb className="h-5 w-5 text-teal-600" />
           Consigli per la Crescita
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -577,10 +577,10 @@ interface StatsCardProps {
 
 function StatsCard({ title, value, icon: Icon, color, subtitle }: StatsCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    purple: 'bg-purple-50 text-purple-600',
-    orange: 'bg-orange-50 text-orange-600',
+    blue: 'bg-teal-50 text-teal-600',
+    green: 'bg-emerald-50 text-emerald-600',
+    purple: 'bg-teal-50 text-teal-600',
+    orange: 'bg-amber-50 text-amber-600',
   };
 
   return (
@@ -613,10 +613,10 @@ interface ActionCardProps {
 
 function ActionCard({ title, description, href = '#', onClick, icon: Icon, color }: ActionCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    orange: 'bg-orange-500',
+    blue: 'bg-teal-500',
+    green: 'bg-emerald-500',
+    purple: 'bg-teal-500',
+    orange: 'bg-amber-500',
   };
 
   const content = (
@@ -659,7 +659,7 @@ function RecentActivityList() {
         </p>
         <Link
           href="/problems"
-          className="mt-4 inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+          className="mt-4 inline-flex items-center gap-2 text-teal-600 hover:text-teal-800 font-medium transition-colors duration-200"
         >
           <Vote className="w-4 h-4" />
           Inizia a Votare
