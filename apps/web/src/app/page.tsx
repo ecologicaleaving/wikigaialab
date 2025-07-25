@@ -41,41 +41,41 @@ export default function HomePage() {
   return (
     <UnauthenticatedLayout>
       {/* Hero Section - Simple and Warm */}
-      <section className="py-20 px-6 bg-gradient-to-br from-amber-50 to-orange-50">
+      <section className="py-20 px-6 bg-gradient-to-br from-teal-50 to-emerald-50">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Headline */}
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6 leading-tight">
-            Get Help with Life's Little Problems
+            Aiuto per i Piccoli Problemi della Vita
           </h1>
           
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Join neighbors who understand exactly what you're going through
+            Unisciti ai vicini che capiscono esattamente cosa stai passando
           </p>
 
           {/* Hero Image Placeholder - Will be replaced with real photo */}
-          <div className="bg-gradient-to-r from-orange-200 to-amber-200 rounded-3xl p-12 mb-10 mx-auto max-w-2xl">
+          <div className="bg-gradient-to-r from-teal-200 to-emerald-200 rounded-3xl p-12 mb-10 mx-auto max-w-2xl">
             <div className="flex items-center justify-center gap-6">
-              <Users className="h-16 w-16 text-orange-600" />
+              <Users className="h-16 w-16 text-teal-600" />
               <Heart className="h-20 w-20 text-red-500" />
-              <Users className="h-16 w-16 text-orange-600" />
+              <Users className="h-16 w-16 text-teal-600" />
             </div>
             <p className="text-gray-700 mt-4 italic">
-              "Real people helping real people"
+              "Persone vere che aiutano persone vere"
             </p>
           </div>
 
           {/* Primary Action */}
           <button 
             onClick={handleShareProblem}
-            className="bg-orange-500 hover:bg-orange-600 text-white text-xl px-8 py-4 rounded-xl font-semibold shadow-lg transition-colors duration-200 mb-4"
+            className="bg-teal-500 hover:bg-teal-600 text-white text-xl px-8 py-4 rounded-xl font-semibold shadow-lg transition-colors duration-200 mb-4"
           >
-            Tell Us Your Problem
+            Racconta il Tuo Problema
           </button>
           
           {/* Social Proof */}
           <p className="text-gray-600 text-lg">
-            Over 2,000 neighbors helping each other
+            Oltre 2.000 vicini che si aiutano a vicenda
           </p>
         </div>
       </section>
@@ -84,10 +84,10 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-center text-gray-900 mb-4">
-            Problems We Help With Every Day
+            Problemi che Risolviamo Ogni Giorno
           </h2>
           <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            No problem is too small when neighbors care about each other
+            Nessun problema è troppo piccolo quando i vicini si prendono cura l'uno dell'altro
           </p>
 
           <div className="grid md:grid-cols-3 gap-12">
@@ -97,11 +97,11 @@ export default function HomePage() {
                 <Calendar className="h-12 w-12 text-blue-700" />
               </div>
               <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-4">
-                Family Logistics
+                Organizzazione Familiare
               </h3>
               <p className="text-gray-700 text-lg leading-relaxed">
-                Help organizing family schedules, carpools, and activities. 
-                Making life easier for busy parents.
+                Aiuto per organizzare orari familiari, accompagnamenti e attività. 
+                Rendere la vita più semplice per i genitori impegnati.
               </p>
             </div>
 
@@ -111,11 +111,11 @@ export default function HomePage() {
                 <ShoppingCart className="h-12 w-12 text-green-700" />
               </div>
               <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-4">
-                Daily Tasks
+                Commissioni Quotidiane
               </h3>
               <p className="text-gray-700 text-lg leading-relaxed">
-                Getting help with shopping, appointments, and errands. 
-                Support when you need it most.
+                Aiuto per la spesa, appuntamenti e commissioni varie. 
+                Supporto quando ne hai più bisogno.
               </p>
             </div>
 
@@ -125,11 +125,11 @@ export default function HomePage() {
                 <HelpCircle className="h-12 w-12 text-purple-700" />
               </div>
               <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-4">
-                Community Questions
+                Domande di Vicinato
               </h3>
               <p className="text-gray-700 text-lg leading-relaxed">
-                Finding reliable services, local recommendations, and advice 
-                from people who live nearby.
+                Trovare servizi affidabili, raccomandazioni locali e consigli 
+                da persone che vivono nelle vicinanze.
               </p>
             </div>
           </div>
@@ -140,25 +140,25 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-center text-gray-900 mb-4">
-            It's As Simple As Asking a Friend
+            È Semplice Come Chiedere a un Amico
           </h2>
           <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            Three simple steps to get the help you need
+            Tre semplici passi per ottenere l'aiuto di cui hai bisogno
           </p>
 
           <div className="space-y-12">
             {/* Step 1 */}
             <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full w-24 h-24 flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl font-bold text-orange-700">1</span>
+              <div className="bg-gradient-to-br from-teal-100 to-emerald-100 rounded-full w-24 h-24 flex items-center justify-center flex-shrink-0">
+                <span className="text-3xl font-bold text-teal-700">1</span>
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-3">
-                  Share Your Problem
+                  Condividi il Tuo Problema
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Tell us what you need help with, just like you'd ask a neighbor over the fence. 
-                  Use simple words - we're all regular people here.
+                  Raccontaci di cosa hai bisogno, proprio come chiederesti a un vicino di casa. 
+                  Usa parole semplici - siamo tutti persone normali qui.
                 </p>
               </div>
             </div>
@@ -170,11 +170,11 @@ export default function HomePage() {
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-3">
-                  Others Relate
+                  Altri si Riconoscono
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Neighbors who have the same problem support you with a heart. 
-                  When enough people share the same need, we know it's important.
+                  I vicini che hanno lo stesso problema ti sostengono con un cuore. 
+                  Quando abbastanza persone condividono lo stesso bisogno, sappiamo che è importante.
                 </p>
               </div>
             </div>
@@ -186,11 +186,11 @@ export default function HomePage() {
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-3">
-                  We Help Together
+                  Aiutiamo Insieme
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  When enough people need the same help, we create a solution together. 
-                  Real people helping people, not complicated technology.
+                  Quando abbastanza persone hanno bisogno dello stesso aiuto, creiamo insieme una soluzione. 
+                  Persone vere che aiutano persone vere, non tecnologia complicata.
                 </p>
               </div>
             </div>
@@ -202,34 +202,34 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-8">
-            Safe Space for Real People
+            Spazio Sicuro per Persone Vere
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="p-6 bg-gray-50 rounded-2xl">
               <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                No Selling
+                Nessuna Vendita
               </h4>
               <p className="text-gray-700">
-                We never sell your information or spam you with ads
+                Non vendiamo mai le tue informazioni e non ti inviamo pubblicità indesiderata
               </p>
             </div>
             
             <div className="p-6 bg-gray-50 rounded-2xl">
               <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                Real Neighbors
+                Veri Vicini
               </h4>
               <p className="text-gray-700">
-                Real people with real names helping in their community
+                Persone vere con nomi veri che aiutano nella loro comunità
               </p>
             </div>
             
             <div className="p-6 bg-gray-50 rounded-2xl">
               <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                Kind Community
+                Comunità Gentile
               </h4>
               <p className="text-gray-700">
-                Respectful guidelines keep our space welcoming for everyone
+                Linee guida rispettose mantengono il nostro spazio accogliente per tutti
               </p>
             </div>
           </div>
@@ -237,27 +237,27 @@ export default function HomePage() {
       </section>
 
       {/* Final Call to Action */}
-      <section className="py-20 px-6 bg-gradient-to-br from-orange-500 to-red-500 text-white">
+      <section className="py-20 px-6 bg-gradient-to-br from-teal-500 to-emerald-600 text-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
-            Ready to Get Started?
+            Pronto per Iniziare?
           </h2>
           <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-            Join your neighbors and start getting help with everyday challenges
+            Unisciti ai tuoi vicini e inizia a ricevere aiuto per le sfide quotidiane
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={handleGetStarted}
-              className="bg-white text-orange-600 text-xl px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-lg"
+              className="bg-white text-teal-600 text-xl px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-lg"
             >
-              Start Getting Help
+              Inizia a Ricevere Aiuto
             </button>
             <button 
               onClick={handleExplorProblems}
-              className="border-2 border-white text-white text-xl px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-orange-600 transition-colors duration-200"
+              className="border-2 border-white text-white text-xl px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-teal-600 transition-colors duration-200"
             >
-              See What Others Are Asking About
+              Vedi Cosa Chiedono gli Altri
             </button>
           </div>
         </div>
