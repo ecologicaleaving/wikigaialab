@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
                     WikiGaiaLab
                   </div>
                   <div className="text-xs text-orange-600 leading-none">
-                    Bottega Digitale
+                    Laboratorio Digitale
                   </div>
                 </div>
               </Link>

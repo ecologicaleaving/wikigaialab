@@ -109,7 +109,7 @@ export default function NewStoryPage() {
       }
 
       if (result.success) {
-        toast.success('🎉 La tua storia è stata condivisa con la bottega!', {
+        toast.success('🎉 La tua storia è stata condivisa con il laboratorio!', {
           description: 'Ora i vicini possono donare il loro cuore per supportarla'
         });
 
@@ -172,7 +172,7 @@ export default function NewStoryPage() {
             <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-orange-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span>💡</span>
-                Consigli dalla Bottega
+                Consigli dal Laboratorio
               </h3>
               
               <div className="space-y-3 text-sm text-gray-600">
@@ -203,7 +203,7 @@ export default function NewStoryPage() {
               
               <div className="mt-4 pt-4 border-t border-orange-200 text-center">
                 <p className="text-xs text-gray-500 italic">
-                  🛠️ Ricorda: nella nostra bottega, ogni problema è un'opportunità per creare qualcosa di utile insieme
+                  🛠️ Ricorda: nel nostro laboratorio, ogni problema è un'opportunità per creare qualcosa di utile insieme
                 </p>
               </div>
             </div>

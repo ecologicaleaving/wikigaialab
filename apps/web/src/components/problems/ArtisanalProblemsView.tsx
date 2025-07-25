@@ -112,10 +112,10 @@ export const ArtisanalProblemsView: React.FC = () => {
   if (loading) {
     return (
       <AuthenticatedLayout>
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
           <div className="text-center">
             <div className="text-4xl mb-4">🛠️</div>
-            <div className="text-lg text-orange-700">Preparando la bottega...</div>
+            <div className="text-lg text-teal-700">Preparando il laboratorio...</div>
           </div>
         </div>
       </AuthenticatedLayout>
@@ -124,41 +124,41 @@ export const ArtisanalProblemsView: React.FC = () => {
 
   return (
     <AuthenticatedLayout>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-emerald-50 to-green-50">
         {/* Workshop Header */}
-        <div className="bg-white/70 backdrop-blur-sm border-b border-orange-200 shadow-sm">
+        <div className="bg-white/70 backdrop-blur-sm border-b border-teal-200 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-4">
                 <Ear className="w-4 h-4" />
-                <span>Storie del Quartiere</span>
+                <span>Problemi del Quartiere</span>
               </div>
               
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Ascolta le Storie dei Tuoi Vicini
+                Aiuta a Risolvere i Problemi dei Vicini
               </h1>
               
               <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-                Come al mercato del paese, qui ognuno racconta i propri piccoli problemi quotidiani. 
-                Se ti riconosci in una storia, dona il tuo cuore per farla diventare realtà.
+                Come al mercato del paese, qui ognuno porta i propri piccoli problemi quotidiani. 
+                Se riconosci lo stesso problema, dona il tuo cuore per costruire insieme la soluzione.
               </p>
 
               {/* Quick actions */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/problems/new">
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Button className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <Plus className="w-5 h-5 mr-2" />
-                    Racconta la Tua Storia
+                    Porta il Tuo Problema
                   </Button>
                 </Link>
                 
                 <Button 
                   variant="outline"
-                  className="border-orange-200 text-orange-700 hover:bg-orange-50 px-6 py-3 rounded-xl"
+                  className="border-teal-200 text-teal-700 hover:bg-teal-50 px-6 py-3 rounded-xl"
                   onClick={() => setActiveView(activeView === 'stories' ? 'workshop' : 'stories')}
                 >
                   <Users className="w-5 h-5 mr-2" />
-                  {activeView === 'stories' ? 'Vedi la Bottega' : 'Vedi le Storie'}
+                  {activeView === 'stories' ? 'Vedi il Laboratorio' : 'Vedi i Problemi'}
                 </Button>
               </div>
             </div>
@@ -169,11 +169,11 @@ export const ArtisanalProblemsView: React.FC = () => {
                 onClick={() => setSelectedCategory(null)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   !selectedCategory 
-                    ? 'bg-orange-600 text-white shadow-md' 
-                    : 'bg-white text-orange-700 border border-orange-200 hover:bg-orange-50'
+                    ? 'bg-teal-600 text-white shadow-md' 
+                    : 'bg-white text-teal-700 border border-teal-200 hover:bg-teal-50'
                 }`}
               >
-                Tutte le Storie ({problems.length})
+                Tutti i Problemi ({problems.length})
               </button>
               
               {categories.map(category => (
@@ -182,8 +182,8 @@ export const ArtisanalProblemsView: React.FC = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     selectedCategory === category.id
-                      ? 'bg-orange-600 text-white shadow-md'
-                      : 'bg-white text-orange-700 border border-orange-200 hover:bg-orange-50'
+                      ? 'bg-teal-600 text-white shadow-md'
+                      : 'bg-white text-teal-700 border border-teal-200 hover:bg-teal-50'
                   }`}
                 >
                   <span className="mr-2">{category.icon}</span>
@@ -206,7 +206,7 @@ export const ArtisanalProblemsView: React.FC = () => {
                 Sii il primo a condividere un problema di questo tipo!
               </p>
               <Link href="/problems/new">
-                <Button className="bg-orange-600 hover:bg-orange-700 text-white">
+                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
                   Racconta la Prima Storia
                 </Button>
               </Link>
@@ -227,24 +227,24 @@ export const ArtisanalProblemsView: React.FC = () => {
         </div>
 
         {/* Community stats footer */}
-        <div className="bg-white/50 backdrop-blur-sm border-t border-orange-200 mt-16">
+        <div className="bg-white/50 backdrop-blur-sm border-t border-teal-200 mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-teal-600">
                     {problems.reduce((sum, p) => sum + p.vote_count, 0)}
                   </div>
-                  <div className="text-gray-600">Cuori donati nella bottega</div>
+                  <div className="text-gray-600">Cuori donati nel laboratorio</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-teal-600">
                     {problems.length}
                   </div>
-                  <div className="text-gray-600">Storie condivise</div>
+                  <div className="text-gray-600">Problemi portati</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-teal-600">
                     {problems.filter(p => p.vote_count >= 100).length}
                   </div>
                   <div className="text-gray-600">Attrezzi in lavorazione</div>
@@ -252,7 +252,7 @@ export const ArtisanalProblemsView: React.FC = () => {
               </div>
               
               <p className="text-sm text-gray-600 mt-6">
-                💝 Nella nostra bottega, ogni cuore donato è un passo verso la soluzione di un problema comune
+                💝 Nel nostro laboratorio, ogni cuore donato è un passo verso la soluzione di un problema comune
               </p>
             </div>
           </div>

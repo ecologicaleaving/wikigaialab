@@ -14,11 +14,11 @@ import {
   Heart
 } from 'lucide-react';
 
-// Artisanal Workshop Navigation - Community-focused hierarchy
+// Artisanal Laboratory Navigation - Community-focused hierarchy
 export const mainNavigationItems: NavigationItem[] = [
   { 
     id: 'home', 
-    label: 'Bottega', 
+    label: 'Laboratorio', 
     href: '/', 
     icon: Home,
     showWhenAuth: false, // Hide when authenticated (redirect to workshop)
@@ -30,25 +30,25 @@ export const mainNavigationItems: NavigationItem[] = [
     icon: BarChart3, 
     requiresAuth: true,
     priority: 1, // Personal workspace for workshop neighbors
-    description: 'Il vostro spazio nella bottega'
+    description: 'Il vostro spazio nel laboratorio'
   },
   { 
     id: 'problems', 
-    label: 'Storie del Quartiere', 
+    label: 'Problemi del Quartiere', 
     href: '/problems', 
     icon: Search, 
     requiresAuth: true,
     priority: 2,
-    description: 'Ascolta e sostieni le storie dei vicini'
+    description: 'Aiuta a risolvere i problemi dei vicini'
   },
   { 
     id: 'create', 
-    label: 'Racconta', 
+    label: 'Porta Problema', 
     href: '/problems/new', 
     icon: Plus, 
     requiresAuth: true,
     priority: 3,
-    description: 'Condividi la tua storia',
+    description: 'Porta il tuo problema',
     badge: { text: '💭', color: 'bg-orange-500' }
   },
   { 

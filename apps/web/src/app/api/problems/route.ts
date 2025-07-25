@@ -163,34 +163,6 @@ export async function POST(request: NextRequest) {
       userEmail: user.email 
     });
 
-    // Debug: Verify user exists in database before problem creation
-    try {
-      const supabase = getSupabaseClient();
-      const { data: dbUser, error: dbError } = await supabase
-        .from('users')
-        .select('id, email, name')
-        .eq('id', user.id)
-        .single();
-      
-      console.log('🔍 Database user verification:', {
-        searchedId: user.id,
-        found: !!dbUser,
-        dbUser: dbUser,
-        error: dbError?.message
-      });
-
-      if (!dbUser) {
-        console.log('❌ User not found in database, will cause foreign key constraint violation');
-        return tracker.complete(NextResponse.json({
-          success: false,
-          error: 'User not found in database. Please sign out and sign back in.',
-          details: `User ID ${user.id} does not exist in users table`,
-          correlationId: tracker.getCorrelationId()
-        }, { status: 400 }));
-      }
-    } catch (dbError) {
-      console.error('❌ Failed to verify user exists:', dbError);
-    }
 
     // Set user context for tracking
     tracker.setUser(user.id, {

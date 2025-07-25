@@ -59,7 +59,7 @@ export const MilestoneCelebration: React.FC<MilestoneCelebrationProps> = ({
         return {
           emoji: '🌱',
           title: 'Prima Pietra!',
-          subtitle: 'La storia inizia a interessare la bottega'
+          subtitle: 'La storia inizia a interessare il laboratorio'
         };
       case 50:
         return {
@@ -83,7 +83,7 @@ export const MilestoneCelebration: React.FC<MilestoneCelebrationProps> = ({
         return {
           emoji: '✨',
           title: 'Traguardo Raggiunto!',
-          subtitle: 'La bottega celebra questo momento'
+          subtitle: 'Il laboratorio celebra questo momento'
         };
     }
   };
@@ -146,7 +146,7 @@ export const MilestoneCelebration: React.FC<MilestoneCelebrationProps> = ({
           {milestone === 100 && (
             <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
               <div className="text-lg font-semibold text-orange-800 mb-2">
-                🛠️ La Bottega è in Fermento!
+                🛠️ Il Laboratorio è in Fermento!
               </div>
               <p className="text-sm text-orange-700">
                 Questa storia ha conquistato il cuore di 100 vicini. 
@@ -158,7 +158,7 @@ export const MilestoneCelebration: React.FC<MilestoneCelebrationProps> = ({
 
           {/* Workshop gratitude */}
           <div className="mt-6 text-sm text-gray-500 italic">
-            Grazie per aver contribuito alla nostra bottega! 💝
+            Grazie per aver contribuito al nostro laboratorio! 💝
           </div>
         </div>
       </div>

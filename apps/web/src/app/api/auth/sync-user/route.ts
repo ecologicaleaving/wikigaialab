@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth-nextauth';
-import { getUserIdentityService } from '@/lib/auth/UserIdentityService';
 
 export async function POST(request: NextRequest) {
   const correlationId = `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -17,36 +16,26 @@ export async function POST(request: NextRequest) {
       }, { status: 401 });
     }
 
-    console.log('🔄 Syncing user via UserIdentityService:', {
+    // User sync now handled automatically by session callback
+    console.log('🔄 User sync handled by session callback:', {
       sessionUserId: session.user.id,
       email: session.user.email,
       correlationId
     });
 
-    // Use UserIdentityService for atomic user synchronization
-    const userIdentityService = getUserIdentityService(correlationId);
-    const syncedUser = await userIdentityService.syncUserSession(session.user.id, {
-      email: session.user.email,
-      name: session.user.name,
-      image: session.user.image
-    });
-
-    console.log('✅ User sync completed via UserIdentityService:', {
-      id: syncedUser.id,
-      email: syncedUser.email,
-      role: syncedUser.role,
-      isAdmin: syncedUser.isAdmin,
-      correlationId
-    });
-
     return NextResponse.json({
       success: true,
-      message: 'User sync completed via UserIdentityService',
-      action: 'synced',
-      user: syncedUser,
+      message: 'User sync handled by session callback - no action needed',
+      action: 'session_managed',
+      user: {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.name,
+        image: session.user.image
+      },
       metadata: {
         correlationId,
-        service: 'UserIdentityService',
+        service: 'SessionCallback',
         timestamp: new Date().toISOString()
       }
     });
@@ -58,7 +47,7 @@ export async function POST(request: NextRequest) {
       error: 'Failed to sync user',
       details: error instanceof Error ? error.message : 'Unknown error',
       correlationId,
-      service: 'UserIdentityService'
+      service: 'SessionCallback'
     }, { status: 500 });
   }
 }

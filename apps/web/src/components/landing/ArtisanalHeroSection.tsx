@@ -52,7 +52,7 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
       // Gentle animation for workshop warmth
       animateStats(mockStats);
     } catch (error) {
-      console.error('Non riesco a caricare le statistiche della bottega:', error);
+      console.error('Non riesco a caricare le statistiche del laboratorio:', error);
     }
   };
 
@@ -98,7 +98,7 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
   return (
     <section className={`relative overflow-hidden ${className}`}>
       {/* Warm workshop background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-emerald-50 to-green-50" />
       
       {/* Subtle artisanal pattern overlay */}
       <div className="absolute inset-0 opacity-5">
@@ -112,23 +112,23 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
           
           {/* Workshop greeting */}
           <div className="mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full text-amber-700 text-sm font-medium border border-amber-200 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full text-teal-700 text-sm font-medium border border-teal-200 shadow-sm">
               <Wrench className="w-4 h-4" />
-              <span>Benvenuti nella Bottega Digitale</span>
+              <span>Benvenuti nel Laboratorio Digitale</span>
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
 
           {/* Main headline - artisanal workshop style */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            <span className="block text-amber-600">Una Bottega Artigianale</span>
+            <span className="block text-teal-600">Un Laboratorio Artigiano</span>
             <span className="block">dove l'intelligenza artificiale</span>
-            <span className="block text-orange-600">serve le persone comuni</span>
+            <span className="block text-teal-600">serve le persone comuni</span>
           </h1>
 
           {/* Warm description */}
           <p className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Come in un'antica bottega di paese, qui ci ritroviamo per raccontare 
+            Come in un antico laboratorio di paese, qui ci ritroviamo per raccontare 
             i nostri problemi quotidiani e creare insieme soluzioni semplici, 
             usando l'intelligenza artificiale come <strong>un attrezzo amichevole</strong> 
             nelle mani di chi sa ascoltare.
@@ -137,16 +137,16 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
           {/* Community stats - workshop style */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 max-w-2xl mx-auto">
             <div className="text-center">
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-orange-100">
-                <Users className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-teal-100">
+                <Users className="w-8 h-8 text-teal-600 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">{communityStats.neighbors}</div>
-                <div className="text-sm text-gray-600 font-medium">Vicini di bottega</div>
+                <div className="text-sm text-gray-600 font-medium">Vicini di laboratorio</div>
               </div>
             </div>
             
             <div className="text-center">
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-amber-100">
-                <div className="w-8 h-8 mx-auto mb-2 text-amber-600 font-bold text-lg">📖</div>
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-teal-100">
+                <div className="w-8 h-8 mx-auto mb-2 text-teal-600 font-bold text-lg">📖</div>
                 <div className="text-2xl font-bold text-gray-900">{communityStats.stories}</div>
                 <div className="text-sm text-gray-600 font-medium">Storie condivise</div>
               </div>
@@ -176,9 +176,9 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
                 {user ? (
                   <button
                     onClick={handleEnterWorkshop}
-                    className="group inline-flex items-center gap-3 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    className="group inline-flex items-center gap-3 px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                   >
-                    <span>Entra nella Bottega</span>
+                    <span>Entra nel Laboratorio</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
                 ) : (
@@ -189,15 +189,15 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
                           source: 'artisanal_hero'
                         });
                       }}
-                      className="group inline-flex items-center gap-3 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                      className="group inline-flex items-center gap-3 px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                     >
-                      <span>Unisciti alla Bottega</span>
+                      <span>Unisciti al Laboratorio</span>
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </GoogleLoginButton>
                     
                     <button
                       onClick={() => window.location.href = '/problems'}
-                      className="inline-flex items-center gap-2 px-6 py-3 text-orange-700 hover:text-orange-800 font-medium hover:bg-white/50 rounded-xl transition-all duration-200"
+                      className="inline-flex items-center gap-2 px-6 py-3 text-teal-700 hover:text-teal-800 font-medium hover:bg-white/50 rounded-xl transition-all duration-200"
                     >
                       <span>Prima guarda i problemi</span>
                     </button>
@@ -209,7 +209,7 @@ export const ArtisanalHeroSection: React.FC<ArtisanalHeroSectionProps> = ({
 
           {/* Workshop promise */}
           <p className="text-sm text-gray-600 mt-8 max-w-md mx-auto">
-            Come in ogni bottega che si rispetti, qui si entra senza impegno. 
+            Come in ogni laboratorio che si rispetti, qui si entra senza impegno. 
             Guardate, ascoltate, e se vi piace, rimanete a lavorare con noi.
           </p>
         </div>

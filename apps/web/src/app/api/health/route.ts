@@ -28,20 +28,12 @@ export async function GET() {
       }
     };
 
-    // Test UserIdentityService import and instantiation
-    try {
-      const { getUserIdentityService } = await import('@/lib/auth/UserIdentityService');
-      diagnostics.userIdentityService.importable = true;
-      
-      try {
-        const service = getUserIdentityService('health-check');
-        diagnostics.userIdentityService.instantiable = true;
-      } catch (error) {
-        diagnostics.userIdentityService.error = error instanceof Error ? error.message : 'Instantiation failed';
-      }
-    } catch (error) {
-      diagnostics.userIdentityService.error = error instanceof Error ? error.message : 'Import failed';
-    }
+    // UserIdentityService deprecated - using session callback instead
+    diagnostics.userIdentityService = {
+      importable: false,
+      instantiable: false,
+      error: 'Deprecated: Replaced by session callback architecture'
+    };
 
     // Test UUID generation for the existing user
     const testEmail = 'dadecresce@gmail.com';
