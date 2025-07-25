@@ -115,12 +115,15 @@ export const authConfig = {
             session.user.email = dbUser.email;
             session.user.name = dbUser.name || token.name as string;
             session.user.image = dbUser.avatar_url || token.picture as string;
+            // CRITICAL: Add admin status to session
+            (session.user as any).is_admin = dbUser.is_admin;
             
             if (process.env.NODE_ENV === 'development') {
               console.log('🔐 Session callback - Database user found:', {
                 googleId: token.googleId,
                 databaseId: dbUser.id,
-                email: dbUser.email
+                email: dbUser.email,
+                isAdmin: dbUser.is_admin
               });
             }
           } else {
@@ -154,6 +157,8 @@ export const authConfig = {
               session.user.email = newUser.email;
               session.user.name = newUser.name;
               session.user.image = newUser.avatar_url || token.picture as string;
+              // Add admin status to session (new users are not admin by default)
+              (session.user as any).is_admin = newUser.is_admin;
               
               console.log('✅ Session callback - New user created:', {
                 databaseId: newUser.id,

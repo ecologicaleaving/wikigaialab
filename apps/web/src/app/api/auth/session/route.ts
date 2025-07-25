@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../lib/auth-nextauth';
-import { getUserIdentityService } from '../../../../lib/auth/UserIdentityService';
 
 /**
  * NextAuth Session API Route
@@ -53,46 +52,77 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Use UserIdentityService to get synchronized user data
+    // Get user data directly from database
     let user = null;
     try {
-      const correlationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const userIdentityService = getUserIdentityService(correlationId);
+      const { createClient } = require('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_KEY!
+      );
       
-      // Sync user from session to ensure database consistency
-      user = await userIdentityService.syncUserSession(session.user.id, {
-        email: session.user.email,
-        name: session.user.name,
-        image: session.user.image
-      });
+      // Query database directly by user ID (which comes from session callback)
+      const { data: dbUser, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
       
-      if (process.env.NODE_ENV === 'development') {
-        console.log('✅ User synchronized via UserIdentityService:', {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          isAdmin: user.isAdmin,
-          correlationId
-        });
+      if (dbUser) {
+        // Use full database user data
+        user = {
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name,
+          avatar_url: dbUser.avatar_url,
+          created_at: dbUser.created_at,
+          updated_at: dbUser.updated_at,
+          last_login_at: dbUser.last_login_at,
+          is_admin: dbUser.is_admin,
+          role: dbUser.role || 'user',
+          subscription_status: dbUser.subscription_status || 'free',
+          total_votes_cast: dbUser.total_votes_cast || 0,
+          total_problems_proposed: dbUser.total_problems_proposed || 0,
+        };
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ User fetched directly from database:', {
+            id: user.id,
+            email: user.email,
+            is_admin: user.is_admin,
+            role: user.role
+          });
+        }
+      } else {
+        throw new Error(`User not found in database: ${session.user.id}`);
       }
     } catch (error) {
-      console.error('❌ Failed to sync user via UserIdentityService:', error);
+      console.error('❌ Failed to fetch user from database:', error);
       
-      // Fallback to basic session data
+      // Fallback: use session data if available, including is_admin from session
       user = {
-        id: session.user.id || session.user.email || '',
+        id: session.user.id || '',
         email: session.user.email || '',
         name: session.user.name || '',
         avatar_url: session.user.image || null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         last_login_at: new Date().toISOString(),
-        is_admin: false,
+        is_admin: (session.user as any).is_admin || false, // Get from session if available
         role: 'user' as const,
         subscription_status: 'free',
         total_votes_cast: 0,
         total_problems_proposed: 0,
       };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️ Using session fallback data:', {
+          id: user.id,
+          email: user.email,
+          is_admin: user.is_admin,
+          sessionHasAdmin: !!(session.user as any).is_admin
+        });
+      }
     }
 
     if (process.env.NODE_ENV === 'development') {
