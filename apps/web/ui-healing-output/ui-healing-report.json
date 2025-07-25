@@ -1,48 +1,14 @@
 {
-  "timestamp": "2025-07-25T05:09:27.506Z",
+  "timestamp": "2025-07-25T05:21:14.276Z",
   "summary": {
     "total_screens": 9,
-    "successful_evaluations": 1,
+    "successful_evaluations": 0,
     "failed_evaluations": 0,
-    "average_score": 9.1,
+    "average_score": 0,
     "screens_needing_healing": 0,
     "priority_alta_count": 4,
     "priority_media_count": 5
   },
   "healing_recommendations": [],
-  "detailed_results": [
-    {
-      "screen": "homepage",
-      "path": "/",
-      "description": "Landing page principale del laboratorio digitale",
-      "priority": "Alta",
-      "title": "WikiGaiaLab | Piattaforma Community per Soluzioni AI",
-      "brandElements": {
-        "hasWikiGaiaLogo": true,
-        "tealColors": 32,
-        "heartIcons": 12,
-        "primaryButtons": 40,
-        "hasLoginButton": true,
-        "hasWarmLanguage": true,
-        "imageCount": 9,
-        "svgCount": 72,
-        "hasWikiGaiaText": true
-      },
-      "evaluation": {
-        "brandScore": 10,
-        "languageScore": 10,
-        "accessibilityScore": 7,
-        "totalScore": 9.1,
-        "needsHealing": false,
-        "issues": []
-      },
-      "screenshots": {
-        "desktop": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/ui-healing-output/homepage-desktop.png",
-        "tablet": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/ui-healing-output/homepage-tablet.png",
-        "mobile": "/Users/davidecrescentini/00-Progetti/000-WikiGaiaLab/apps/web/ui-healing-output/homepage-mobile.png"
-      },
-      "timestamp": "2025-07-25T05:09:16.394Z",
-      "status": "success"
-    }
-  ]
+  "detailed_results": []
 }

@@ -2,12 +2,12 @@ import { test, expect, Page } from '@playwright/test';
 import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-// Authentication credentials from docs/ui/page-list.md
+// Authentication credentials for test login page
 const AUTH_CONFIG = {
   TEST_EMAIL: 'playwright-test@wikigaialab.com',
   TEST_PASSWORD: 'PlaywrightTest123!',
   TEST_USERNAME: 'playwright-user',
-  LOGIN_URL: 'http://localhost:3000/login',
+  LOGIN_URL: 'http://localhost:3000/test-login', // Use dedicated test login page
   SIGNUP_URL: 'http://localhost:3000/signup'
 };
 
@@ -91,7 +91,7 @@ try {
 // Authentication helper functions
 async function performLogin(page: Page): Promise<boolean> {
   try {
-    console.log('🔐 Attempting login...');
+    console.log('🔐 Attempting login via test login page...');
     await page.goto(AUTH_CONFIG.LOGIN_URL, { waitUntil: 'networkidle', timeout: 30000 });
     await page.waitForTimeout(2000);
     
@@ -102,34 +102,44 @@ async function performLogin(page: Page): Promise<boolean> {
       return true;
     }
     
-    // Look for Google OAuth button or email/password form
-    const googleButton = page.locator('button:has-text("Google"), button:has-text("Entra con Google"), [href*="oauth"]').first();
-    const emailInput = page.locator('input[type="email"], input[name="email"]').first();
+    // Use the dedicated test login form
+    const emailInput = page.locator('input[name="email"]').first();
+    const passwordInput = page.locator('input[name="password"]').first();
     
-    if (await googleButton.count() > 0) {
-      console.log('🔍 Found Google OAuth button - this requires manual setup');
-      // For OAuth, we'd need to mock the authentication or use a test account
-      // For now, skip authentication and continue with public pages only
-      return false;
-    } else if (await emailInput.count() > 0) {
-      console.log('📧 Found email/password form');
+    if (await emailInput.count() > 0 && await passwordInput.count() > 0) {
+      console.log('📧 Using test login form');
+      
+      // Fill the test credentials
       await emailInput.fill(AUTH_CONFIG.TEST_EMAIL);
-      const passwordInput = page.locator('input[type="password"], input[name="password"]').first();
       await passwordInput.fill(AUTH_CONFIG.TEST_PASSWORD);
       
-      const submitButton = page.locator('button[type="submit"], button:has-text("Login"), button:has-text("Entra")').first();
-      await submitButton.click();
+      // Click the login button
+      const loginButton = page.locator('button[type="submit"]:has-text("Login")').first();
+      await loginButton.click();
       
-      // Wait for login to complete
+      // Wait for login to complete and check for success message or redirect
       await page.waitForTimeout(3000);
       
-      // Check if login was successful
-      const loginSuccess = await page.locator('[data-testid="user-menu"], .user-avatar, [href="/dashboard"]').count() > 0;
-      console.log(loginSuccess ? '✅ Login successful' : '❌ Login failed');
-      return loginSuccess;
+      // Check for success indicators
+      const successMessage = await page.locator('text="Successfully logged in"').count() > 0;
+      const redirected = page.url().includes('/dashboard') || page.url().includes('/admin');
+      
+      if (successMessage || redirected) {
+        console.log('✅ Test login successful');
+        return true;
+      }
+      
+      // If not redirected, check if we're still on login page with error
+      const errorMessage = await page.locator('[role="alert"], .alert-destructive').count() > 0;
+      if (errorMessage) {
+        const errorText = await page.locator('[role="alert"], .alert-destructive').first().textContent();
+        console.log('❌ Login failed with error:', errorText);
+      }
+      
+      return false;
     }
     
-    console.log('⚠️  No recognizable login form found');
+    console.log('⚠️  Test login form not found');
     return false;
   } catch (error) {
     console.log('❌ Login failed:', error.message);

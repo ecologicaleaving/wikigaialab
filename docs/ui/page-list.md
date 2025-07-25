@@ -5,11 +5,12 @@
 TEST_EMAIL = "playwright-test@wikigaialab.com"
 TEST_PASSWORD = "PlaywrightTest123!"
 TEST_USERNAME = "playwright-user"
-AUTH_METHOD = "login"
-LOGIN_URL = "http://localhost:3000/login"
+AUTH_METHOD = "test-login"
+LOGIN_URL = "http://localhost:3000/test-login"
 SIGNUP_URL = "http://localhost:3000/signup"
 CREATED_DATE = "2025-07-25"
 USER_STATUS = "active"
+# Note: /test-login bypasses OAuth for automation testing
 
 ## Formato: URL_PATH | SCREEN_NAME | DESCRIPTION | AUTH_REQUIRED
 
@@ -20,6 +21,7 @@ USER_STATUS = "active"
 / | homepage | Landing page principale del laboratorio digitale | false
 /dashboard | dashboard | Dashboard personale dell'utente (Il Mio Angolo) | true
 /login | login | Schermata di autenticazione con Google OAuth | false
+/test-login | test-login | Pagina di login dedicata per automazione Playwright | false
 /profile | profile | Profilo personale utente (Il Mio Quaderno) | true
 /settings | settings | Impostazioni account e preferenze | true
 /help | help | Pagina di aiuto e documentazione | false
