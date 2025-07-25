@@ -85,7 +85,7 @@ export default function HomePage() {
       <OnboardingFlow />
 
       {/* Come Funziona il Laboratorio - Artisanal Workshop Style */}
-      <section id="come-funziona-laboratorio" className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
+      <section id="come-funziona-laboratorio" className="py-20 bg-gradient-to-br from-teal-50 to-emerald-50">
         <div className="container-narrow">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -100,7 +100,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-12">
             {/* Step 1: Racconta */}
             <div className="text-center group">
-              <div className="bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+              <div className="bg-gradient-to-br from-teal-100 to-emerald-100 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-200 shadow-sm">
                 <div className="text-3xl">🗣️</div>
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">Porta</h3>
@@ -139,7 +139,7 @@ export default function HomePage() {
 
           {/* Workshop Promise */}
           <div className="mt-16 text-center">
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto border border-orange-200 shadow-sm">
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto border border-teal-200 shadow-sm">
               <div className="text-2xl mb-4">🤝</div>
               <h4 className="text-xl font-semibold text-gray-900 mb-3">
                 La Promessa del Laboratorio
@@ -162,11 +162,11 @@ export default function HomePage() {
       <FAQSection />
 
       {/* Discovery Section - Trending Problems */}
-      <section className="py-20 bg-gradient-to-br from-secondary-50 to-primary-50">
+      <section className="py-20 bg-gradient-to-br from-teal-50 to-emerald-50">
         <div className="container-narrow">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <TrendingUp className="h-6 w-6 text-secondary-600" />
+              <TrendingUp className="h-6 w-6 text-teal-600" />
               <h2 className="text-3xl font-bold">Trending Now</h2>
             </div>
             <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
@@ -190,7 +190,7 @@ export default function HomePage() {
           <div className="container-narrow">
             <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <Heart className="h-6 w-6 text-primary-600" />
+                <Heart className="h-6 w-6 text-teal-600" />
                 <h2 className="text-3xl font-bold">Recommended for You</h2>
               </div>
               <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
@@ -214,7 +214,7 @@ export default function HomePage() {
         <div className="container-narrow">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <BookOpen className="h-6 w-6 text-purple-600" />
+              <BookOpen className="h-6 w-6 text-teal-600" />
               <h2 className="text-3xl font-bold">Curated Collections</h2>
             </div>
             <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
@@ -234,12 +234,12 @@ export default function HomePage() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 bg-primary-600 text-white">
+      <section className="py-20 bg-teal-600 text-white">
         <div className="container-narrow text-center">
           <h2 className="text-3xl font-bold mb-4">
             Ready to Discover More?
           </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
             Join our community and start exploring problems that matter to you
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
