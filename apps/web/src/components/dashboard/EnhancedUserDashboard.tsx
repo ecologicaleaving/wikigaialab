@@ -14,6 +14,7 @@ import RelatedProblemsWidget from '../recommendations/RelatedProblemsWidget';
 import { ReferralWidget } from '../growth/ReferralWidget';
 import { CampaignWidget } from '../growth/CampaignWidget';
 import { LeaderboardWidget } from '../growth/LeaderboardWidget';
+import { AdminAccessWidget } from '../admin/AdminAccessWidget';
 import { 
   Calendar, 
   TrendingUp, 
@@ -583,6 +584,9 @@ function OverviewTab({
 
       {/* Sidebar - 4 columns on large screens */}
       <aside className="col-span-12 lg:col-span-4 space-y-4" role="complementary" aria-label="Dashboard sidebar">
+        {/* Admin Access Widget */}
+        <AdminAccessWidget />
+        
         {/* Access Status */}
         <AccessStatusCard />
         
