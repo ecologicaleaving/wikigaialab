@@ -30,6 +30,82 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [databaseUser, setDatabaseUser] = useState<any>(null);
   const [fetchingUser, setFetchingUser] = useState(false);
   const [lastFetchedUserId, setLastFetchedUserId] = useState<string | null>(null);
+  const [testUser, setTestUser] = useState<any>(null);
+  const [testLoading, setTestLoading] = useState(true);
+
+  // Check for test authentication data on mount and storage changes
+  useEffect(() => {
+    const checkTestAuth = () => {
+      if (typeof window === 'undefined') {
+        setTestLoading(false);
+        return;
+      }
+
+      try {
+        const testSession = localStorage.getItem('test-session');
+        if (testSession) {
+          const sessionData = JSON.parse(testSession);
+          
+          // Check if session is not expired
+          const expiresAt = new Date(sessionData.expiresAt);
+          if (expiresAt > new Date()) {
+            // Convert test session to AuthUser format
+            const testAuthUser = {
+              id: sessionData.user.id,
+              email: sessionData.user.email,
+              name: sessionData.user.username,
+              avatar_url: null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              last_login_at: new Date().toISOString(),
+              is_admin: sessionData.user.role === 'admin',
+              role: sessionData.user.role,
+              subscription_status: 'active',
+              total_votes_cast: 0,
+              total_problems_proposed: 0,
+              isTestUser: true
+            };
+            
+            setTestUser(testAuthUser);
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🧪 Test authentication detected:', {
+                id: testAuthUser.id,
+                email: testAuthUser.email,
+                role: testAuthUser.role,
+                isAdmin: testAuthUser.is_admin
+              });
+            }
+          } else {
+            // Clean up expired test session
+            localStorage.removeItem('test-session');
+            localStorage.removeItem('auth-token');
+            document.cookie = 'test-auth=; path=/; max-age=0';
+            setTestUser(null);
+          }
+        } else {
+          setTestUser(null);
+        }
+      } catch (error) {
+        console.warn('Error checking test authentication:', error);
+        setTestUser(null);
+      } finally {
+        setTestLoading(false);
+      }
+    };
+
+    checkTestAuth();
+
+    // Listen for storage changes (in case test login happens in another tab)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'test-session') {
+        checkTestAuth();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Fetch user data from session API when session changes
   // UserIdentityService now handles synchronization in the session API
@@ -66,9 +142,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [session?.user?.id, session?.user?.email]);
 
-  // Convert NextAuth session to our AuthUser type with synchronized database data
-  // UserIdentityService ensures deterministic IDs and consistent data
-  const user: AuthUser | null = session?.user && databaseUser ? {
+  // Priority: Test user > NextAuth user with database data
+  // If test user exists, use it; otherwise use NextAuth session data
+  const user: AuthUser | null = testUser ? testUser : (session?.user && databaseUser ? {
     id: databaseUser.id, // Use synchronized ID from UserIdentityService
     email: databaseUser.email,
     name: databaseUser.name || session.user.name || '',
@@ -81,7 +157,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     subscription_status: databaseUser.subscription_status,
     total_votes_cast: databaseUser.total_votes_cast,
     total_problems_proposed: databaseUser.total_problems_proposed,
-  } : null;
+  } : null);
+
+  // Include test loading in overall loading state
+  const overallLoading = loading || testLoading;
 
   const signInWithGoogle = async () => {
     try {
@@ -114,6 +193,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
+      // Clear test authentication if it exists
+      if (testUser) {
+        localStorage.removeItem('test-session');
+        localStorage.removeItem('auth-token');
+        document.cookie = 'test-auth=; path=/; max-age=0';
+        setTestUser(null);
+        
+        // For test users, just redirect without calling NextAuth signOut
+        window.location.href = '/login';
+        return;
+      }
+
+      // Normal NextAuth signOut for regular users
       await nextAuthSignOut({ 
         callbackUrl: '/login',
         redirect: true 
@@ -140,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value: AuthContextType = {
     user,
-    loading,
+    loading: overallLoading,
     error: null, // NextAuth handles errors differently
     session,
     signInWithGoogle,
