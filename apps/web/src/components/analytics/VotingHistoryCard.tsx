@@ -42,7 +42,7 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
     );
   }
 
-  const { votes, statistics } = data;
+  const { votes, statistics } = data || { votes: [], statistics: null };
 
   return (
     <Card className={`p-6 ${className}`}>
@@ -69,7 +69,7 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
             <TrendingUp className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {statistics.totalVotes}
+            {statistics?.totalVotes || 0}
           </div>
           <div className="text-xs text-gray-500">Voti Totali</div>
         </div>
@@ -79,7 +79,7 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
             <Calendar className="w-4 h-4 text-green-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {statistics.votesThisMonth}
+            {statistics?.votesThisMonth || 0}
           </div>
           <div className="text-xs text-gray-500">Questo Mese</div>
         </div>
@@ -89,7 +89,7 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
             <Award className="w-4 h-4 text-purple-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {statistics.categoriesVoted}
+            {statistics?.categoriesVoted || 0}
           </div>
           <div className="text-xs text-gray-500">Categorie</div>
         </div>
@@ -99,7 +99,7 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
             <TrendingUp className="w-4 h-4 text-orange-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {Math.round(statistics.avgVotesPerMonth * 10) / 10}
+            {Math.round((statistics?.avgVotesPerMonth || 0) * 10) / 10}
           </div>
           <div className="text-xs text-gray-500">Media/Mese</div>
         </div>
@@ -107,14 +107,14 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
 
       {/* Recent Votes */}
       <div className="space-y-3">
-        {votes.length === 0 ? (
+        {(votes || []).length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>Nessun voto ancora registrato</p>
             <p className="text-sm">Inizia a votare sui problemi per vedere la tua cronologia</p>
           </div>
         ) : (
-          votes.map((vote) => (
+          (votes || []).map((vote) => (
             <div key={`${vote.problem.id}-${vote.created_at}`} 
                  className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
               <div className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
@@ -153,11 +153,11 @@ export const VotingHistoryCard: React.FC<VotingHistoryCardProps> = ({
         )}
       </div>
 
-      {votes.length > 0 && statistics.totalVotes > maxItems && (
+      {(votes || []).length > 0 && (statistics?.totalVotes || 0) > maxItems && (
         <div className="mt-4 text-center">
           <Link href="/profile/voting-history">
             <Button variant="outline" size="sm">
-              Vedi tutti i {statistics.totalVotes} voti
+              Vedi tutti i {statistics?.totalVotes || 0} voti
             </Button>
           </Link>
         </div>
