@@ -12,9 +12,10 @@
     "test": "jest",
     "test:e2e": "playwright test",
     "clean": "rm -rf .next dist",
-    "analyze": "ANALYZE=true npm run build",
+    "analyze": "ANALYZE=true pnpm run build",
     "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
-    "perf:monitor": "node -e \"const { generatePerformanceReport } = require('./src/lib/performance-monitor'); generatePerformanceReport();\""
+    "perf:monitor": "node -e \"const { generatePerformanceReport } = require('./src/lib/performance-monitor'); generatePerformanceReport();\"",
+    "test:bundle": "echo 'Testing bundle analysis...' && ANALYZE=true pnpm run build && ls -la .next/analyze/"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -31,7 +32,7 @@
     "framer-motion": "12.23.6",
     "isomorphic-dompurify": "^2.26.0",
     "lucide-react": "0.469.0",
-    "next": "15.1.4",
+    "next": "15.2.4",
     "next-auth": "^5.0.0-beta.22",
     "react": "18.3.1",
     "react-dom": "18.3.1",
