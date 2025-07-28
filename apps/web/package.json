@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "clean": "rm -rf .next dist",
     "analyze": "ANALYZE=true npm run build",
-    "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json"
+    "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
+    "perf:monitor": "node -e \"const { generatePerformanceReport } = require('./src/lib/performance-monitor'); generatePerformanceReport();\""
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -44,6 +45,8 @@
     "zod": "3.25.1"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.12.0",
+    "@next/bundle-analyzer": "^15.1.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",

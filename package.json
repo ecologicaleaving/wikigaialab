@@ -51,6 +51,7 @@
     "setup:no-docker": "node scripts/setup-no-docker.js",
     "test:env": "node scripts/test-environment.js",
     "test:supabase": "node scripts/test-supabase.js",
+    "test:perf-monitor": "node scripts/test-performance-monitor.js",
     "fix:rls": "node scripts/fix-rls-policies.js"
   },
   "dependencies": {

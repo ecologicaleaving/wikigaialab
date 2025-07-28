@@ -1,29 +1,50 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    // Get basic metrics
-    const [
-      { count: totalUsers },
-      { count: totalProblems },
-      { count: totalVotes },
-      { count: activeUsers }
-    ] = await Promise.all([
-      supabase.from('users').select('*', { count: 'exact', head: true }),
-      supabase.from('problems').select('*', { count: 'exact', head: true }),
-      supabase.from('votes').select('*', { count: 'exact', head: true }),
-      supabase.from('users').select('*', { count: 'exact', head: true })
-        .gte('updated_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-    ]);
+    // Initialize Supabase client
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!
+    );
 
-    // Get recent activity
-    const { data: recentActivity } = await supabase
-      .from('votes')
-      .select('created_at')
-      .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
-      .order('created_at', { ascending: false });
+    // Get basic metrics (with error handling for database unavailability)
+    let totalUsers = 0, totalProblems = 0, totalVotes = 0, activeUsers = 0;
+    let recentActivity: any[] = [];
+
+    try {
+      const [
+        usersResult,
+        problemsResult,
+        votesResult,
+        activeUsersResult
+      ] = await Promise.all([
+        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('problems').select('*', { count: 'exact', head: true }),
+        supabase.from('votes').select('*', { count: 'exact', head: true }),
+        supabase.from('users').select('*', { count: 'exact', head: true })
+          .gte('updated_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      ]);
+
+      totalUsers = usersResult.count || 0;
+      totalProblems = problemsResult.count || 0;
+      totalVotes = votesResult.count || 0;
+      activeUsers = activeUsersResult.count || 0;
+
+      // Get recent activity
+      const { data: activityData } = await supabase
+        .from('votes')
+        .select('created_at')
+        .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
+        .order('created_at', { ascending: false });
+
+      recentActivity = activityData || [];
+    } catch (dbError) {
+      console.warn('Database metrics unavailable during migration:', dbError);
+    }
 
     // Calculate activity metrics
     const votesLastHour = recentActivity?.length || 0;

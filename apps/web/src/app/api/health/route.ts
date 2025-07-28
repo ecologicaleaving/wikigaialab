@@ -6,7 +6,7 @@ export async function GET() {
   try {
     // Check essential services
     const healthChecks = {
-      database: false, // Database not available during migration
+      database: 'maintenance', // Database in maintenance mode during migration
       api: true,
       timestamp: new Date().toISOString(),
       responseTime: Date.now() - startTime,

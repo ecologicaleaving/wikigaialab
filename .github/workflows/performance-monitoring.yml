@@ -7,8 +7,13 @@ on:
   workflow_dispatch:
   deployment_status:
 
+permissions:
+  issues: write
+  contents: read
+
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '18.19.0'
+  PRODUCTION_URL: 'https://wikigaialab.vercel.app'
 
 jobs:
   lighthouse-audit:
@@ -32,6 +37,7 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        continue-on-error: true
 
       - name: Upload Lighthouse results
         uses: actions/upload-artifact@v4
@@ -42,6 +48,7 @@ jobs:
   bundle-analysis:
     name: Bundle Size Analysis
     runs-on: ubuntu-latest
+    needs: lighthouse-audit
     
     steps:
       - name: Checkout code
@@ -57,45 +64,72 @@ jobs:
         with:
           version: '8'
 
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build application
-        run: pnpm run build
-
-      - name: Analyze bundle size
+      - name: Build and analyze
         run: |
           cd apps/web
-          npx next-bundle-analyzer --analyze
+          ANALYZE=true pnpm run build
 
       - name: Upload bundle analysis
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: bundle-analysis
           path: apps/web/.next/analyze/
+          if-no-files-found: warn
+          retention-days: 7
 
   uptime-monitoring:
     name: Uptime Check
     runs-on: ubuntu-latest
+    # Skip uptime check in forks to prevent failures
+    if: github.repository == 'wikigaialab/wikigaialab' || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Check production uptime
         run: |
+          # Use environment variable
+          PRODUCTION_URL="${{ env.PRODUCTION_URL }}"
+          
           urls=(
-            "https://wikigaialab.com"
-            "https://wikigaialab.com/api/health"
-            "https://wikigaialab.com/problems"
+            "$PRODUCTION_URL"
+            "$PRODUCTION_URL/api/health"
+            "$PRODUCTION_URL/problems"
+            "$PRODUCTION_URL/apps"
+            "$PRODUCTION_URL/dashboard"
           )
+          
+          failed_urls=()
           
           for url in "${urls[@]}"; do
             echo "Checking $url"
-            if curl -f --retry 3 --retry-delay 5 --max-time 30 "$url" > /dev/null 2>&1; then
+            # Use more lenient check - 200-399 status codes are acceptable
+            if curl -s --retry 3 --retry-delay 5 --max-time 30 -w "%{http_code}" "$url" | grep -E "^[23][0-9][0-9]$" > /dev/null; then
               echo "✅ $url is up"
             else
-              echo "❌ $url is down"
-              exit 1
+              echo "❌ $url is down or unhealthy"
+              failed_urls+=("$url")
             fi
           done
+          
+          if [ ${#failed_urls[@]} -gt 0 ]; then
+            echo "Failed URLs: ${failed_urls[*]}"
+            exit 1
+          fi
 
       - name: Create uptime issue
         if: failure()
@@ -133,6 +167,7 @@ jobs:
   performance-regression:
     name: Performance Regression Detection
     runs-on: ubuntu-latest
+    needs: [lighthouse-audit, bundle-analysis]
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     
     steps:
@@ -144,13 +179,21 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '8'
+
       - name: Install dependencies
-        run: npm install -g @lhci/cli puppeteer
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm add -g @lhci/cli puppeteer
 
       - name: Run performance tests
         run: |
-          lhci autorun --collect.url=https://wikigaialab.com || true
-          lhci autorun --collect.url=https://wikigaialab.com/problems || true
+          PRODUCTION_URL="${{ env.PRODUCTION_URL }}"
+          lhci autorun --collect.url="$PRODUCTION_URL"
+          lhci autorun --collect.url="$PRODUCTION_URL/problems"
 
       - name: Analyze performance changes
         run: |

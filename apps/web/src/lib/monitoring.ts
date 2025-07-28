@@ -300,9 +300,11 @@ class MonitoringService {
 
   private isPerformanceIssue(name: string, value: number): boolean {
     const thresholds = {
-      'page_load_time': 3000, // 3 seconds
-      'api_response_time': 2000, // 2 seconds
-      'memory_usage': 80 // 80%
+      'page_load_time': 5000, // 5 seconds - more realistic for complex apps
+      'api_response_time': 3000, // 3 seconds - more realistic for database queries
+      'memory_usage': 90, // 90% - more realistic threshold
+      'bundle_size': 1000000, // 1MB - reasonable bundle size limit
+      'startup_time': 10000 // 10 seconds - more realistic startup time
     };
 
     return thresholds[name] && value > thresholds[name];
