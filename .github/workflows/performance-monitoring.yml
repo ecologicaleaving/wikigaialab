@@ -29,6 +29,15 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Check Lighthouse config
+        run: |
+          if [ -f ".lighthouserc.json" ]; then
+            echo "Lighthouse config found:"
+            cat .lighthouserc.json
+          else
+            echo "Warning: No .lighthouserc.json found"
+          fi
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v11
         with:
@@ -80,9 +89,30 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build and analyze
+        env:
+          ANALYZE: true
         run: |
           cd apps/web
-          ANALYZE=true pnpm run build
+          echo "Building with bundle analysis..."
+          echo "ANALYZE environment variable: $ANALYZE"
+          pnpm run analyze
+          echo "Build completed with exit code: $?"
+          
+      - name: Check bundle analysis output
+        run: |
+          cd apps/web
+          if [ -d ".next/analyze" ]; then
+            echo "Bundle analysis output found:"
+            ls -la .next/analyze/ || true
+            echo "Files in analyze directory:"
+            find .next/analyze/ -type f | head -10 || true
+          else
+            echo "No analyze directory found. Creating fallback..."
+            mkdir -p .next/analyze
+            echo "Bundle analysis failed - no output generated at $(date)" > .next/analyze/bundle-analysis-error.txt
+            echo "Build logs:" >> .next/analyze/bundle-analysis-error.txt
+            echo "ANALYZE environment variable: ${ANALYZE:-not set}" >> .next/analyze/bundle-analysis-error.txt
+          fi
 
       - name: Upload bundle analysis
         uses: actions/upload-artifact@v4
@@ -104,6 +134,7 @@ jobs:
         run: |
           # Use environment variable
           PRODUCTION_URL="${{ env.PRODUCTION_URL }}"
+          echo "Checking uptime for: $PRODUCTION_URL"
           
           urls=(
             "$PRODUCTION_URL"
@@ -116,12 +147,16 @@ jobs:
           failed_urls=()
           
           for url in "${urls[@]}"; do
-            echo "Checking $url"
-            # Use more lenient check - 200-399 status codes are acceptable
-            if curl -s --retry 3 --retry-delay 5 --max-time 30 -w "%{http_code}" "$url" | grep -E "^[23][0-9][0-9]$" > /dev/null; then
-              echo "✅ $url is up"
+            echo "Checking $url..."
+            # Get HTTP status code with better error handling
+            http_code=$(curl -s --retry 3 --retry-delay 5 --max-time 30 -w "%{http_code}" -o /dev/null "$url" || echo "000")
+            echo "HTTP Status: $http_code"
+            
+            # Check if status code is 2xx or 3xx
+            if [[ "$http_code" =~ ^[23][0-9][0-9]$ ]]; then
+              echo "✅ $url is up (status: $http_code)"
             else
-              echo "❌ $url is down or unhealthy"
+              echo "❌ $url is down or unhealthy (status: $http_code)"
               failed_urls+=("$url")
             fi
           done
@@ -129,6 +164,8 @@ jobs:
           if [ ${#failed_urls[@]} -gt 0 ]; then
             echo "Failed URLs: ${failed_urls[*]}"
             exit 1
+          else
+            echo "All URLs are healthy! 🎉"
           fi
 
       - name: Create uptime issue
