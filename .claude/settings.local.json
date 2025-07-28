@@ -19,7 +19,10 @@
       "Bash(pnpm run test:*)",
       "Bash(set ANALYZE=true)",
       "Bash(pnpm run:*)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(npx next:*)",
+      "Bash(npx tsc:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

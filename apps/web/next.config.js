@@ -9,12 +9,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   experimental: {
     typedRoutes: true,
+    skipMiddlewareUrlNormalize: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  // Optimize static generation for CI/CD
+  output: 'standalone',
+  trailingSlash: false,
+  generateBuildId: async () => {
+    return 'build-id'
   },
   // Performance optimizations
   compiler: {
